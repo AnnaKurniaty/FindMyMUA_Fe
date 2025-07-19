@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import LoginMuaPage from '../pages/Mua/login.vue'
-import LoginCusPage from '../pages/customer/login.vue'
+import LoginCusPage from '../pages/Customer/login.vue'
 import RegisterMuaPage from '../pages/Mua/register.vue'
 import RegisterCusPage from '../pages/Customer/register.vue'
 import MuaLayout from '../layouts/MuaLayout.vue'
 import CustomerLayout from '../layouts/CustomerLayout.vue'
 
-import MuaDashboard from '../pages/mua/dashboard.vue'
-import MuaAvailable from '../pages/mua/availability.vue'
-import MuaProfile from '../pages/mua/profile.vue'
-import MuaService from '../pages/mua/service.vue'
+import MuaDashboard from '../pages/Mua/dashboard.vue'
+import MuaAvailable from '../pages/Mua/availability.vue'
+import MuaProfile from '../pages/Mua/profile.vue'
+import MuaService from '../pages/Mua/service.vue'
 
-import CustomerHome from '../pages/customer/dashboard.vue'
-import CustomerBooking from '../pages/customer/booking.vue'
+import CustomerHome from '../pages/Customer/dashboard.vue'
+import CustomerBooking from '../pages/Customer/booking.vue'
 
 const routes = [
   { path: '/login/mua', name: 'LoginMua', component: LoginMuaPage },

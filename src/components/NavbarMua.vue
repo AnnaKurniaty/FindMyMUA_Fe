@@ -7,7 +7,7 @@
         </div>
         <div>
           <h1 class="text-2xl font-bold text-gray-800">MUA Dashboard</h1>
-          <p class="text-gray-800 text-sm">Welcome back, {{ userName || 'MUA' }}!</p>
+          <p class="text-gray-800 text-sm">Welcome, <b>{{ userName || 'MUA' }}</b>!</p>
         </div>
       </div>
 
