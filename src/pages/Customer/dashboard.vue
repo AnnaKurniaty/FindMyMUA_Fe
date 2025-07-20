@@ -44,10 +44,15 @@
                             Sign In
                         </button>
                         <button
-                            class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                        >
-                            Join Now
-                        </button>
+                                class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                @click="goToRegisterCus">
+                                Join Now
+                            </button>
+                            <button
+                                class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                @click="goToRegisterMua">
+                                Be Our Partner
+                            </button>
                         <button class="md:hidden">
                             <span class="material-symbols-outlined text-gray-700">menu</span>
                         </button>
@@ -344,6 +349,19 @@
                 </div>
             </div>
         </div>
-    </div></template
->
+    </div></template>
 
+<script>
+export default {
+    name: 'dashboard',
+
+    methods: {
+        goToRegisterCus() {
+            this.$router.push('/register/cus');
+        }
+           goToRegisterMua() {
+            this.$router.push('/register/mua');
+        }
+    }
+}
+</script>
