@@ -344,33 +344,38 @@ async function handleSubmit() {
     }
 
     try {
-        const registerResult = await apiFetch('/auth/register/mua', {
+        await apiFetch('/auth/register/mua', {
+            method: 'POST',
+            body: JSON.stringify(form)
+        });
+        
+        const loginResult = await apiFetch('/auth/login/mua', {
             method: 'POST',
             body: JSON.stringify(form)
         });
 
-        localStorage.setItem('token', registerResult.access_token)
-        localStorage.setItem('user', JSON.stringify(registerResult.user))
-        localStorage.setItem('user_id', registerResult.user.id)
+        localStorage.setItem('token', loginResult.access_token)
+        localStorage.setItem('user', JSON.stringify(loginResult.user))
+        localStorage.setItem('user_id', loginResult.user.id)
 
-        // const formData = new FormData()
-        // formData.append('bio', form.bio)
-        // formData.append('certification', JSON.stringify(form.certification))
-        // formData.append('service_area', form.service_area)
-        // formData.append('studio_lat', form.studio_lat)
-        // formData.append('studio_lng', form.studio_lng)
-        // formData.append('available_start_time', form.available_start_time + ':00')
-        // formData.append('available_end_time', form.available_end_time + ':00')
-        // formData.append('available_days', JSON.stringify(form.available_days))
-        // formData.append('makeup_specializations', JSON.stringify(form.makeup_specializations))
-        // formData.append('makeup_styles', JSON.stringify(form.makeup_styles))
-        // formData.append('skin_type', JSON.stringify(form.skin_type))
+        const formData = new FormData()
+        formData.append('bio', form.bio)
+        formData.append('certification', JSON.stringify(form.certification))
+        formData.append('service_area', form.service_area)
+        formData.append('studio_lat', form.studio_lat)
+        formData.append('studio_lng', form.studio_lng)
+        formData.append('available_start_time', form.available_start_time + ':00')
+        formData.append('available_end_time', form.available_end_time + ':00')
+        formData.append('available_days', JSON.stringify(form.available_days))
+        formData.append('makeup_specializations', JSON.stringify(form.makeup_specializations))
+        formData.append('makeup_styles', JSON.stringify(form.makeup_styles))
+        formData.append('skin_type', JSON.stringify(form.skin_type))
+        if (form.profile_photo)
+            formData.append('profile_photo', form.profile_photo)
 
-        // if (form.profile_photo)
-        //     formData.append('profile_photo', form.profile_photo)
-        apiFetch('/mua/profile', {
+        await apiFetch('/mua/profile', {
             method: 'POST',
-            body: JSON.stringify(form)
+            body: formData
         });
 
         alert(`MUA's Account Created!`)

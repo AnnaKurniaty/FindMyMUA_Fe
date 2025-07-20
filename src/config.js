@@ -4,10 +4,10 @@ export const config = {
 }
 
 export async function apiFetch(endpoint, options = {}) {
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('token');
 
   const defaultHeaders = {
-    'Content-Type': 'application/json',
+    ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
     ...(token && { Authorization: `Bearer ${token}` }),
   };
 
@@ -24,9 +24,9 @@ export async function apiFetch(endpoint, options = {}) {
 
   const responseData = await response.json().catch(() => ({}));
 
-    if (!response.ok) {
-        console.log("Error:", responseData)
-        throw new Error(responseData.message || 'API request failed');
+  if (!response.ok) {
+    console.log("Error:", responseData);
+    throw new Error(responseData.message || 'API request failed');
   }
 
   return responseData;
