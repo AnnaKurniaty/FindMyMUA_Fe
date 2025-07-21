@@ -72,7 +72,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between">
-                                <label class="block text-sm font-medium text-gray-700">Studio Location</label>
+                                <label class="block text-sm font-medium">Studio Location</label>
                                 <span
                                     class="text-xs text-pink-500 cursor-pointer hover:text-pink-600 transition-colors flex items-center">
                                     <button type="button" @click="getLocation"
@@ -123,15 +123,15 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Profile Photo</label>
+                            <label class="block font-medium mb-2">Profile Photo</label>
                             <!-- Drop Area -->
-                            <div class="block border-2 border-dashed border-pink-300 rounded-2xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
+                            <div class="block border-2 border-dashed border-pink-300 rounded-xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
                                 @click="triggerFileInput">
                                 <input type="file" ref="fileInput" accept="image/*" class="hidden"
                                     @change="handleFileChange" />
                                 <template v-if="previewUrl">
                                     <img :src="previewUrl" alt="Preview" class="mx-auto max-h-40 rounded-lg" />
-                                    <button @click.stop="removeImage" class="mt-2 text-sm text-red-500 underline">
+                                    <button @click.stop="removeImage" class="mt-2 text-sm underline">
                                         Remove Image
                                     </button>
                                 </template>
@@ -344,33 +344,38 @@ async function handleSubmit() {
     }
 
     try {
-        const registerResult = await apiFetch('/auth/register/mua', {
+        await apiFetch('/auth/register/mua', {
+            method: 'POST',
+            body: JSON.stringify(form)
+        });
+        
+        const loginResult = await apiFetch('/auth/login/mua', {
             method: 'POST',
             body: JSON.stringify(form)
         });
 
-        localStorage.setItem('token', registerResult.access_token)
-        localStorage.setItem('user', JSON.stringify(registerResult.user))
-        localStorage.setItem('user_id', registerResult.user.id)
+        localStorage.setItem('token', loginResult.access_token)
+        localStorage.setItem('user', JSON.stringify(loginResult.user))
+        localStorage.setItem('user_id', loginResult.user.id)
 
-        // const formData = new FormData()
-        // formData.append('bio', form.bio)
-        // formData.append('certification', JSON.stringify(form.certification))
-        // formData.append('service_area', form.service_area)
-        // formData.append('studio_lat', form.studio_lat)
-        // formData.append('studio_lng', form.studio_lng)
-        // formData.append('available_start_time', form.available_start_time + ':00')
-        // formData.append('available_end_time', form.available_end_time + ':00')
-        // formData.append('available_days', JSON.stringify(form.available_days))
-        // formData.append('makeup_specializations', JSON.stringify(form.makeup_specializations))
-        // formData.append('makeup_styles', JSON.stringify(form.makeup_styles))
-        // formData.append('skin_type', JSON.stringify(form.skin_type))
+        const formData = new FormData()
+        formData.append('bio', form.bio)
+        formData.append('certification', JSON.stringify(form.certification))
+        formData.append('service_area', form.service_area)
+        formData.append('studio_lat', form.studio_lat)
+        formData.append('studio_lng', form.studio_lng)
+        formData.append('available_start_time', form.available_start_time + ':00')
+        formData.append('available_end_time', form.available_end_time + ':00')
+        formData.append('available_days', JSON.stringify(form.available_days))
+        formData.append('makeup_specializations', JSON.stringify(form.makeup_specializations))
+        formData.append('makeup_styles', JSON.stringify(form.makeup_styles))
+        formData.append('skin_type', JSON.stringify(form.skin_type))
+        if (form.profile_photo)
+            formData.append('profile_photo', form.profile_photo)
 
-        // if (form.profile_photo)
-        //     formData.append('profile_photo', form.profile_photo)
-        apiFetch('/mua/profile', {
+        await apiFetch('/mua/profile', {
             method: 'POST',
-            body: JSON.stringify(form)
+            body: formData
         });
 
         alert(`MUA's Account Created!`)
