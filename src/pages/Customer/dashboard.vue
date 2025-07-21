@@ -359,7 +359,7 @@ export default {
         goToRegisterCus() {
             this.$router.push('/register/cus');
         },
-        goToRegisterMua() {
+           goToRegisterMua() {
             this.$router.push('/register/mua');
         }
     }

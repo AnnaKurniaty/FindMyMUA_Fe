@@ -1,17 +1,18 @@
-<template
-    ><div id="webcrumbs">
+<template>
+    <div id="webcrumbs">
         <div class="w-full min-h-screen">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-6">
+
+                    <!-- PROFILE INFORMATION Section -->
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300"
-                    >
+                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                <span class="material-symbols-outlined">person</span> Profile Information
+                                <span class="material-symbols-outlined">person</span>
+                                Profile Information
                             </h2>
                             <button
-                                 @click="openEditModal"
                                 class="bg-primary-100 text-primary-800 px-4 py-2 rounded-full font-medium hover:bg-primary-200 transition-colors"
                             >
                                 <span class="material-symbols-outlined text-sm mr-2">edit</span> Edit Profile
@@ -21,12 +22,12 @@
                             <div class="space-y-4">
                                 <div class="flex items-center gap-4">
                                     <div
-                                        class="w-16 h-16 bg-gradient-to-r from-pink-200 to-purple-200 rounded-full flex items-center justify-center"
-                                    >
-                                        <span class="text-2xl">👤</span>
+                                        class="w-16 h-16 bg-gradient-to-r from-pink-200 to-purple-200 rounded-full flex items-center justify-center">
+                                        <span class="text-2xl">{{ profile?.profile_photo || '👤' }}</span>
                                     </div>
                                     <div>
-                                        <h3 class="font-semibold text-gray-800">{{ profile?.name || 'Loading...' }}</h3>
+                                        <h3 class="font-semibold text-gray-800">{{ profile?.name || 'Loading...' }}
+                                        </h3>
                                         <p class="text-sm text-gray-600">Professional MUA</p>
                                     </div>
                                 </div>
@@ -64,188 +65,158 @@
                                 <div>
                                     <h4 class="font-semibold text-gray-800 mb-2">Service Locations</h4>
                                     <div class="flex flex-wrap gap-2">
-                                        <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm"
-                                            >
+                                        <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">
                                             {{ profile?.mua_profile?.service_area || 'Not specified' }}
-                                            </span
-                                        >
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- CERTIFICATIONS & SPECIALIZATIONS Section -->
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300"
-                    >
+                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
                         <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2">
                             <span class="material-symbols-outlined">workspace_premium</span> Certifications &amp;
                             Specializations
                         </h3>
+                        <!-- Certifications -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
 
                                 <div v-if="parsedCertifications.length" class="space-y-3">
-                                    <div
-                                    v-for="(cert, i) in parsedCertifications"
-                                    :key="i"
-                                    class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
-                                    :class="getCertBg(i)"
-                                    >
-                                    <div
-                                        :class="getCertIconBg(i)"
-                                        class="w-8 h-8 rounded-full flex items-center justify-center"
-                                    >
-                                        <span
-                                        class="material-symbols-outlined text-sm"
-                                        :class="getCertIconColor(i)"
-                                        >
-                                        verified
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">{{ cert }}</p>
-                                    </div>
+                                    <div v-for="(cert, i) in parsedCertifications" :key="i"
+                                        class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
+                                        :class="getBg(i)">
+                                        <div :class="getIconBg(i)"
+                                            class="w-8 h-8 rounded-full flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
+                                                verified
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-800">{{ cert }}</p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <p v-else class="text-sm text-gray-500">No certifications added.</p>
+                                <p v-else class="text-sm text-gray-500">No certification(s) added.</p>
                             </div>
+
+                            <!-- Specializations -->
                             <div>
                                 <h4 class="font-semibold text-gray-800 mb-3">Specializations</h4>
 
-                                <div v-if="parsedSpecializations.length" class="space-y-3">
-                                    <div
-                                    v-for="(item, i) in parsedSpecializations"
-                                    :key="i"
-                                    class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
-                                    :class="getCertBg(i)"
-                                    >
-                                    <div
-                                        :class="getCertIconBg(i)"
-                                        class="w-8 h-8 rounded-full flex items-center justify-center"
-                                    >
-                                        <span
-                                        class="material-symbols-outlined text-sm"
-                                        :class="getCertIconColor(i)"
-                                        >
-                                        palette
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">{{ item }}</p>
-                                    </div>
+                                <div v-if="parsedSpecializations.length" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div v-for="(item, i) in parsedSpecializations" :key="i"
+                                        class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
+                                        :class="getBg(i)">
+                                        <div :class="getIconBg(i)"
+                                            class="w-8 h-8 rounded-full flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
+                                                palette
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-800">{{ item }}</p>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <p v-else class="text-sm text-gray-500">No specializations added.</p>
+                                <p v-else class="text-sm text-gray-500">No specialization(s) added.</p>
                             </div>
                         </div>
                     </div>
+
+                    <!-- PREFERENCES & TECHNIQUES Section -->
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300"
-                    >
+                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
                         <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <span class="material-symbols-outlined">palette</span> Preferences &amp; Techniques
+                            <span class="material-symbols-outlined">palette</span>
+                            Preferences &amp; Techniques
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <!-- Makeup Styles -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h4 class="font-semibold text-gray-800 mb-3">Color Preferences</h4>
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-4 h-4 bg-pink-300 rounded-full"></div>
-                                        <span class="text-sm text-gray-600">Warm Tones</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-4 h-4 bg-purple-300 rounded-full"></div>
-                                        <span class="text-sm text-gray-600">Cool Tones</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-4 h-4 bg-yellow-300 rounded-full"></div>
-                                        <span class="text-sm text-gray-600">Neutral Tones</span>
+                                <h4 class="font-semibold text-gray-800 mb-3">Makeup Styles</h4>
+
+                                <div v-if="parsedMakeupStyles.length" class="space-y-2">
+                                    <div v-for="(style, i) in parsedMakeupStyles" :key="i"
+                                        class="flex items-center gap-2">
+                                        <div :class="getIconBg(i)"
+                                            class="w-8 h-8 rounded flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
+                                                brush
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">{{ style }}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                <p v-else class="text-sm text-gray-500">No makeup style(s) added.</p>
                             </div>
+
+                            <!-- Skin Types Expertise -->
                             <div>
-                                <h4 class="font-semibold text-gray-800 mb-3">Skin Tone Expertise</h4>
-                                <div class="space-y-2">
-                                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">Fair</span>
-                                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm"
-                                        >Medium</span
-                                    >
-                                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm"
-                                        >Deep</span
-                                    >
+                                <h4 class="font-semibold text-gray-800 mb-3">Skin Types Expertise</h4>
+
+                                <div v-if="parsedSkinTypes.length" class="flex flex-col md:flex-row flex-wrap gap-3">
+                                    <span v-for="(skinType, i) in parsedSkinTypes" :key="i" :class="getIconBg(i)"
+                                        class="text-gray-800 px-3 py-1 rounded-full text-sm">
+                                        {{ skinType }}
+                                    </span>
                                 </div>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800 mb-3">Techniques</h4>
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-pink-600 text-sm">brush</span>
-                                        <span class="text-sm text-gray-600">Traditional</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-purple-600 text-sm">landscape</span>
-                                        <span class="text-sm text-gray-600">Airbrush</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-yellow-600 text-sm"
-                                            >auto_awesome</span
-                                        >
-                                        <span class="text-sm text-gray-600">Highlighting</span>
-                                    </div>
-                                </div>
+
+                                <p v-else class="text-sm text-gray-500">No skin type(s) added.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- PORTFOLIO Section -->
                 <div class="space-y-6">
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300"
-                    >
+                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
                         <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2">
                             <span class="material-symbols-outlined">photo_library</span> Portfolio Photos
                         </h3>
                         <div class="grid grid-cols-2 gap-3 mb-4">
                             <div
-                                class="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow"
-                            >
+                                class="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
                                 <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
                             </div>
                             <div
-                                class="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow"
-                            >
+                                class="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
                                 <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
                             </div>
                             <div
-                                class="aspect-square bg-gradient-to-br from-yellow-100 to-pink-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow"
-                            >
+                                class="aspect-square bg-gradient-to-br from-yellow-100 to-pink-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
                                 <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
                             </div>
                             <div
-                                class="aspect-square bg-gradient-to-br from-pink-100 to-yellow-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow"
-                            >
+                                class="aspect-square bg-gradient-to-br from-pink-100 to-yellow-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
                                 <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <button
-                                class="w-full bg-pink-100 text-pink-800 px-4 py-3 rounded-xl font-medium hover:bg-pink-200 transition-colors"
-                            >
-                                <span class="material-symbols-outlined text-sm mr-2">add_photo_alternate</span> Add
-                                Photos
+                            <button @click="isModalOpen = true"
+                                class="w-full bg-pink-100 text-pink-800 px-4 py-3 rounded-xl font-medium hover:bg-pink-200 transition-colors">
+                                <span class="material-symbols-outlined text-sm mr-2">add_photo_alternate</span>
+                                Add Photos
                             </button>
                             <button
-                                class="w-full bg-purple-100 text-purple-800 px-4 py-3 rounded-xl font-medium hover:bg-purple-200 transition-colors"
-                            >
-                                <span class="material-symbols-outlined text-sm mr-2">folder_open</span> Manage Gallery
+                                class="w-full bg-purple-100 text-purple-800 px-4 py-3 rounded-xl font-medium hover:bg-purple-200 transition-colors">
+                                <span class="material-symbols-outlined text-sm mr-2">folder_open</span>
+                                Manage Gallery
                             </button>
                         </div>
                     </div>
-                    <div
-                        class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300"
-                    >
+
+                    <!-- STATISTICS Section -->
+                    <div class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
                         <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined">trending_up</span> Profile Statistics
                         </h3>
@@ -657,135 +628,107 @@
 
         </div>
     </div>
+    <!-- Modal Add Image Portfolio -->
+    <div v-if="isModalOpen" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md shadow-lg relative">
+            <!-- Modal Title -->
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-pink-500">Upload Portfolio Photo</h2>
+                <button @click="isModalOpen = false" class="text-gray-400 hover:text-black text-2xl focus:outline-none">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Upload Area -->
+            <div>
+                <div class="block border-2 border-dashed border-pink-300 rounded-xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
+                    @click="triggerFileInput">
+                    <input type="file" ref="fileInput" accept="image/*" class="hidden" @change="handleFileChange" />
+
+                    <template v-if="previewUrl">
+                        <img :src="previewUrl" alt="Preview" class="mx-auto max-h-40 rounded-lg" />
+                        <button @click.stop="removeImage" style="color: #ef4444 !important;"
+                            class="mt-2 text-sm underline">
+                            Remove Image
+                        </button>
+                    </template>
+
+                    <template v-else>
+                        <span class="material-symbols-outlined text-4xl text-pink-400 mb-2 block">
+                            add_a_photo
+                        </span>
+                        <p class="text-pink-500 font-medium">Click to upload</p>
+                        <p class="text-sm text-pink-400">JPG, PNG up to 5MB</p>
+                    </template>
+                </div>
+            </div>
+            <!-- Upload Button -->
+            <button :disabled="!selectedFile" @click="uploadPhoto" :class="[
+                'mt-6 w-full text-white py-2 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed',
+                selectedFile ? 'bg-pink-500' : 'bg-pink-300'
+            ]">
+                Upload
+            </button>
+        </div>
+    </div>
 </template>
 
 
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 
+const userId = localStorage.getItem('user_id')
 const profile = ref(null)
-const showEditModal = ref(false)
+const parsedCertifications = ref([])
+const parsedSpecializations = ref([])
 const certColors = ['pink', 'purple', 'yellow']
 
-function getCertBg(index) {
-  return `bg-${certColors[index % certColors.length]}-50`
+function getBg(index) {
+    return `bg-${customColors[index % customColors.length]}-100`
 }
-function getCertIconBg(index) {
-  return `bg-${certColors[index % certColors.length]}-200`
+function getIconBg(index) {
+    return `bg-${customColors[index % customColors.length]}-200`
 }
-function getCertIconColor(index) {
-  return `text-${certColors[index % certColors.length]}-600`
-}
-
-function closeEditModal() {
-  showEditModal.value = false
+function getIconColor(index) {
+    return `text-${customColors[index % customColors.length]}-600`
 }
 
-const editForm = reactive({
-    name: '',
-    email: '',
-    phone: '',
-    bio: '',
-    certification: [''],
-    service_area: '',
-    studio_lat: '',
-    studio_lng: '',
-    available_days: [],
-    available_start_time: '',
-    available_end_time: '',
-    makeup_specializations: [],
-    makeup_styles: [],
-    skin_type: [],
-    profile_photo: null
-})
 
-const parsedCertifications = computed(() => {
-  if (!profile.value || !profile.value.mua_profile) return []
-  try {
-    return JSON.parse(profile.value.mua_profile.certification || '[]')
-  } catch {
-    return []
-  }
-})
-
-const parsedSpecializations = computed(() => {
-  if (!profile.value || !profile.value.mua_profile) return []
-  try {
-    return JSON.parse(profile.value.mua_profile.makeup_specializations || '[]')
-  } catch {
-    return []
-  }
-})
-
-const fetchProfile = async () => {
+onMounted(async () => {
   const token = localStorage.getItem('token')
   const userId = localStorage.getItem('user_id')
 
   try {
-    const response = await fetch(`http://localhost:8000/api/mua/profile/${userId}`, {
+    const res = await fetch(`http://localhost:8000/api/mua/profile/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    const data = await response.json()
-    profile.value = data
-  } catch (error) {
-    console.error('Error fetching profile:', error)
-  }
-}
-
-function openEditModal() {
-  if (profile.value) {
-    editForm.name = profile.value.name || ''
-    editForm.email = profile.value.email || ''
-    editForm.phone = profile.value.phone || ''
-    editForm.service_area = profile.value.mua_profile?.service_area || ''
-    editForm.bio = profile.value.mua_profile?.bio || ''
-    editForm.certification = parsedCertifications.value || []
-    editForm.makeup_specializations = parsedSpecializations.value || []
-  }
-  showEditModal.value = true
-}
-
-async function submitEditForm(e) {
-  e.preventDefault()
-
-  const token = localStorage.getItem('token')
-  const userId = localStorage.getItem('user_id')
-
-  const payload = {
-    name: editForm.name,
-    email: editForm.email,
-    phone: editForm.phone,
-    mua_profile: {
-      service_area: editForm.service_area,
-      bio: editForm.bio,
-      certification: JSON.stringify(editForm.certifications),
-      makeup_specializations: JSON.stringify(editForm.specializations)
-    }
-  }
-
-  try {
-    const res = await fetch(`http://localhost:8000/api/mua/profile/${userId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(payload)
-    })
 
     if (!res.ok) {
-      throw new Error('Failed to update profile')
+      throw new Error('Failed to fetch profile data')
     }
 
-    const updated = await res.json()
-    profile.value = updated
-    closeEditModal()
+    const data = await res.json()
+    profile.value = data
+
+    if (data.mua_profile?.certification) {
+      try {
+        parsedCertifications.value = JSON.parse(data.mua_profile.certification)
+      } catch (e) {
+        parsedCertifications.value = [data.mua_profile.certification]
+      }
+    }
+
+    if (data.mua_profile?.makeup_specializations) {
+      try {
+        parsedSpecializations.value = JSON.parse(data.mua_profile.makeup_specializations)
+      } catch (e) {
+        parsedSpecializations.value = [data.mua_profile.makeup_specializations]
+      }
+    }
   } catch (err) {
     console.error('Error updating profile:', err)
   }
-}
-
-onMounted(fetchProfile)
+})
 </script>
