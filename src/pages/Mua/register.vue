@@ -72,7 +72,7 @@
                         </div>
                         <div>
                             <div class="flex items-center justify-between">
-                                <label class="block text-sm font-medium text-gray-700">Studio Location</label>
+                                <label class="block text-sm font-medium">Studio Location</label>
                                 <span
                                     class="text-xs text-pink-500 cursor-pointer hover:text-pink-600 transition-colors flex items-center">
                                     <button type="button" @click="getLocation"
@@ -123,15 +123,15 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Profile Photo</label>
+                            <label class="block font-medium mb-2">Profile Photo</label>
                             <!-- Drop Area -->
-                            <div class="block border-2 border-dashed border-pink-300 rounded-2xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
+                            <div class="block border-2 border-dashed border-pink-300 rounded-xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
                                 @click="triggerFileInput">
                                 <input type="file" ref="fileInput" accept="image/*" class="hidden"
                                     @change="handleFileChange" />
                                 <template v-if="previewUrl">
                                     <img :src="previewUrl" alt="Preview" class="mx-auto max-h-40 rounded-lg" />
-                                    <button @click.stop="removeImage" class="mt-2 text-sm text-red-500 underline">
+                                    <button @click.stop="removeImage" class="mt-2 text-sm underline">
                                         Remove Image
                                     </button>
                                 </template>
