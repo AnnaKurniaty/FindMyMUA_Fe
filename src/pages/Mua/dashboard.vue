@@ -34,15 +34,15 @@
         <div class="space-y-2">
           <div class="flex justify-between">
             <span class="text-gray-800">Daily</span>
-            <span class="font-bold text-gray-800">$450</span>
+            <span class="font-bold text-gray-800">Rp 800.000</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-800">Weekly</span>
-            <span class="font-bold text-gray-800">$2,100</span>
+            <span class="font-bold text-gray-800">Rp 1.900.000</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-800">Monthly</span>
-            <span class="font-bold text-gray-800">$8,900</span>
+            <span class="font-bold text-gray-800">Rp 15.000.000</span>
           </div>
         </div>
       </div>

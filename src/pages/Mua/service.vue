@@ -91,7 +91,7 @@
                         <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">Price</span>
-                            <span class="text-2xl font-bold text-primary-600">Rp {{ service.formatted_price }}</span>
+                            <span class="text-2xl font-bold text-primary-600">{{ service.formatted_price }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">Duration</span>

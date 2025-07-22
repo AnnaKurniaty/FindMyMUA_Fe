@@ -13,9 +13,10 @@
                                 Profile Information
                             </h2>
                             <button
-                                class="bg-primary-100 text-primary-800 px-4 py-2 rounded-full font-medium hover:bg-primary-200 transition-colors"
-                            >
-                                <span class="material-symbols-outlined text-sm mr-2">edit</span> Edit Profile
+                                @click="openEditModal"
+                                class="bg-primary-100 text-primary-800 px-4 py-2 rounded-full font-medium hover:bg-primary-200 transition-colors">
+                                <span class="material-symbols-outlined text-sm mr-2">edit</span>
+                                Edit Profile
                             </button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -84,26 +85,33 @@
                         <!-- Certifications -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
+  <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
 
-                                <div v-if="parsedCertifications.length" class="space-y-3">
-                                    <div v-for="(cert, i) in parsedCertifications" :key="i"
-                                        class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
-                                        :class="getBg(i)">
-                                        <div :class="getIconBg(i)"
-                                            class="w-8 h-8 rounded-full flex items-center justify-center">
-                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
-                                                verified
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-800">{{ cert }}</p>
-                                        </div>
-                                    </div>
-                                </div>
+  <div v-if="parsedCertifications.length" class="space-y-4">
+    <div
+      v-for="(cert, i) in parsedCertifications"
+      :key="i"
+      class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow transition-shadow"
+    >
+      <!-- Icon -->
+      <div
+        class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined text-green-600 text-base">
+          verified
+        </span>
+      </div>
 
-                                <p v-else class="text-sm text-gray-500">No certification(s) added.</p>
-                            </div>
+      <!-- Text -->
+      <div>
+        <p class="text-sm text-gray-800 font-medium">{{ cert }}</p>
+      </div>
+    </div>
+  </div>
+
+  <p v-else class="text-sm text-gray-500">No certification(s) added.</p>
+</div>
+
 
                             <!-- Specializations -->
                             <div>
@@ -241,391 +249,389 @@
                     </div>
                 </div>
             </div>
-            <!-- Edit Profile Modal -->
             <div
             v-if="showEditModal"
             class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
             >
-            <div class="max-w-4xl w-full mx-auto bg-white rounded-2xl shadow-2xl relative my-auto">
-                <div class="bg-white rounded-2xl p-6 mb-6 overflow-y-auto max-h-[80vh]">
-                    <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                            <span class="material-symbols-outlined">edit</span> Edit MUA Profile
-                        </h1>
-                        <button @click="closeEditModal" type="button" class="text-gray-500 hover:text-gray-700 transition-colors">
-                            <span class="material-symbols-outlined">close</span>
-                        </button>
-                    </div>
-                    <form class="space-y-8 overflow-y-auto">
-                        <div class="space-y-6">
-                            <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
-                                Basic Information
-                            </h2>
-                            <div class="flex flex-col md:flex-row gap-6">
-                                <div class="w-full md:w-1/3 flex flex-col items-center">
-                                    <div
-                                        class="relative group w-40 h-40 rounded-full overflow-hidden border-4 border-primary-100 hover:border-primary-300 transition-all duration-300"
-                                    >
-                                        <div
-                                            class="w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center"
-                                        >
-                                            <span class="text-4xl">👤</span>
-                                        </div>
-                                        <div
-                                            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                        >
-                                            <button
-                                                type="button"
-                                                class="bg-white rounded-full p-2 hover:bg-primary-100 transition-colors"
-                                            >
-                                                <span class="material-symbols-outlined">add_a_photo</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-gray-500 mt-2">Upload Profile Photo</p>
-                                </div>
-                                <div class="w-full md:w-2/3 space-y-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
-                                                >Brand Name</label
-                                            >
-                                            <input
-                                                type="text"
-                                                v-model="editForm.name"
-                                                id="name"
-                                                class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                                placeholder="Your MUA Brand Name"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1"
-                                                >Email</label
-                                            >
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                v-model="editForm.email"
-                                                class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                                placeholder="your.email@example.com"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1"
-                                                >Phone Number</label
-                                            >
-                                            <input
-                                                type="tel"
-                                                id="phone"
-                                                v-model="editForm.phone"
-                                                class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                                placeholder="+1 (234) 567-8901"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label
-                                                for="service-area"
-                                                class="block text-sm font-medium text-gray-700 mb-1"
-                                                >Service Area</label
-                                            >
-                                            <input
-                                                type="text"
-                                                id="service-area"
-                                                v-model="editForm.service_area"
-                                                class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                                placeholder="E.g., Los Angeles, CA"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-1"
-                                            >Professional Bio</label
-                                        >
-                                        <textarea
-                                            id="bio"
-                                            rows="4"
-                                            v-model="editForm.bio"
-                                            class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                            placeholder="Tell clients about yourself, your experience, and your makeup philosophy..."
-                                        ></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                        <label class="block text-sm font-medium text-gray-700">Certifications</label>
-                        <!-- Input dan Tambah -->
-                        <div class="flex items-center gap-2">
-                            <input
-                            type="text"
-                            v-model="newCertification"
-                            class="flex-1 px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                            placeholder="Add certification"
-                            />
-                            <button
-                            type="button"
-                            @click="addCertification"
-                            class="p-3 bg-pink-100 text-pink-800 rounded-full hover:bg-pink-200 transition-colors"
-                            >
-                            <span class="material-symbols-outlined">add</span>
+                <div class="max-w-4xl w-full mx-auto bg-white rounded-2xl shadow-2xl relative my-auto">
+                    <div class="bg-white rounded-2xl p-6 mb-6 overflow-y-auto max-h-[80vh]">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                <span class="material-symbols-outlined">edit</span> Edit MUA Profile
+                            </h1>
+                            <button @click="closeEditModal" type="button" class="text-gray-500 hover:text-gray-700 transition-colors">
+                                <span class="material-symbols-outlined">close</span>
                             </button>
                         </div>
-
-                        <!-- Daftar Certification -->
-                        <div v-if="editForm.certification.length" class="space-y-2">
-                            <div
-                            v-for="(cert, i) in editForm.certification"
-                            :key="i"
-                            class="flex items-center gap-3 p-3 rounded-xl bg-pink-50 hover:shadow-sm transition-shadow"
-                            >
-                            <div
-                                class="w-8 h-8 bg-pink-200 rounded-full flex items-center justify-center"
-                            >
-                                <span class="material-symbols-outlined text-sm text-pink-600">verified</span>
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-medium text-gray-800">{{ cert }}</p>
-                            </div>
-                            <button
-                                type="button"
-                                @click="removeCertification(i)"
-                                class="text-gray-400 hover:text-red-500 transition-colors"
-                            >
-                                <span class="material-symbols-outlined">delete</span>
-                            </button>
-                            </div>
-                        </div>
-                        <p v-else class="text-sm text-gray-500">No certifications added.</p>
-                        </div>
-                        <div class="space-y-6">
-                            <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
-                                Preferences &amp; Techniques
-                            </h2>
-                            <div class="grid grid-cols-1 md:grid-cols-3 text-gray-700 gap-6">
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-medium text-gray-700">Makeup Style</label>
-                                    <div class="space-y-2">
-                                        <div class="flex flex-wrap gap-4">
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="color_preference[]" value="Natural" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Natural</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="color_preference[]" value="Soft Glam" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Soft Glam</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="color_preference[]" value="Bold" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Bold</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="color_preference[]" value="Warm" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Warm</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="color_preference[]" value="Cool" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Cool</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-medium text-gray-700">Skin Tone Expertise</label>
-                                    <div class="space-y-2">
-                                        <div class="flex flex-wrap gap-4">
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="skin_tone[]" value="Fair" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Fair</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="skin_tone[]" value="Medium" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Medium</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="skin_tone[]" value="Olive" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Olive</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="skin_tone[]" value="Tan" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Tan</span>
-                                            </label>
-                                            <label class="inline-flex items-center">
-                                            <input type="checkbox" name="skin_tone[]" value="Deep" class="form-checkbox text-pink-600">
-                                            <span class="ml-2">Deep</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
-                                Availability Schedule
-                            </h2>
+                        <form class="space-y-8 overflow-y-auto">
                             <div class="space-y-6">
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-medium text-gray-700">Available Days</label>
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="monday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="monday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Monday
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="tuesday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="tuesday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Tuesday
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="wednesday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="wednesday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Wednesday
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="thursday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="thursday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Thursday
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="friday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="friday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Friday
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="saturday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="saturday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Saturday
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id="sunday"
-                                                class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                            />
-                                            <label
-                                                for="sunday"
-                                                class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                Sunday
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label for="start-time" class="block text-sm font-medium text-gray-700 mb-1"
-                                            >Available Start Time</label
+                                <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                                    Basic Information
+                                </h2>
+                                <div class="flex flex-col md:flex-row gap-6">
+                                    <div class="w-full md:w-1/3 flex flex-col items-center">
+                                        <div
+                                            class="relative group w-40 h-40 rounded-full overflow-hidden border-4 border-primary-100 hover:border-primary-300 transition-all duration-300"
                                         >
-                                        <div class="relative">
-                                            <input
-                                                type="time"
-                                                id="start-time"
-                                                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                            />
-                                            <span
-                                                class="absolute right-3 top-1/2 transform -translate-y-1/2 material-symbols-outlined text-gray-400"
+                                            <div
+                                                class="w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center"
                                             >
-                                                schedule
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="end-time" class="block text-sm font-medium text-gray-700 mb-1"
-                                            >Available End Time</label
-                                        >
-                                        <div class="relative">
-                                            <input
-                                                type="time"
-                                                id="end-time"
-                                                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                            />
-                                            <span
-                                                class="absolute right-3 top-1/2 transform -translate-y-1/2 material-symbols-outlined text-gray-400"
+                                                <span class="text-4xl">👤</span>
+                                            </div>
+                                            <div
+                                                class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                             >
-                                                schedule
-                                            </span>
+                                                <button
+                                                    type="button"
+                                                    class="bg-white rounded-full p-2 hover:bg-primary-100 transition-colors"
+                                                >
+                                                    <span class="material-symbols-outlined">add_a_photo</span>
+                                                </button>
+                                            </div>
                                         </div>
+                                        <p class="text-sm text-gray-500 mt-2">Upload Profile Photo</p>
                                     </div>
-                                </div>
-                                <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
-                                    <div class="flex items-start gap-2">
-                                        <span class="material-symbols-outlined text-yellow-600 mt-0.5">info</span>
-                                        <p class="text-sm text-gray-700">
-                                            Setting your availability helps clients know when they can book your
-                                            services. You can always update this information later.
-                                        </p>
+                                    <div class="w-full md:w-2/3 space-y-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+                                                    >Brand Name</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    v-model="editForm.name"
+                                                    id="name"
+                                                    class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                    placeholder="Your MUA Brand Name"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1"
+                                                    >Email</label
+                                                >
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    v-model="editForm.email"
+                                                    class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                    placeholder="your.email@example.com"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1"
+                                                    >Phone Number</label
+                                                >
+                                                <input
+                                                    type="tel"
+                                                    id="phone"
+                                                    v-model="editForm.phone"
+                                                    class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                    placeholder="+1 (234) 567-8901"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label
+                                                    for="service-area"
+                                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                                    >Service Area</label
+                                                >
+                                                <input
+                                                    type="text"
+                                                    id="service-area"
+                                                    v-model="editForm.service_area"
+                                                    class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                    placeholder="E.g., Los Angeles, CA"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="bio" class="block text-sm font-medium text-gray-700 mb-1"
+                                                >Professional Bio</label
+                                            >
+                                            <textarea
+                                                id="bio"
+                                                rows="4"
+                                                v-model="editForm.bio"
+                                                class="w-full px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                placeholder="Tell clients about yourself, your experience, and your makeup philosophy..."
+                                            ></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex flex-col md:flex-row gap-4 pt-4 border-t border-gray-200">
-                            <button
-                                type="submit"
-                                class="flex-1 bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors transform hover:-translate-y-1 duration-300"
-                            >
-                                <span class="material-symbols-outlined text-sm mr-2">save</span> Save Changes
-                            </button>
-                            <button
+                            <div class="space-y-6">
+                            <label class="block text-sm font-medium text-gray-700">Certifications</label>
+                            <!-- Input dan Tambah -->
+                            <div class="flex items-center gap-2">
+                                <input
+                                type="text"
+                                v-model="newCertification"
+                                class="flex-1 px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                placeholder="Add certification"
+                                />
+                                <button
                                 type="button"
-                                @click="closeEditModal"
-                                class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-xl font-medium hover:bg-gray-300 transition-colors transform hover:-translate-y-1 duration-300"
-                            >
-                                <span class="material-symbols-outlined text-sm mr-2">cancel</span> Cancel
-                            </button>
-                        </div>
-                    </form>
+                                @click="addCertification"
+                                class="p-3 bg-pink-100 text-pink-800 rounded-full hover:bg-pink-200 transition-colors"
+                                >
+                                <span class="material-symbols-outlined">add</span>
+                                </button>
+                            </div>
+
+                            <!-- Daftar Certification -->
+                            <div v-if="editForm.certification.length" class="space-y-2">
+                                <div
+                                v-for="(cert, i) in editForm.certification"
+                                :key="i"
+                                class="flex items-center gap-3 p-3 rounded-xl bg-pink-50 hover:shadow-sm transition-shadow"
+                                >
+                                <div
+                                    class="w-8 h-8 bg-pink-200 rounded-full flex items-center justify-center"
+                                >
+                                    <span class="material-symbols-outlined text-sm text-pink-600">verified</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-800">{{ cert }}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    @click="removeCertification(i)"
+                                    class="text-gray-400 hover:text-red-500 transition-colors"
+                                >
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                                </div>
+                            </div>
+                            <p v-else class="text-sm text-gray-500">No certifications added.</p>
+                            </div>
+                            <div class="space-y-6">
+                                <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                                    Preferences &amp; Techniques
+                                </h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 text-gray-700 gap-6">
+                                    <div class="space-y-4">
+                                        <label class="block text-sm font-medium text-gray-700">Makeup Style</label>
+                                        <div class="space-y-2">
+                                            <div class="flex flex-wrap gap-4">
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="color_preference[]" value="Natural" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Natural</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="color_preference[]" value="Soft Glam" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Soft Glam</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="color_preference[]" value="Bold" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Bold</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="color_preference[]" value="Warm" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Warm</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="color_preference[]" value="Cool" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Cool</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <label class="block text-sm font-medium text-gray-700">Skin Tone Expertise</label>
+                                        <div class="space-y-2">
+                                            <div class="flex flex-wrap gap-4">
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="skin_tone[]" value="Fair" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Fair</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="skin_tone[]" value="Medium" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Medium</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="skin_tone[]" value="Olive" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Olive</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="skin_tone[]" value="Tan" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Tan</span>
+                                                </label>
+                                                <label class="inline-flex items-center">
+                                                <input type="checkbox" name="skin_tone[]" value="Deep" class="form-checkbox text-pink-600">
+                                                <span class="ml-2">Deep</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-6">
+                                <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                                    Availability Schedule
+                                </h2>
+                                <div class="space-y-6">
+                                    <div class="space-y-4">
+                                        <label class="block text-sm font-medium text-gray-700">Available Days</label>
+                                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="monday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="monday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Monday
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="tuesday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="tuesday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Tuesday
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="wednesday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="wednesday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Wednesday
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="thursday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="thursday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Thursday
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="friday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="friday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Friday
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="saturday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="saturday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Saturday
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id="sunday"
+                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
+                                                />
+                                                <label
+                                                    for="sunday"
+                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    Sunday
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label for="start-time" class="block text-sm font-medium text-gray-700 mb-1"
+                                                >Available Start Time</label
+                                            >
+                                            <div class="relative">
+                                                <input
+                                                    type="time"
+                                                    id="start-time"
+                                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                />
+                                                <span
+                                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 material-symbols-outlined text-gray-400"
+                                                >
+                                                    schedule
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="end-time" class="block text-sm font-medium text-gray-700 mb-1"
+                                                >Available End Time</label
+                                            >
+                                            <div class="relative">
+                                                <input
+                                                    type="time"
+                                                    id="end-time"
+                                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                                />
+                                                <span
+                                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 material-symbols-outlined text-gray-400"
+                                                >
+                                                    schedule
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                                        <div class="flex items-start gap-2">
+                                            <span class="material-symbols-outlined text-yellow-600 mt-0.5">info</span>
+                                            <p class="text-sm text-gray-700">
+                                                Setting your availability helps clients know when they can book your
+                                                services. You can always update this information later.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col md:flex-row gap-4 pt-4 border-t border-gray-200">
+                                <button
+                                    type="submit"
+                                    class="flex-1 bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors transform hover:-translate-y-1 duration-300"
+                                >
+                                    <span class="material-symbols-outlined text-sm mr-2">save</span> Save Changes
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="closeEditModal"
+                                    class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-xl font-medium hover:bg-gray-300 transition-colors transform hover:-translate-y-1 duration-300"
+                                >
+                                    <span class="material-symbols-outlined text-sm mr-2">cancel</span> Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-</div>
-
         </div>
     </div>
     <!-- Modal Add Image Portfolio -->
@@ -675,13 +681,20 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { apiFetch } from '@/config'
 
+const showEditModal = ref(false)
+function closeEditModal() {
+  showEditModal.value = false
+}
 const userId = localStorage.getItem('user_id')
 const profile = ref(null)
+const parsedSkinTypes = ref([])
+const parsedMakeupStyles = ref([])
 const parsedCertifications = ref([])
 const parsedSpecializations = ref([])
-const certColors = ['pink', 'purple', 'yellow']
+const customColors = ['pink', 'purple', 'yellow']
 
 function getBg(index) {
     return `bg-${customColors[index % customColors.length]}-100`
@@ -693,23 +706,10 @@ function getIconColor(index) {
     return `text-${customColors[index % customColors.length]}-600`
 }
 
-
+// fetch data Profile
 onMounted(async () => {
-  const token = localStorage.getItem('token')
-  const userId = localStorage.getItem('user_id')
-
   try {
-    const res = await fetch(`http://localhost:8000/api/mua/profile/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch profile data')
-    }
-
-    const data = await res.json()
+    const data = await apiFetch(`/mua/profile/${userId}`, {});
     profile.value = data
 
     if (data.mua_profile?.certification) {
@@ -727,8 +727,99 @@ onMounted(async () => {
         parsedSpecializations.value = [data.mua_profile.makeup_specializations]
       }
     }
+
+    if (data.mua_profile?.makeup_styles) {
+        try {
+            parsedMakeupStyles.value = JSON.parse(data.mua_profile.makeup_styles)
+        } catch (e) {
+            parsedMakeupStyles.value = [data.mua_profile.makeup_styles]
+        }
+    }
+
+    if (data.mua_profile?.skin_type) {
+        try {
+            parsedSkinTypes.value = JSON.parse(data.mua_profile.skin_type)
+        } catch (e) {
+            parsedSkinTypes.value = [data.mua_profile.skin_type]
+        }
+    }
   } catch (err) {
-    console.error('Error updating profile:', err)
+    console.error('Error loading profile:', err)
   }
 })
+
+// Upload Image Portfolio
+const isModalOpen = ref(false)
+const previewUrl = ref(null)
+const selectedFile = ref(null)
+const fileInput = ref(null)
+
+const triggerFileInput = () => {
+    fileInput.value?.click()
+}
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file && file.type.startsWith('image/')) {
+        selectedFile.value = file
+        previewUrl.value = URL.createObjectURL(file)
+    }
+}
+
+function openEditModal() {
+  if (profile.value) {
+    editForm.name = profile.value.name || ''
+    editForm.email = profile.value.email || ''
+    editForm.phone = profile.value.phone || ''
+    editForm.service_area = profile.value.mua_profile?.service_area || ''
+    editForm.bio = profile.value.mua_profile?.bio || ''
+    editForm.certification = parsedCertifications.value || []
+    editForm.makeup_specializations = parsedSpecializations.value || []
+  }
+  showEditModal.value = true
+}
+
+const editForm = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    bio: '',
+    certification: [''],
+    service_area: '',
+    studio_lat: '',
+    studio_lng: '',
+    available_days: [],
+    available_start_time: '',
+    available_end_time: '',
+    makeup_specializations: [],
+    makeup_styles: [],
+    skin_type: [],
+    profile_photo: null
+})
+
+const removeImage = () => {
+    selectedFile.value = null
+    previewUrl.value = null
+    fileInput.value.value = ''
+}
+
+const uploadPhoto = async () => {
+    if (!selectedFile.value) return
+
+    const formData = new FormData()
+    formData.append('file', selectedFile.value)
+
+    try {
+        await apiFetch(`/mua/portfolio/upload/${userId}`, {
+            method: 'POST',
+            body: formData
+        })
+
+        alert('Upload successful!')
+        isModalOpen.value = false
+        removeImage()
+    } catch (err) {
+        alert('Upload failed: ' + err.message)
+    }
+}
 </script>
