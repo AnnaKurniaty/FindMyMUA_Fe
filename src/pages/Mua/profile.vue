@@ -85,33 +85,26 @@
                         <!-- Certifications -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-  <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
+                                <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
 
-  <div v-if="parsedCertifications.length" class="space-y-4">
-    <div
-      v-for="(cert, i) in parsedCertifications"
-      :key="i"
-      class="flex items-center gap-3 p-4 rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow transition-shadow"
-    >
-      <!-- Icon -->
-      <div
-        class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"
-      >
-        <span class="material-symbols-outlined text-green-600 text-base">
-          verified
-        </span>
-      </div>
+                                <div v-if="parsedCertifications.length" class="space-y-3">
+                                    <div v-for="(cert, i) in parsedCertifications" :key="i"
+                                        class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
+                                        :class="getBg(i)">
+                                        <div :class="getIconBg(i)"
+                                            class="w-8 h-8 rounded-full flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
+                                                verified
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-800">{{ cert }}</p>
+                                        </div>
+                                    </div>
+                                </div>
 
-      <!-- Text -->
-      <div>
-        <p class="text-sm text-gray-800 font-medium">{{ cert }}</p>
-      </div>
-    </div>
-  </div>
-
-  <p v-else class="text-sm text-gray-500">No certification(s) added.</p>
-</div>
-
+                                <p v-else class="text-sm text-gray-500">No certification(s) added.</p>
+                            </div>
 
                             <!-- Specializations -->
                             <div>
@@ -251,9 +244,9 @@
             </div>
             <div
             v-if="showEditModal"
-            class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
+            class="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm flex items-center justify-center"
             >
-                <div class="max-w-4xl w-full mx-auto bg-white rounded-2xl shadow-2xl relative my-auto">
+                <div class="max-w-4xl w-full mx-auto bg-white rounded-2xl shadow-2xl relative my-auto overflow-y-auto">
                     <div class="bg-white rounded-2xl p-6 mb-6 overflow-y-auto max-h-[80vh]">
                         <div class="flex justify-between items-center mb-6">
                             <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -409,58 +402,32 @@
                                     Preferences &amp; Techniques
                                 </h2>
                                 <div class="grid grid-cols-1 md:grid-cols-3 text-gray-700 gap-6">
-                                    <div class="space-y-4">
+                                    <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700">Makeup Style</label>
-                                        <div class="space-y-2">
-                                            <div class="flex flex-wrap gap-4">
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="color_preference[]" value="Natural" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Natural</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="color_preference[]" value="Soft Glam" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Soft Glam</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="color_preference[]" value="Bold" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Bold</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="color_preference[]" value="Warm" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Warm</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="color_preference[]" value="Cool" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Cool</span>
-                                                </label>
-                                            </div>
+                                        <div class="flex flex-wrap gap-4 mt-2">
+                                            <label v-for="style in ['Natural', 'Soft Glam', 'Bold', 'Warm', 'Cool']" :key="style" class="inline-flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                class="form-checkbox text-pink-600"
+                                                :value="style"
+                                                v-model="editForm.makeup_styles"
+                                            />
+                                            <span class="ml-2">{{ style }}</span>
+                                            </label>
                                         </div>
                                     </div>
-                                    <div class="space-y-4">
-                                        <label class="block text-sm font-medium text-gray-700">Skin Tone Expertise</label>
-                                        <div class="space-y-2">
-                                            <div class="flex flex-wrap gap-4">
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="skin_tone[]" value="Fair" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Fair</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="skin_tone[]" value="Medium" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Medium</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="skin_tone[]" value="Olive" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Olive</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="skin_tone[]" value="Tan" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Tan</span>
-                                                </label>
-                                                <label class="inline-flex items-center">
-                                                <input type="checkbox" name="skin_tone[]" value="Deep" class="form-checkbox text-pink-600">
-                                                <span class="ml-2">Deep</span>
-                                                </label>
-                                            </div>
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700">Skin Tone</label>
+                                        <div class="flex flex-wrap gap-4 mt-2">
+                                            <label v-for="style in ['Oily', 'Normal', 'Dry', 'Combination', 'Sensitif']" :key="style" class="inline-flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                class="form-checkbox text-pink-600"
+                                                :value="style"
+                                                v-model="editForm.skin_type"
+                                            />
+                                            <span class="ml-2">{{ style }}</span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -469,103 +436,26 @@
                                 <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
                                     Availability Schedule
                                 </h2>
-                                <div class="space-y-6">
+                                <div class="space-y-6 text-gray-700">
                                     <div class="space-y-4">
-                                        <label class="block text-sm font-medium text-gray-700">Available Days</label>
-                                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="monday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="monday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Monday
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="tuesday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="tuesday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Tuesday
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="wednesday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="wednesday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Wednesday
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="thursday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="thursday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Thursday
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="friday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="friday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Friday
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="saturday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="saturday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Saturday
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="sunday"
-                                                    class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mr-2"
-                                                />
-                                                <label
-                                                    for="sunday"
-                                                    class="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-                                                >
-                                                    Sunday
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+  <label class="block text-sm font-medium text-gray-700">Available Days</label>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+    <label
+      v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
+      :key="day"
+      class="inline-flex items-center"
+    >
+      <input
+        type="checkbox"
+        class="form-checkbox text-pink-600"
+        :value="day"
+        v-model="editForm.available_days"
+      />
+      <span class="ml-2">{{ day }}</span>
+    </label>
+  </div>
+</div>
+
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label for="start-time" class="block text-sm font-medium text-gray-700 mb-1"
@@ -575,6 +465,7 @@
                                                 <input
                                                     type="time"
                                                     id="start-time"
+                                                    v-model="editForm.available_start_time"
                                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
                                                 />
                                                 <span
@@ -591,6 +482,7 @@
                                             <div class="relative">
                                                 <input
                                                     type="time"
+                                                    v-model="editForm.available_end_time"
                                                     id="end-time"
                                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
                                                 />
@@ -694,6 +586,7 @@ const parsedSkinTypes = ref([])
 const parsedMakeupStyles = ref([])
 const parsedCertifications = ref([])
 const parsedSpecializations = ref([])
+const parsedAvailableDays = ref([])
 const customColors = ['pink', 'purple', 'yellow']
 
 function getBg(index) {
@@ -743,6 +636,14 @@ onMounted(async () => {
             parsedSkinTypes.value = [data.mua_profile.skin_type]
         }
     }
+
+    if (data.mua_profile?.available_days) {
+        try {
+            parsedAvailableDays.value = JSON.parse(data.mua_profile.available_days)
+        } catch (e) {
+            parsedAvailableDays.value = [data.mua_profile.available_days]
+        }
+    }
   } catch (err) {
     console.error('Error loading profile:', err)
   }
@@ -771,10 +672,15 @@ function openEditModal() {
     editForm.name = profile.value.name || ''
     editForm.email = profile.value.email || ''
     editForm.phone = profile.value.phone || ''
+    editForm.available_start_time = profile.value.available_start_time || ''
+    editForm.available_end_time = profile.value.available_end_time || ''
     editForm.service_area = profile.value.mua_profile?.service_area || ''
     editForm.bio = profile.value.mua_profile?.bio || ''
     editForm.certification = parsedCertifications.value || []
     editForm.makeup_specializations = parsedSpecializations.value || []
+    editForm.makeup_styles = parsedMakeupStyles.value || []
+    editForm.skin_type = parsedSkinTypes.value || []
+    editForm.available_days = parsedAvailableDays.value || []
   }
   showEditModal.value = true
 }

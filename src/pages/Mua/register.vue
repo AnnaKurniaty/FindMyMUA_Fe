@@ -244,12 +244,12 @@ const form = reactive({
     service_area: '',
     studio_lat: '',
     studio_lng: '',
-    available_days: [],
+    available_days: [''],
     available_start_time: '',
     available_end_time: '',
-    makeup_specializations: [],
-    makeup_styles: [],
-    skin_type: [],
+    makeup_specializations: [''],
+    makeup_styles: [''],
+    skin_type: [''],
     profile_photo: null
 })
 
@@ -257,8 +257,6 @@ const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const specializations = ['Bridal', 'Pre-wedding', 'Graduation', 'Party', 'Content Creator', 'Regular']
 const styles = ['Neutrals', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
 const skin = ['Dry', 'Oily', 'Combination', 'Sensitive', 'Normal']
-
-const imagePreview = ref(null)
 
 const showPassword = ref(false)
 const passwordWarning = ref('')
@@ -308,14 +306,6 @@ watch(
 
 function togglePassword() {
     showPassword.value = !showPassword.value
-}
-
-function handleFileUpload(event) {
-    form.profile_photo = event.target.files[0]
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-        imagePreview.value = URL.createObjectURL(file)
-    }
 }
 
 function addCertification() {

@@ -862,6 +862,14 @@ img,
 
 }
 
+#webcrumbs .w-20 {
+        width: 80px;
+    }
+
+#webcrumbs .h-20 {
+        height: 80px;
+    }
+
 #webcrumbs .md\:flex {display: flex;}
 
 #webcrumbs .md\:w-1\/2 {width: 50%;}

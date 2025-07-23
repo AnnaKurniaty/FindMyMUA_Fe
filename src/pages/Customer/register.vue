@@ -1,7 +1,7 @@
 <template>
     <div id="webcrumbs">
         <div
-            class="w-full min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center px-4 py-10"
+            class="w-full min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center px-4 py-10 text-gray-700"
         >
             <div
                 class="w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row"
@@ -68,6 +68,20 @@
                                 <p class="text-xs text-pink-600">Password must be at least 8 characters long</p>
                             </div>
                             <div class="space-y-2">
+                                <label class="block text-pink-800 font-medium">Password</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
+                                        <span class="material-symbols-outlined text-sm">lock</span>
+                                    </span>
+                                    <input
+                                        type="password"
+                                        class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
+                                        placeholder="Create a password"
+                                        v-model="form.password_confirmation"
+                                    />
+                                </div>
+                            </div>
+                            <div class="space-y-2">
                                 <label class="block text-pink-800 font-medium">Phone Number</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
@@ -79,6 +93,47 @@
                                         placeholder="Enter your phone number"
                                         v-model="form.phone"
                                     />
+                                </div>
+                            </div>
+                            <div class="space-y-2 mt-4">
+                                <label class="block text-pink-800 font-medium">Address</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
+                                        <span class="material-symbols-outlined text-sm">location_on</span>
+                                    </span>
+                                    <textarea
+                                        class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors resize-none"
+                                        rows="2"
+                                        v-model="form.address"
+                                        placeholder="Enter your complete address"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div class="space-y-2 mt-4">
+                                <label class="block text-pink-800 font-medium">Studio Location</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
+                                            <span class="material-symbols-outlined text-sm">public</span>
+                                        </span>
+                                        <input
+                                            type="text"
+                                            class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
+                                            placeholder="Studio Latitude"
+                                            v-model="form.studio_lat"
+                                        />
+                                    </div>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
+                                            <span class="material-symbols-outlined text-sm">public</span>
+                                        </span>
+                                        <input
+                                            type="text"
+                                            class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
+                                            placeholder="Studio Longitude"
+                                            v-model="form.studio_lng"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <div class="space-y-2">
@@ -112,13 +167,14 @@
                                                 v-for="option  in skin"
                                                 :key="option "
                                                 type="button"
-                                                @click="form.skin_type = option "
+                                                @click="toggleSelection(form.skin_type, option)"
                                                 :class="[
                                                 'px-4 py-2 rounded-full transition-all',
-                                                form.skin_type === option 
+                                                form.skin_type.includes(option)
                                                     ? 'bg-[#D56E6E] text-white'
                                                     : 'bg-[#D56E6E]/20 text-[#D56E6E] hover:bg-[#D56E6E]/30'
                                                 ]"
+
                                             >
                                                 {{ option  }}
                                             </button>
@@ -174,10 +230,10 @@
                                                 v-for="option  in styles"
                                                 :key="option "
                                                 type="button"
-                                                @click="form.makeup_preferences = option "
+                                                @click="toggleSelection(form.makeup_preferences, option)"
                                                 :class="[
                                                 'px-4 py-2 rounded-full transition-all',
-                                                form.makeup_preferences === option 
+                                                form.makeup_preferences.includes(option)
                                                     ? 'bg-[#D56E6E] text-white'
                                                     : 'bg-[#D56E6E]/20 text-[#D56E6E] hover:bg-[#D56E6E]/30'
                                                 ]"
@@ -279,98 +335,148 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import router from '@/router'
+import { config, apiFetch } from '@/config'
+import { reactive, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const specializations = ['Bridal', 'Pre-wedding', 'Graduation', 'Party', 'Content Creator', 'Regular']
 const styles = ['Neutrals', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
 const skin = ['Dry', 'Oily', 'Combination', 'Sensitive', 'Normal']
 
-const form = ref({
+const form = reactive({
   name: '',
   email: '',
   phone: '',
   password: '',
   password_confirmation: '',
+  address: '',
+  studio_lat: '',
+  studio_lng: '',
   profile_photo: null,
-  skin_type: '',
+  skin_type: [''],
   skin_tone: '',
   skincare_history: '',
   allergies: '',
-  makeup_preferences: '',
+  makeup_preferences: [''],
   skin_issues: ''
 })
 
-const uploading = ref(false)
-const error = ref(null)
+const showPassword = ref(false)
+const passwordWarning = ref('')
+const passwordMismatch = ref(false)
 
-const handleFileChange = (e) => {
-  form.value.profile_photo = e.target.files[0]
+const fileInput = ref(null)
+const previewUrl = ref(null)
+const selectedFile = ref(null)
+
+const triggerFileInput = () => {
+    fileInput.value.click()
 }
 
-const handleSubmit = async () => {
-  uploading.value = true
-  error.value = null
+const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        form.profile_photo = file
+        selectedFile.value = file
+        previewUrl.value = URL.createObjectURL(file)
+    }
+}
 
-  try {
-    // Step 1: Register User
-    const regRes = await fetch('http://localhost:8000/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: form.value.name,
-        email: form.value.email,
-        phone: form.value.phone,
-        password: form.value.password,
-        password_confirmation: form.value.password_confirmation
-      })
-    })
+const removeImage = () => {
+    selectedFile.value = null
+    previewUrl.value = null
+    fileInput.value.value = null
+}
 
-    if (!regRes.ok) {
-      const err = await regRes.json()
-      throw new Error(err.message || 'Failed to register')
+watch(
+    () => form.password,
+    (newVal) => {
+        if (newVal.length > 0 && newVal.length < 6) {
+            passwordWarning.value = 'Password must be at least 6 characters'
+        } else {
+            passwordWarning.value = ''
+        }
+        passwordMismatch.value = form.password_confirmation !== form.password
+    }
+)
+
+watch(
+    () => form.password_confirmation,
+    (newVal) => {
+        passwordMismatch.value = newVal !== form.password
+    }
+)
+
+function toggleSelection(array, value) {
+    const index = array.indexOf(value)
+    if (index > -1) {
+        array.splice(index, 1) // hapus jika sudah ada
+    } else {
+        array.push(value) // tambah jika belum ada
+    }
+}
+
+function getLocation() {
+    if (!navigator.geolocation) return alert('Geolocation not supported')
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            form.studio_lat = pos.coords.latitude
+            form.studio_lng = pos.coords.longitude
+        },
+        () => alert('Failed to get location')
+    )
+}
+
+async function handleSubmit() {
+    if (form.password !== form.password_confirmation) {
+        passwordMismatch.value = true
+        return
     }
 
-    const regData = await regRes.json()
-    const token = regData.access_token || regData.token
+    try {
+        await apiFetch('/auth/register/customer', {
+            method: 'POST',
+            body: JSON.stringify(form)
+        });
+        
+        const loginResult = await apiFetch('/auth/login/customer', {
+            method: 'POST',
+            body: JSON.stringify(form)
+        });
 
-    if (!token) throw new Error('No token returned from register.')
+        localStorage.setItem('token', loginResult.access_token)
+        localStorage.setItem('user', JSON.stringify(loginResult.user))
+        localStorage.setItem('user_id', loginResult.user.id)
 
-    // Step 2: Upload Profile
-    const profileForm = new FormData()
-    profileForm.append('skin_type', form.value.skin_type)
-    profileForm.append('skin_tone', form.value.skin_tone)
-    profileForm.append('skincare_history', form.value.skincare_history)
-    profileForm.append('allergies', form.value.allergies)
-    profileForm.append('makeup_preferences', form.value.makeup_preferences)
-    profileForm.append('skin_issues[]', form.value.skin_issues)
-    if (form.value.profile_photo) {
-      profileForm.append('profile_photo', form.value.profile_photo)
+        const formData = new FormData()
+        formData.append('address', form.address)
+        formData.append('studio_lat', form.studio_lat)
+        formData.append('studio_lng', form.studio_lng)
+        form.skin_type.forEach((item, index) => {
+        formData.append(`skin_type[${index}]`, item)
+        })
+        form.makeup_preferences.forEach((item, index) => {
+            formData.append(`makeup_preferences[${index}]`, item)
+        })
+        formData.append('skin_tone', form.skin_tone)
+        formData.append('skincare_history',form.skincare_history)
+        formData.append('allergies', form.allergies)
+        formData.append('skin_issues', form.skin_issues)
+        if (form.profile_photo)
+            formData.append('profile_photo', form.profile_photo)
+
+        await apiFetch('/customer/profile', {
+            method: 'POST',
+            body: formData
+        });
+
+        alert(`Customer's Account Created!`)
+        router.push('/')
+    } catch (err) {
+        console.error(err)
+        alert('Maaf sedang terjadi masalah, silahkan coba lagi.')
     }
-
-    const profileRes = await fetch('http://localhost:8000/api/profile', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: profileForm
-    })
-
-    if (!profileRes.ok) {
-      const err = await profileRes.json()
-      throw new Error(err.message || 'Failed to submit profile')
-    }
-
-    alert('Account created successfully!')
-    router.push('/login/cus')
-
-  } catch (err) {
-    console.error(err)
-    error.value = err.message
-  } finally {
-    uploading.value = false
-  }
 }
 </script>

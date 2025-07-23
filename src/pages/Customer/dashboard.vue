@@ -1,64 +1,6 @@
 <template
     ><div id="webcrumbs">
         <div class="w-full mx-auto bg-gradient-to-br from-pink-50 to-rose-50 min-h-screen">
-            <nav class="bg-white shadow-lg border-b border-pink-100 px-6 py-4">
-                <div class="flex items-center justify-between max-w-7xl mx-auto">
-                    <div class="flex items-center space-x-8">
-                        <div class="flex items-center space-x-2">
-                            <div
-                                class="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full flex items-center justify-center"
-                            >
-                                <span class="material-symbols-outlined text-white text-sm"
-                                    >face_retouching_natural</span
-                                >
-                            </div>
-                            <span class="text-xl font-bold text-gray-800">Wezz Beauty</span>
-                        </div>
-                        <div class="hidden md:flex space-x-6">
-                            <a
-                                href="#"
-                                class="text-gray-700 hover:text-pink-600 transition-colors duration-200 font-medium"
-                                >Home</a
-                            >
-                            <a
-                                href="#"
-                                class="text-gray-700 hover:text-pink-600 transition-colors duration-200 font-medium"
-                                >Browse MUAs</a
-                            >
-                            <a
-                                href="#"
-                                class="text-gray-700 hover:text-pink-600 transition-colors duration-200 font-medium"
-                                >Services</a
-                            >
-                            <a
-                                href="#"
-                                class="text-gray-700 hover:text-pink-600 transition-colors duration-200 font-medium"
-                                >About</a
-                            >
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button
-                            class="hidden md:block text-gray-700 hover:text-pink-600 transition-colors duration-200 font-medium"
-                        >
-                            Sign In
-                        </button>
-                        <button
-                                class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                                @click="goToRegisterCus">
-                                Join Now
-                            </button>
-                            <button
-                                class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                                @click="goToRegisterMua">
-                                Be Our Partner
-                            </button>
-                        <button class="md:hidden">
-                            <span class="material-symbols-outlined text-gray-700">menu</span>
-                        </button>
-                    </div>
-                </div>
-            </nav>
             <div class="max-w-7xl mx-auto px-6 py-8">
                 <div class="text-center mb-8">
                     <h1 class="text-4xl font-bold text-gray-800 mb-4">Find Your Perfect Makeup Artist</h1>
