@@ -74,7 +74,7 @@
             <div class="space-y-2">
               <div class="flex justify-between">
                 <label class="block text-pink-800 font-medium">Password</label>
-                <a href="#" class="text-[#D56E6E] text-sm hover:underline">Forgot password?</a>
+                <!-- <a href="#" class="text-[#D56E6E] text-sm hover:underline">Forgot password?</a> -->
               </div>
               <div class="relative">
                 <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
@@ -88,15 +88,6 @@
                   required
                 />
               </div>
-            </div>
-
-            <div class="flex items-center">
-              <input
-                type="checkbox"
-                id="remember"
-                class="w-4 h-4 text-[#D56E6E] border-2 border-pink-200 rounded focus:ring-[#D56E6E]"
-              />
-              <label for="remember" class="ml-2 text-pink-700">Remember me</label>
             </div>
 
             <button

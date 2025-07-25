@@ -412,9 +412,9 @@ watch(
 function toggleSelection(array, value) {
     const index = array.indexOf(value)
     if (index > -1) {
-        array.splice(index, 1) // hapus jika sudah ada
+        array.splice(index, 1)
     } else {
-        array.push(value) // tambah jika belum ada
+        array.push(value)
     }
 }
 
@@ -473,7 +473,7 @@ async function handleSubmit() {
         });
 
         alert(`Customer's Account Created!`)
-        router.push('/')
+        router.push('/home')
     } catch (err) {
         console.error(err)
         alert('Maaf sedang terjadi masalah, silahkan coba lagi.')

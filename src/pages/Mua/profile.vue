@@ -22,10 +22,6 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-4">
                                 <div class="flex items-center gap-4">
-                                    <div
-                                        class="w-16 h-16 bg-gradient-to-r from-pink-200 to-purple-200 rounded-full flex items-center justify-center">
-                                        <span class="text-2xl">{{ profile?.profile_photo || '👤' }}</span>
-                                    </div>
                                     <div>
                                         <h3 class="font-semibold text-gray-800">{{ profile?.name || 'Loading...' }}
                                         </h3>
@@ -186,57 +182,76 @@
                         </h3>
                         <div class="grid grid-cols-2 gap-3 mb-4">
                             <div
-                                class="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
-                                <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
-                                <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-gradient-to-br from-yellow-100 to-pink-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
-                                <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-gradient-to-br from-pink-100 to-yellow-100 rounded-xl flex items-center justify-center hover:shadow-sm transition-shadow">
-                                <span class="material-symbols-outlined text-gray-400 text-2xl">image</span>
+                                v-for="(service, index) in services"
+                                :key="index"
+                                class="aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                <img
+                                v-if="service.photo"
+                                :src="service.photo"
+                                alt="Portfolio Image"
+                                class="w-full h-full object-cover"
+                                loading="lazy"
+                                />
+                                <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+                                <span class="material-symbols-outlined text-2xl">image_not_supported</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="space-y-2">
+
+                        <!-- <div class="space-y-2">
                             <button @click="isModalOpen = true"
                                 class="w-full bg-pink-100 text-pink-800 px-4 py-3 rounded-xl font-medium hover:bg-pink-200 transition-colors">
                                 <span class="material-symbols-outlined text-sm mr-2">add_photo_alternate</span>
                                 Add Photos
                             </button>
-                            <button
-                                class="w-full bg-purple-100 text-purple-800 px-4 py-3 rounded-xl font-medium hover:bg-purple-200 transition-colors">
-                                <span class="material-symbols-outlined text-sm mr-2">folder_open</span>
-                                Manage Gallery
-                            </button>
-                        </div>
+                        </div> -->
                     </div>
 
-                    <!-- STATISTICS Section -->
-                    <div class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
-                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                            <span class="material-symbols-outlined">trending_up</span> Profile Statistics
-                        </h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-700">Profile Views</span>
-                                <span class="font-bold text-gray-800">124</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-700">Bookings This Month</span>
-                                <span class="font-bold text-gray-800">18</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-700">Portfolio Likes</span>
-                                <span class="font-bold text-gray-800">89</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-700">Client Reviews</span>
-                                <span class="font-bold text-gray-800">4.9 ⭐</span>
+                    <div class="space-y-6">
+                        <div
+                            class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300"
+                        >
+                            <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined">schedule</span> Availability Schedule
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-gray-800">Days</h4>
+                                    <button
+                                        class="text-primary-600 text-sm hover:text-primary-800 transition-colors flex items-center"
+                                    >
+                                        <span class="material-symbols-outlined text-sm mr-1">edit</span> Edit
+                                    </button>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
+                                        >Monday</span
+                                    >
+                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
+                                        >Tuesday</span
+                                    >
+                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
+                                        >Thursday</span
+                                    >
+                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
+                                        >Friday</span
+                                    >
+                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">Wednesday</span>
+                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">Saturday</span>
+                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">Sunday</span>
+                                </div>
+                                <div class="pt-4 border-t border-gray-100">
+                                    <h4 class="font-semibold text-gray-800 mb-3">Hours</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-3">
+                                            <span class="material-symbols-outlined text-pink-600 text-sm">schedule</span>
+                                            <div>
+                                                <p class="text-sm text-gray-600">9:00 AM - 5:00 PM</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -256,7 +271,7 @@
                                 <span class="material-symbols-outlined">close</span>
                             </button>
                         </div>
-                        <form class="space-y-8 overflow-y-auto">
+                        <form class="space-y-8 overflow-y-auto" @submit.prevent="saveEdit">
                             <div class="space-y-6">
                                 <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
                                     Basic Information
@@ -358,17 +373,10 @@
                             <div class="flex items-center gap-2">
                                 <input
                                 type="text"
-                                v-model="newCertification"
+                                v-model="editForm.certification"
                                 class="flex-1 px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
                                 placeholder="Add certification"
                                 />
-                                <button
-                                type="button"
-                                @click="addCertification"
-                                class="p-3 bg-pink-100 text-pink-800 rounded-full hover:bg-pink-200 transition-colors"
-                                >
-                                <span class="material-symbols-outlined">add</span>
-                                </button>
                             </div>
 
                             <!-- Daftar Certification -->
@@ -438,23 +446,23 @@
                                 </h2>
                                 <div class="space-y-6 text-gray-700">
                                     <div class="space-y-4">
-  <label class="block text-sm font-medium text-gray-700">Available Days</label>
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-    <label
-      v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
-      :key="day"
-      class="inline-flex items-center"
-    >
-      <input
-        type="checkbox"
-        class="form-checkbox text-pink-600"
-        :value="day"
-        v-model="editForm.available_days"
-      />
-      <span class="ml-2">{{ day }}</span>
-    </label>
-  </div>
-</div>
+                                        <label class="block text-sm font-medium text-gray-700">Available Days</label>
+                                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                            <label
+                                            v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
+                                            :key="day"
+                                            class="inline-flex items-center"
+                                            >
+                                            <input
+                                                type="checkbox"
+                                                class="form-checkbox text-pink-600"
+                                                :value="day"
+                                                v-model="editForm.available_days"
+                                            />
+                                            <span class="ml-2">{{ day }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
@@ -599,10 +607,26 @@ function getIconColor(index) {
     return `text-${customColors[index % customColors.length]}-600`
 }
 
-// fetch data Profile
+const services = ref([])
+
+async function fetchServices() {
+  const token = localStorage.getItem('token')
+  try {
+    const data = await apiFetch('/mua/services', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    })
+    services.value = data
+  } catch (err) {
+    console.error('Failed to load services', err)
+  }
+}
+
 onMounted(async () => {
   try {
-    const data = await apiFetch(`/mua/profile/${userId}`, {});
+    const data = await apiFetch(`/mua/profile`, {});
     profile.value = data
 
     if (data.mua_profile?.certification) {
@@ -647,6 +671,7 @@ onMounted(async () => {
   } catch (err) {
     console.error('Error loading profile:', err)
   }
+  fetchServices()
 })
 
 // Upload Image Portfolio
@@ -669,20 +694,20 @@ const handleFileChange = (event) => {
 
 function openEditModal() {
   if (profile.value) {
+    showEditModal.value = true
     editForm.name = profile.value.name || ''
     editForm.email = profile.value.email || ''
     editForm.phone = profile.value.phone || ''
-    editForm.available_start_time = profile.value.available_start_time || ''
-    editForm.available_end_time = profile.value.available_end_time || ''
     editForm.service_area = profile.value.mua_profile?.service_area || ''
     editForm.bio = profile.value.mua_profile?.bio || ''
-    editForm.certification = parsedCertifications.value || []
-    editForm.makeup_specializations = parsedSpecializations.value || []
-    editForm.makeup_styles = parsedMakeupStyles.value || []
-    editForm.skin_type = parsedSkinTypes.value || []
-    editForm.available_days = parsedAvailableDays.value || []
+    editForm.certification = [...parsedCertifications.value]
+    editForm.makeup_specializations = [...parsedSpecializations.value]
+    editForm.makeup_styles = [...parsedMakeupStyles.value]
+    editForm.skin_type = [...parsedSkinTypes.value]
+    editForm.available_days = [...parsedAvailableDays.value]
+    editForm.available_start_time = profile.value.available_start_time || ''
+    editForm.available_end_time = profile.value.available_end_time || ''
   }
-  showEditModal.value = true
 }
 
 const editForm = reactive({
@@ -707,6 +732,38 @@ const removeImage = () => {
     selectedFile.value = null
     previewUrl.value = null
     fileInput.value.value = ''
+}
+
+async function saveEdit() {
+  try {
+    const formData = new FormData();
+
+    formData.append('bio', editForm.bio);
+    formData.append('certification', JSON.stringify(editForm.certification));
+    formData.append('service_area', editForm.service_area);
+    formData.append('makeup_specializations', JSON.stringify(editForm.makeup_specializations));
+    formData.append('makeup_styles', JSON.stringify(editForm.makeup_styles));
+    formData.append('skin_type', JSON.stringify(editForm.skin_type));
+    formData.append('available_days', JSON.stringify(editForm.available_days));
+    formData.append('available_start_time', editForm.available_start_time);
+    formData.append('available_end_time', editForm.available_end_time);
+
+    if (selectedFile.value) {
+      formData.append('profile_photo', selectedFile.value);
+    }
+
+    const response = await apiFetch(`/mua/profile`, {
+      method: 'PUT',
+      body: formData
+    });
+    console.log('Updated profile response:', response);
+
+    closeEditModal();
+    window.location.reload();
+  } catch (err) {
+    console.error('Failed to save changes:', err);
+    alert('Failed to save profile. Please try again.');
+  }
 }
 
 const uploadPhoto = async () => {

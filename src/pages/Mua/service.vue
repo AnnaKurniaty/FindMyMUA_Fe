@@ -97,6 +97,10 @@
                             <span class="text-gray-600">Duration</span>
                             <span class="text-gray-800 font-medium">{{ service.duration }} Jam</span>
                         </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Category</span>
+                            <span class="text-gray-800 font-medium">{{ service.category }}</span>
+                        </div>
                         <div class="pt-2 border-t border-gray-100">
                             <p class="text-sm text-gray-600">
                             {{ service.description || 'No description provided.' }}
@@ -143,6 +147,21 @@
                                         type="text"
                                         placeholder="e.g., 1 - 2"
                                     />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                    <select
+                                        v-model="form.category"
+                                        class="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+                                    >
+                                        <option disabled value="">-- Select Category --</option>
+                                        <option value="Bridal">Bridal</option>
+                                        <option value="Pre-wedding">Pre-wedding</option>
+                                        <option value="Graduation">Graduation</option>
+                                        <option value="Party">Party</option>
+                                        <option value="Content Creator">Content Creator</option>
+                                        <option value="Regular">Regular</option>
+                                    </select>
                                 </div>
                             </div>
                             <div>
@@ -234,7 +253,8 @@
 >
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { apiFetch } from '@/config'
 
 const services = ref([])
 const editingId = ref(null)
@@ -246,17 +266,16 @@ onMounted(() => {
 
 async function fetchServices() {
   const token = localStorage.getItem('token')
-  const res = await fetch('http://localhost:8000/api/mua/services', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json'
-    }
-  })
-  const data = await res.json()
-  if (res.ok) {
+  try {
+    const data = await apiFetch('/mua/services', {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+        }
+    })
     services.value = data
-  } else {
-    console.error('Failed to load services')
+    } catch (err) {
+    console.error('Failed to load services', err)
   }
 }
 
@@ -267,7 +286,8 @@ const form = reactive({
   price: '',
   duration: '',
   photo: null,
-  makeup_style: ''
+  makeup_style: '',
+  category: ''
 })
 
 function resetForm() {
@@ -277,6 +297,7 @@ function resetForm() {
   form.duration = ''
   form.photo = null
   form.makeup_style = ''
+  form.category = ''
   editingId.value = null
   isEditing.value = false
 }
@@ -297,17 +318,15 @@ async function submitService() {
 
   const isUpdate = editingId.value !== null
   const url = isUpdate
-    ? `http://localhost:8000/api/mua/services/${editingId.value}`
-    : 'http://localhost:8000/api/mua/services'
+    ? `/mua/services/${editingId.value}`
+    : '/mua/services'
 
   if (isUpdate) {
-    fd.append('_method', 'PUT') // Important for Laravel
+    fd.append('_method', 'PUT')
   }
 
-  console.log("🔗 Submit to:", url)
-
   try {
-    const res = await fetch(url, {
+    const data = await apiFetch(url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`
@@ -315,22 +334,15 @@ async function submitService() {
       body: fd
     })
 
-    const data = await res.json()
-
-    if (!res.ok) {
-      alert(data.message || 'Failed to save service')
-      return
-    }
-
     alert(isUpdate ? 'Service updated!' : 'Service added!')
     resetForm()
     fetchServices()
-
   } catch (err) {
     console.error("❌ Network Error:", err)
-    alert("Gagal menghubungi server. Pastikan backend aktif.")
+    alert(err.message || 'Gagal menyimpan service.')
   }
 }
+
 
 function editService(service) {
   form.name = service.name
@@ -338,32 +350,32 @@ function editService(service) {
   form.price = service.price
   form.duration = service.duration
   form.makeup_style = service.makeup_style
+  form.category = service.category
   editingId.value = service.id
   isEditing.value = true
 }
 
 async function deleteService(id) {
-  const confirmDelete = confirm("Are you sure you want to delete this service?");
-  if (!confirmDelete) return;
+  const confirmDelete = confirm("Are you sure you want to delete this service?")
+  if (!confirmDelete) return
 
   const token = localStorage.getItem('token')
-  const res = await fetch(`http://localhost:8000/api/mua/services/${id}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json'
-    }
-  });
 
-  const data = await res.json();
+  try {
+    await apiFetch(`/mua/services/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    })
 
-  if (!res.ok) {
-    alert(data.message || 'Failed to delete service');
-    return;
+    alert('Service deleted!')
+    fetchServices()
+  } catch (err) {
+    console.error("❌ Delete Error:", err)
+    alert(err.message || 'Gagal menghapus service.')
   }
-
-  alert('Service deleted!');
-  fetchServices();
 }
 
 </script>

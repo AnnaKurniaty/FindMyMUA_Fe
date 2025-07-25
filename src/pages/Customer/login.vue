@@ -1,7 +1,7 @@
 <template
     ><div id="webcrumbs">
         <div
-            class="w-full min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center px-4 py-10"
+            class="w-full min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center px-4 py-10 text-gray-700"
         >
             <div
                 class="w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row"
@@ -56,7 +56,7 @@
                         <h2 class="text-2xl font-bold text-[#D56E6E] mb-2">Login to Your Account</h2>
                         <p class="text-pink-600">Enter your credentials to access your account</p>
                     </div>
-                    <form class="space-y-6">
+                    <form class="space-y-6" @submit.prevent="handleLogin">
                         <div class="space-y-2">
                             <label class="block text-pink-800 font-medium">Email</label>
                             <div class="relative">
@@ -65,6 +65,7 @@
                                 </span>
                                 <input
                                     type="email"
+                                    v-model="email"
                                     class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
                                     placeholder="Enter your email"
                                 />
@@ -73,7 +74,7 @@
                         <div class="space-y-2">
                             <div class="flex justify-between">
                                 <label class="block text-pink-800 font-medium">Password</label>
-                                <a href="#" class="text-[#D56E6E] text-sm hover:underline">Forgot password?</a>
+                                <!-- <a href="#" class="text-[#D56E6E] text-sm hover:underline">Forgot password?</a> -->
                             </div>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
@@ -81,18 +82,11 @@
                                 </span>
                                 <input
                                     type="password"
+                                    v-model="password"
                                     class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
                                     placeholder="Enter your password"
                                 />
                             </div>
-                        </div>
-                        <div class="flex items-center">
-                            <input
-                                type="checkbox"
-                                id="remember"
-                                class="w-4 h-4 text-[#D56E6E] border-2 border-pink-200 rounded focus:ring-[#D56E6E]"
-                            />
-                            <label for="remember" class="ml-2 text-pink-700">Remember me</label>
                         </div>
                         <button
                             type="submit"
@@ -110,3 +104,43 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const email = ref('')
+const password = ref('')
+const router = useRouter()
+
+const handleLogin = async () => {
+  try {
+    const res = await fetch('http://localhost:8000/api/auth/login/customer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      localStorage.setItem('token', data.access_token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      localStorage.setItem('user_id', data.user.id)
+      alert('Login berhasil!')
+      router.push('/home')
+    } else {
+      alert(data.error || 'Email atau password salah.')
+    }
+  } catch (error) {
+    alert('Gagal login. Silakan cek koneksi Anda.')
+    console.error(error)
+  }
+}
+</script>

@@ -244,12 +244,12 @@ const form = reactive({
     service_area: '',
     studio_lat: '',
     studio_lng: '',
-    available_days: [''],
+    available_days: [],
     available_start_time: '',
     available_end_time: '',
-    makeup_specializations: [''],
-    makeup_styles: [''],
-    skin_type: [''],
+    makeup_specializations: [],
+    makeup_styles: [],
+    skin_type: [],
     profile_photo: null
 })
 

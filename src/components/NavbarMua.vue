@@ -2,8 +2,12 @@
   <div class="bg-gradient-to-r from-[#D56E6E] to-pink-200 p-6">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-          <span class="text-2xl">💄</span>
+        <div class="w-12 h-12 rounded-full overflow-hidden bg-pink-100 border border-pink-200">
+          <img
+            :src="profile?.profile_photo_url || '/images/default-avatar.png'"
+            alt="Foto Profil"
+            class="object-cover w-full h-full"
+          />
         </div>
         <div>
           <h1 class="text-2xl font-bold text-gray-800">MUA Dashboard</h1>
@@ -57,6 +61,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
+const profile = ref(null)
 
 const userName = ref('')
 const showDropdown = ref(false)
@@ -87,7 +92,10 @@ onMounted(async () => {
         }
       })
       const data = await res.json()
+
       userName.value = data.name || 'MUA'
+      profile.value = data.mua_profile || data.muaProfile || null
+
       localStorage.setItem('user_name', data.name)
     } catch (e) {
       console.error('Gagal ambil data user:', e)

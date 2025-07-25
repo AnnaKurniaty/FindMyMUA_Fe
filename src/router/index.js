@@ -35,8 +35,9 @@ const routes = [
   {
     path: '/',
     component: CustomerLayout,
+    meta: { requiresAuthCus: true },
     children: [
-      { path: '', name: 'CustomerHome', component: CustomerHome },
+      { path: 'home', name: 'CustomerHome', component: CustomerHome },
       { path: 'booking', name: 'CustomerBooking', component: CustomerBooking },
     ]
   }
@@ -52,6 +53,10 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth && !token) {
     return next('/login/mua')
+  }
+
+  if (to.meta.requiresAuthCus && !token) {
+    return next('/login/cus')
   }
 
   next()

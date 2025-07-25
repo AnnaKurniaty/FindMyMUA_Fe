@@ -22,11 +22,6 @@
                             >
                                 <span class="material-symbols-outlined mr-2">search</span> Search
                             </button>
-                            <button
-                                class="border border-gray-200 text-gray-700 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all duration-200"
-                            >
-                                <span class="material-symbols-outlined">tune</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -248,18 +243,27 @@
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Skin Type</span>
-                                    <span class="font-medium text-gray-800">Combination</span>
+                                    <span class="font-medium text-gray-800"
+                                        v-if="profile?.customer_profile?.skin_type">
+                                        {{ profile.customer_profile.skin_type.join(', ') }}
+                                    </span>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Skin Tone</span>
                                     <div class="flex items-center">
                                         <div class="w-4 h-4 bg-yellow-200 rounded-full mr-2"></div>
-                                        <span class="font-medium text-gray-800">Warm</span>
+                                       <span class="font-medium text-gray-800"
+                                        v-if="profile?.customer_profile?.skin_tone">
+                                        {{ profile.customer_profile.skin_tone }}
+                                    </span>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Concerns</span>
-                                    <span class="font-medium text-gray-800">Acne, Sensitivity</span>
+                                    <span class="font-medium text-gray-800"
+                                        v-if="profile?.customer_profile?.skin_issues">
+                                        {{ profile.customer_profile.skin_issues }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -268,42 +272,52 @@
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Style Preference</span>
-                                    <span class="font-medium text-gray-800">Natural, Glam</span>
+                                    <span class="font-medium text-gray-800"
+                                        v-if="profile?.customer_profile?.makeup_preferences">
+                                        {{ profile.customer_profile.makeup_preferences.join(', ') }}
+                                    </span>
                                 </div>
                                 <div class="flex items-center justify-between">
-                                    <span class="text-gray-600">Brand Preference</span>
-                                    <span class="font-medium text-gray-800">MAC, Urban Decay</span>
+                                    <span class="text-gray-600">Skincare History</span>
+                                    <span class="font-medium text-gray-800"
+                                        v-if="profile?.customer_profile?.skincare_history">
+                                        {{ profile.customer_profile.skincare_history }}
+                                    </span>
                                 </div>
                                 <div class="flex items-center justify-between">
-                                    <span class="text-gray-600">Budget Range</span>
-                                    <span class="font-medium text-gray-800">$100 - $300</span>
+                                    <span class="text-gray-600">Allergies</span>
+                                    <span class="font-medium text-gray-800"
+                                        v-if="profile?.customer_profile?.allergies">
+                                        {{ profile.customer_profile.allergies }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-6 text-center">
-                        <button
-                            class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                        >
-                            Update Profile
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div></template>
 
-<script>
-export default {
-    name: 'dashboard',
+<script setup>
+import { ref, onMounted } from 'vue'
+import { apiFetch } from '@/config'
 
-    methods: {
-        goToRegisterCus() {
-            this.$router.push('/register/cus');
-        },
-           goToRegisterMua() {
-            this.$router.push('/register/mua');
-        }
-    }
-}
+const profile = ref(null)
+
+onMounted(async () => {
+  const token = localStorage.getItem('token')
+  try {
+    const data = await apiFetch('/customer/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    })
+    profile.value = data
+    console.log('✅ Profile fetched:', data)
+  } catch (err) {
+    console.error('Failed to load profile', err)
+  }
+})
 </script>
