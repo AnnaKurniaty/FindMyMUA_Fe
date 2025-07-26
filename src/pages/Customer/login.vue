@@ -133,6 +133,7 @@ const handleLogin = async () => {
       localStorage.setItem('token', data.access_token)
       localStorage.setItem('user', JSON.stringify(data.user))
       localStorage.setItem('user_id', data.user.id)
+      localStorage.setItem('role', 'customer')
       alert('Login berhasil!')
       router.push('/home')
     } else {

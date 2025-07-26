@@ -376,3 +376,26 @@
                     </div>
                 </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { apiFetch } from '@/config'
+
+const profile = ref(null)
+
+onMounted(async () => {
+  const token = localStorage.getItem('token')
+  try {
+    const data = await apiFetch('/customer/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    })
+    profile.value = data
+    console.log('✅ Profile fetched:', data)
+  } catch (err) {
+    console.error('Failed to load profile', err)
+  }
+})
+</script>

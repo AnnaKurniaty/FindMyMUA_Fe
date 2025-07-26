@@ -136,6 +136,7 @@ const handleLogin = async () => {
       localStorage.setItem('token', data.access_token)
       localStorage.setItem('user', JSON.stringify(data.user))
       localStorage.setItem('user_id', data.user.id)
+      localStorage.setItem('role', 'mua')
       alert('Login berhasil!')
       router.push('/mua/dashboard')
     } else {

@@ -14,6 +14,8 @@ import MuaService from '../pages/Mua/service.vue'
 
 import CustomerHome from '../pages/Customer/dashboard.vue'
 import CustomerBooking from '../pages/Customer/booking.vue'
+import CustomerMua from '../pages/Customer/mua.vue'
+import CustomerProfile from '../pages/Customer/profile.vue'
 
 const routes = [
   { path: '/login/mua', name: 'LoginMua', component: LoginMuaPage },
@@ -21,11 +23,11 @@ const routes = [
   { path: '/register/cus', name: 'RegisterCusPage', component: RegisterCusPage },
   { path: '/register/mua', name: 'RegisterMua', component: RegisterMuaPage },
   {
-    
     path: '/mua',
     component: MuaLayout,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, role: 'mua' },
     children: [
+      { path: '', redirect: '/mua/dashboard' },
       { path: 'dashboard', name: 'MuaDashboard', component: MuaDashboard },
       { path: 'calendar', name: 'MuaAvailable', component: MuaAvailable },
       { path: 'services', name: 'MuaService', component: MuaService },
@@ -35,10 +37,13 @@ const routes = [
   {
     path: '/',
     component: CustomerLayout,
-    meta: { requiresAuthCus: true },
+    meta: { requiresAuth: true, role: 'customer' },
     children: [
+      { path: '', redirect: '/home' },
       { path: 'home', name: 'CustomerHome', component: CustomerHome },
       { path: 'booking', name: 'CustomerBooking', component: CustomerBooking },
+      { path: 'muaprofile', name: 'CustomerMua', component: CustomerMua },
+      { path: 'profile', name: 'CustomerProfile', component: CustomerProfile },
     ]
   }
 ]
@@ -50,17 +55,22 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
+  const role = localStorage.getItem('role') // pastikan diset saat login
 
-  if (to.meta.requiresAuth && !token) {
-    return next('/login/mua')
-  }
+  if (to.meta.requiresAuth) {
+    if (!token) {
+      if (to.meta.role === 'mua') return next('/login/mua')
+      if (to.meta.role === 'customer') return next('/login/cus')
+      return next('/login') // fallback
+    }
 
-  if (to.meta.requiresAuthCus && !token) {
-    return next('/login/cus')
+    if (to.meta.role && to.meta.role !== role) {
+      // Redirect jika role tidak sesuai
+      return role === 'mua' ? next('/mua') : next('/home')
+    }
   }
 
   next()
 })
-
 
 export default router

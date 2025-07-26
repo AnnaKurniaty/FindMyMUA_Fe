@@ -1,239 +1,51 @@
 <template
     ><div id="webcrumbs">
-        <div class="bg-gray-50 min-h-screen p-4 md:p-6 lg:p-8">
+        <div class="bg-gray-50 min-h-screen p-4 md:p-6 lg:p-8 text-gray-800">
             <div class="max-w-6xl mx-auto">
                 <h1 class="text-2xl md:text-3xl font-bold mb-6">MUA Favorites</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div
-                        class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <div class="relative h-56">
+                        <div
+                            v-for="(profile, index) in profileList"
+                            :key="index"
+                            class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
+                        >
+                            <div class="relative h-56">
                             <img
-                                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&amp;w=2071"
+                                :src="profile.mua_profile?.profile_photo_url || 'https://via.placeholder.com/400x300?text=MUA'"
                                 alt="MUA Profile"
                                 class="w-full h-full object-cover"
-                                keywords="makeup artist, beauty, professional, MUA"
                             />
                             <div class="absolute top-3 right-3">
                                 <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 transition-colors">
-                                    <span class="material-symbols-outlined text-rose-500">favorite</span>
+                                <span class="material-symbols-outlined text-rose-500">favorite</span>
                                 </button>
                             </div>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-xl font-semibold">Sarah Johnson</h2>
+                                <h2 class="text-xl font-semibold">{{ profile.name }}</h2>
                                 <div class="flex items-center">
-                                    <span class="material-symbols-outlined text-yellow-400">star</span>
-                                    <span class="ml-1 font-medium">4.9</span>
+                                <span class="material-symbols-outlined text-yellow-400">star</span>
+                                <span class="ml-1 font-medium">4.8</span> <!-- dummy rating -->
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-600 mb-3">Wedding &amp; Party Makeup Specialist</p>
+                            <p class="text-sm text-gray-600 mb-3">
+                                {{ profile.mua_profile?.bio }}
+                            </p>
                             <div class="flex items-center text-sm text-gray-500 mb-4">
                                 <span class="material-symbols-outlined text-gray-400 text-base mr-1">location_on</span>
-                                Jakarta Selatan
+                                {{ profile.mua_profile?.service_area || 'Lokasi tidak tersedia' }}
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="font-semibold text-primary-600">Rp 650K - 1.2M</span>
+                                <span class="font-semibold text-primary-600">
+                                {{
+                                    formatPriceRange(profile.services)
+                                }}
+                                </span>
                                 <button
-                                    class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
+                                class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
                                 >
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <div class="relative h-56">
-                            <img
-                                src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&amp;w=2069"
-                                alt="MUA Profile"
-                                class="w-full h-full object-cover"
-                                keywords="makeup artist, beauty, professional, MUA"
-                            />
-                            <div class="absolute top-3 right-3">
-                                <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 transition-colors">
-                                    <span class="material-symbols-outlined text-rose-500">favorite</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-xl font-semibold">Daniel Rahman</h2>
-                                <div class="flex items-center">
-                                    <span class="material-symbols-outlined text-yellow-400">star</span>
-                                    <span class="ml-1 font-medium">4.7</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">Celebrity &amp; Fashion Makeup Artist</p>
-                            <div class="flex items-center text-sm text-gray-500 mb-4">
-                                <span class="material-symbols-outlined text-gray-400 text-base mr-1">location_on</span>
-                                Jakarta Pusat
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-primary-600">Rp 800K - 2.5M</span>
-                                <button
-                                    class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-                                >
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <div class="relative h-56">
-                            <img
-                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&amp;w=2187"
-                                alt="MUA Profile"
-                                class="w-full h-full object-cover"
-                                keywords="makeup artist, beauty, professional, MUA"
-                            />
-                            <div class="absolute top-3 right-3">
-                                <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 transition-colors">
-                                    <span class="material-symbols-outlined text-rose-500">favorite</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-xl font-semibold">Maya Wijaya</h2>
-                                <div class="flex items-center">
-                                    <span class="material-symbols-outlined text-yellow-400">star</span>
-                                    <span class="ml-1 font-medium">4.8</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">Bridal &amp; Traditional Makeup Expert</p>
-                            <div class="flex items-center text-sm text-gray-500 mb-4">
-                                <span class="material-symbols-outlined text-gray-400 text-base mr-1">location_on</span>
-                                Bandung
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-primary-600">Rp 750K - 1.8M</span>
-                                <button
-                                    class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-                                >
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <div class="relative h-56">
-                            <img
-                                src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&amp;w=2000"
-                                alt="MUA Profile"
-                                class="w-full h-full object-cover"
-                                keywords="makeup artist, beauty, professional, MUA"
-                            />
-                            <div class="absolute top-3 right-3">
-                                <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 transition-colors">
-                                    <span class="material-symbols-outlined text-rose-500">favorite</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-xl font-semibold">Rina Puspita</h2>
-                                <div class="flex items-center">
-                                    <span class="material-symbols-outlined text-yellow-400">star</span>
-                                    <span class="ml-1 font-medium">4.6</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">Natural &amp; Korean-style Makeup</p>
-                            <div class="flex items-center text-sm text-gray-500 mb-4">
-                                <span class="material-symbols-outlined text-gray-400 text-base mr-1">location_on</span>
-                                Surabaya
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-primary-600">Rp 500K - 1M</span>
-                                <button
-                                    class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-                                >
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <div class="relative h-56">
-                            <img
-                                src="https://images.unsplash.com/photo-1596815064285-45ed8a9c0463?q=80&amp;w=1915"
-                                alt="MUA Profile"
-                                class="w-full h-full object-cover"
-                                keywords="makeup artist, beauty, professional, MUA"
-                            />
-                            <div class="absolute top-3 right-3">
-                                <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 transition-colors">
-                                    <span class="material-symbols-outlined text-rose-500">favorite</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-xl font-semibold">Aditya Pratama</h2>
-                                <div class="flex items-center">
-                                    <span class="material-symbols-outlined text-yellow-400">star</span>
-                                    <span class="ml-1 font-medium">4.9</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">Editorial &amp; High Fashion MUA</p>
-                            <div class="flex items-center text-sm text-gray-500 mb-4">
-                                <span class="material-symbols-outlined text-gray-400 text-base mr-1">location_on</span>
-                                Jakarta Barat
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-primary-600">Rp 900K - 3M</span>
-                                <button
-                                    class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-                                >
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                    >
-                        <div class="relative h-56">
-                            <img
-                                src="https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?q=80&amp;w=2187"
-                                alt="MUA Profile"
-                                class="w-full h-full object-cover"
-                                keywords="makeup artist, beauty, professional, MUA"
-                            />
-                            <div class="absolute top-3 right-3">
-                                <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 transition-colors">
-                                    <span class="material-symbols-outlined text-rose-500">favorite</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-xl font-semibold">Dewi Santoso</h2>
-                                <div class="flex items-center">
-                                    <span class="material-symbols-outlined text-yellow-400">star</span>
-                                    <span class="ml-1 font-medium">4.7</span>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3">Special Effects &amp; Character Makeup</p>
-                            <div class="flex items-center text-sm text-gray-500 mb-4">
-                                <span class="material-symbols-outlined text-gray-400 text-base mr-1">location_on</span>
-                                Yogyakarta
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-primary-600">Rp 600K - 1.5M</span>
-                                <button
-                                    class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-                                >
-                                    Book Now
+                                Book Now
                                 </button>
                             </div>
                         </div>
@@ -262,6 +74,45 @@
         </div>
     </div></template
 >
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { apiFetch } from '@/config'
+
+const profileList = ref([])
+
+onMounted(async () => {
+  const token = localStorage.getItem('token')
+  try {
+    const data = await apiFetch('/dashboard/mua-users', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    })
+    profileList.value = data
+    console.log('✅ MUA profiles fetched:', data)
+  } catch (err) {
+    console.error('❌ Failed to fetch MUA profiles:', err)
+  }
+})
+
+function formatPriceRange(services) {
+  if (!services || services.length === 0) return 'Harga tidak tersedia'
+
+  const prices = services.map(s => s.price)
+  const min = Math.min(...prices)
+  const max = Math.max(...prices)
+
+  return `Rp ${formatRupiah(min)} - ${formatRupiah(max)}`
+}
+
+function formatRupiah(number) {
+  return new Intl.NumberFormat('id-ID').format(number)
+}
+
+</script>
+
 
 <style scoped>
     @import url(https://fonts.googleapis.com/css2?family=Lato&display=swap);

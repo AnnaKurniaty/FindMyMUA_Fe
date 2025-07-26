@@ -449,6 +449,7 @@ async function handleSubmit() {
         localStorage.setItem('token', loginResult.access_token)
         localStorage.setItem('user', JSON.stringify(loginResult.user))
         localStorage.setItem('user_id', loginResult.user.id)
+        localStorage.setItem('role', 'customer')
 
         const formData = new FormData()
         formData.append('address', form.address)

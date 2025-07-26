@@ -138,9 +138,9 @@
                 <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold text-gray-800">Recommended MUAs</h2>
-                        <button class="text-pink-600 hover:text-pink-700 transition-colors duration-200 font-medium">
+                        <a href="/muaprofile" class="text-pink-600 hover:text-pink-700 transition-colors duration-200 font-medium">
                             View All
-                        </button>
+                        </a>
                     </div>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div
