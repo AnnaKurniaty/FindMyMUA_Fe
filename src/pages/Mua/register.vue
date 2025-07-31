@@ -3,13 +3,22 @@
         <div class="w-full p-8 bg-pink-50 min-h-screen text-[#D56E6E]">
             <div
                 class="max-w-md mx-auto md:max-w-xl lg:max-w-4xl bg-white rounded-3xl shadow-lg p-8 border-2 border-[#D56E6E]">
-                <div class="text-center mb-8">
-                    <div
-                        class="w-16 h-16 bg-gradient-to-br from-[#D56E6E] to-pink-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-2xl text-white">palette</span>
+                <div class="flex justify-between items-center mb-8">
+                    <a
+                        href="/guest"
+                        class="bg-white text-[#D56E6E] border border-pink-200 px-4 py-2 rounded-full font-medium hover:bg-pink-50 transition-colors flex items-center"
+                    >
+                        <span class="material-symbols-outlined text-sm mr-1">arrow_back</span>
+                        Back
+                    </a>
+                    <div class="text-center flex-1">
+                        <div
+                            class="w-16 h-16 bg-gradient-to-br from-[#D56E6E] to-pink-300 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-2xl text-white">palette</span>
+                        </div>
+                        <h1 class="text-2xl font-bold text-[#D56E6E] mb-2">MUA Registration</h1>
+                        <p class="text-pink-800 text-sm">Join our beauty community!</p>
                     </div>
-                    <h1 class="text-2xl font-bold text-[#D56E6E] mb-2">MUA Registration</h1>
-                    <p class="text-pink-800 text-sm">Join our beauty community!</p>
                 </div>
                 <form @submit.prevent="handleSubmit" class="space-y-4">
                     <div class="md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3 md:space-y-0">

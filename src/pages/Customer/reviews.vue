@@ -1,6 +1,6 @@
 <template
     ><div id="webcrumbs">
-        <div class="w-full min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 p-6">
+        <div class="w-full min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 p-6 text-gray-800">
             <div class="flex min-h-screen">
                 <div class="w-64 bg-white rounded-2xl shadow-lg p-6 mr-6">
                     <div class="flex items-center mb-8">

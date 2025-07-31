@@ -25,7 +25,7 @@
                             >
                                 <span class="material-symbols-outlined text-white text-2xl">trending_up</span>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-800">12</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ analytics.total_bookings }}</h3>
                             <p class="text-gray-600">Total Bookings</p>
                         </div>
                         <div class="text-center">
@@ -34,7 +34,7 @@
                             >
                                 <span class="material-symbols-outlined text-white text-2xl">attach_money</span>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-800">$2,840</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ formatCurrency(analytics.total_revenue) }}</h3>
                             <p class="text-gray-600">Total Revenue</p>
                         </div>
                         <div class="text-center">
@@ -43,7 +43,7 @@
                             >
                                 <span class="material-symbols-outlined text-white text-2xl">star</span>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-800">4.9</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ analytics.average_rating }}</h3>
                             <p class="text-gray-600">Average Rating</p>
                         </div>
                         <div class="text-center">
@@ -52,7 +52,7 @@
                             >
                                 <span class="material-symbols-outlined text-white text-2xl">favorite</span>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-800">Wedding</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">{{ analytics.most_popular_category }}</h3>
                             <p class="text-gray-600">Most Popular</p>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                         <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
                             <div class="w-12 h-12 rounded-full overflow-hidden bg-pink-100 border border-pink-200">
-                            <img :src="service.photo" alt="Service Photo" class="object-cover w-full h-full" />
+                            <img :src="service?.service_photo_url || 'https://via.placeholder.com/150x150?text=No+Image'" alt="Service Photo" class="object-cover w-full h-full" />
                             </div>
                             <div class="ml-4">
                             <h3 class="text-lg font-semibold text-gray-800">{{ service.name }}</h3>
@@ -259,9 +259,16 @@ import { apiFetch } from '@/config'
 const services = ref([])
 const editingId = ref(null)
 const isEditing = ref(false)
+const analytics = ref({
+  total_bookings: 0,
+  total_revenue: 0,
+  average_rating: 0,
+  most_popular_category: 'No data'
+})
 
 onMounted(() => {
   fetchServices()
+  fetchAnalytics()
 })
 
 async function fetchServices() {
@@ -277,6 +284,26 @@ async function fetchServices() {
     } catch (err) {
     console.error('Failed to load services', err)
   }
+}
+
+async function fetchAnalytics() {
+  const token = localStorage.getItem('token')
+  try {
+    const data = await apiFetch('/mua/services/analytics', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    })
+    analytics.value = data
+  } catch (err) {
+    console.error('Failed to load analytics', err)
+  }
+}
+
+function formatCurrency(amount) {
+  if (!amount || amount === 0) return 'Rp 0'
+  return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount)
 }
 
 
@@ -337,6 +364,7 @@ async function submitService() {
     alert(isUpdate ? 'Service updated!' : 'Service added!')
     resetForm()
     fetchServices()
+    fetchAnalytics() // Refresh analytics after service changes
   } catch (err) {
     console.error("❌ Network Error:", err)
     alert(err.message || 'Gagal menyimpan service.')
@@ -372,6 +400,7 @@ async function deleteService(id) {
 
     alert('Service deleted!')
     fetchServices()
+    fetchAnalytics() // Refresh analytics after service deletion
   } catch (err) {
     console.error("❌ Delete Error:", err)
     alert(err.message || 'Gagal menghapus service.')

@@ -71,103 +71,100 @@
                         </div>
                     </div>
 
-                    <!-- CERTIFICATIONS & SPECIALIZATIONS Section -->
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
+                        class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 duration-300"
+                    >
                         <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2">
                             <span class="material-symbols-outlined">workspace_premium</span> Certifications &amp;
                             Specializations
                         </h3>
-                        <!-- Certifications -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
-
-                                <div v-if="parsedCertifications.length" class="space-y-3">
-                                    <div v-for="(cert, i) in parsedCertifications" :key="i"
+                                <div class="space-y-3" v-if="parsedCertifications.length > 0">
+                                    <div
+                                        v-for="(cert, index) in parsedCertifications"
+                                        :key="index"
                                         class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
-                                        :class="getBg(i)">
-                                        <div :class="getIconBg(i)"
-                                            class="w-8 h-8 rounded-full flex items-center justify-center">
-                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
-                                                verified
-                                            </span>
+                                        :class="getBg(index)"
+                                    >
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                                             :class="getIconBg(index)">
+                                            <span class="material-symbols-outlined text-sm"
+                                                  :class="getIconColor(index)">verified</span>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-800">{{ cert }}</p>
-                                        </div>
+                                        <div><p class="text-sm text-gray-800">{{ cert }}</p></div>
                                     </div>
                                 </div>
-
-                                <p v-else class="text-sm text-gray-500">No certification(s) added.</p>
+                                <div v-else class="text-gray-500 text-sm italic">
+                                    No certifications added yet.
+                                </div>
                             </div>
-
-                            <!-- Specializations -->
                             <div>
                                 <h4 class="font-semibold text-gray-800 mb-3">Specializations</h4>
-
-                                <div v-if="parsedSpecializations.length" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div v-for="(item, i) in parsedSpecializations" :key="i"
+                                <div class="space-y-3" v-if="parsedSpecializations.length > 0">
+                                    <div
+                                        v-for="(spec, index) in parsedSpecializations"
+                                        :key="index"
                                         class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
-                                        :class="getBg(i)">
-                                        <div :class="getIconBg(i)"
-                                            class="w-8 h-8 rounded-full flex items-center justify-center">
-                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
-                                                palette
-                                            </span>
+                                        :class="getBg(index)"
+                                    >
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                                             :class="getIconBg(index)">
+                                            <span class="material-symbols-outlined text-sm"
+                                                  :class="getIconColor(index)">palette</span>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-800">{{ item }}</p>
-                                        </div>
+                                        <div><p class="text-sm text-gray-800">{{ spec }}</p></div>
                                     </div>
                                 </div>
-                                <p v-else class="text-sm text-gray-500">No specialization(s) added.</p>
+                                <div v-else class="text-gray-500 text-sm italic">
+                                    No specializations added yet.
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- PREFERENCES & TECHNIQUES Section -->
                     <div
-                        class="bg-gray-50 rounded-2xl p-6 hover:shadow-md transition-shadow transform hover:-translate-y-1 duration-300">
+                        class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 duration-300"
+                    >
                         <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <span class="material-symbols-outlined">palette</span>
-                            Preferences &amp; Techniques
+                            <span class="material-symbols-outlined">palette</span> Preferences &amp; Techniques
                         </h3>
-
-                        <!-- Makeup Styles -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <h4 class="font-semibold text-gray-800 mb-3">Makeup Styles</h4>
-
-                                <div v-if="parsedMakeupStyles.length" class="space-y-2">
-                                    <div v-for="(style, i) in parsedMakeupStyles" :key="i"
-                                        class="flex items-center gap-2">
-                                        <div :class="getIconBg(i)"
-                                            class="w-8 h-8 rounded flex items-center justify-center">
-                                            <span class="material-symbols-outlined text-sm" :class="getIconColor(i)">
-                                                brush
-                                            </span>
+                                <div class="space-y-2" v-if="parsedMakeupStyles.length > 0">
+                                    <div 
+                                        v-for="(style, index) in parsedMakeupStyles"
+                                        :key="index"
+                                        class="flex items-center gap-2"
+                                    >
+                                        <div class="w-8 h-8 rounded flex items-center justify-center"
+                                             :class="getIconBg(index)">
+                                            <span class="material-symbols-outlined text-sm"
+                                                  :class="getIconColor(index)">brush</span>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">{{ style }}</p>
-                                        </div>
+                                        <div><p class="text-sm text-gray-800">{{ style }}</p></div>
                                     </div>
                                 </div>
-                                <p v-else class="text-sm text-gray-500">No makeup style(s) added.</p>
+                                <div v-else class="text-gray-500 text-sm italic">
+                                    No makeup styles specified yet.
+                                </div>
                             </div>
-
-                            <!-- Skin Types Expertise -->
                             <div>
                                 <h4 class="font-semibold text-gray-800 mb-3">Skin Types Expertise</h4>
-
-                                <div v-if="parsedSkinTypes.length" class="flex flex-col md:flex-row flex-wrap gap-3">
-                                    <span v-for="(skinType, i) in parsedSkinTypes" :key="i" :class="getIconBg(i)"
-                                        class="text-gray-800 px-3 py-1 rounded-full text-sm">
+                                <div class="flex flex-wrap gap-3" v-if="parsedSkinTypes.length > 0">
+                                    <span 
+                                        v-for="(skinType, index) in parsedSkinTypes"
+                                        :key="index"
+                                        class="px-3 py-1 rounded-full text-sm"
+                                        :class="getSkinTypeStyle(skinType)"
+                                    >
                                         {{ skinType }}
                                     </span>
                                 </div>
-
-                                <p v-else class="text-sm text-gray-500">No skin type(s) added.</p>
+                                <div v-else class="text-gray-500 text-sm italic">
+                                    No skin type expertise specified yet.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -187,25 +184,18 @@
                                 class="aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-md transition-shadow"
                             >
                                 <img
-                                v-if="service.photo"
-                                :src="service.photo"
+                                v-if="service.service_photo_url"
+                                :src="service.service_photo_url"
                                 alt="Portfolio Image"
                                 class="w-full h-full object-cover"
                                 loading="lazy"
+                                @error="handleImageError"
                                 />
                                 <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
                                 <span class="material-symbols-outlined text-2xl">image_not_supported</span>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <div class="space-y-2">
-                            <button @click="isModalOpen = true"
-                                class="w-full bg-pink-100 text-pink-800 px-4 py-3 rounded-xl font-medium hover:bg-pink-200 transition-colors">
-                                <span class="material-symbols-outlined text-sm mr-2">add_photo_alternate</span>
-                                Add Photos
-                            </button>
-                        </div> -->
                     </div>
 
                     <div class="space-y-6">
@@ -217,39 +207,39 @@
                             </h3>
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between">
-                                    <h4 class="font-semibold text-gray-800">Days</h4>
-                                    <button
-                                        class="text-primary-600 text-sm hover:text-primary-800 transition-colors flex items-center"
-                                    >
-                                        <span class="material-symbols-outlined text-sm mr-1">edit</span> Edit
-                                    </button>
+                                    <h4 class="font-semibold text-gray-800">Available Days</h4>
                                 </div>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
-                                        >Monday</span
+                                <div class="flex flex-wrap gap-2" v-if="parsedAvailableDays.length > 0">
+                                    <span 
+                                        v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
+                                        :key="day"
+                                        class="px-3 py-1 rounded-full text-sm"
+                                        :class="parsedAvailableDays.includes(day) ? 'bg-primary-100 text-primary-800' : 'bg-gray-100 text-gray-500'"
                                     >
-                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
-                                        >Tuesday</span
-                                    >
-                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
-                                        >Thursday</span
-                                    >
-                                    <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm"
-                                        >Friday</span
-                                    >
-                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">Wednesday</span>
-                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">Saturday</span>
-                                    <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">Sunday</span>
+                                        {{ day }}
+                                    </span>
                                 </div>
-                                <div class="pt-4 border-t border-gray-100">
-                                    <h4 class="font-semibold text-gray-800 mb-3">Hours</h4>
+                                <div v-else class="text-gray-500 text-sm italic">
+                                    No availability schedule set yet.
+                                </div>
+                                <div class="pt-4 border-t border-gray-100" v-if="profile?.mua_profile?.available_start_time || profile?.mua_profile?.available_end_time">
+                                    <h4 class="font-semibold text-gray-800 mb-3">Working Hours</h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center gap-3">
                                             <span class="material-symbols-outlined text-pink-600 text-sm">schedule</span>
                                             <div>
-                                                <p class="text-sm text-gray-600">9:00 AM - 5:00 PM</p>
+                                                <p class="text-sm text-gray-600">
+                                                    {{ formatTime(profile?.mua_profile?.available_start_time) || '09:00' }} - 
+                                                    {{ formatTime(profile?.mua_profile?.available_end_time) || '17:00' }}
+                                                </p>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div v-else class="pt-4 border-t border-gray-100">
+                                    <h4 class="font-semibold text-gray-800 mb-3">Working Hours</h4>
+                                    <div class="text-gray-500 text-sm italic">
+                                        No working hours specified yet.
                                     </div>
                                 </div>
                             </div>
@@ -368,42 +358,105 @@
                                 </div>
                             </div>
                             <div class="space-y-6">
-                            <label class="block text-sm font-medium text-gray-700">Certifications</label>
-                            <!-- Input dan Tambah -->
-                            <div class="flex items-center gap-2">
-                                <input
-                                type="text"
-                                v-model="editForm.certification"
-                                class="flex-1 px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
-                                placeholder="Add certification"
-                                />
-                            </div>
+                                <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                                    Certifications & Specializations
+                                </h2>
+                                
+                                <!-- Certifications Section -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Certifications</label>
+                                    <!-- Input dan Tambah -->
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <input
+                                        type="text"
+                                        v-model="newCertification"
+                                        class="flex-1 px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                        placeholder="Add certification"
+                                        @keyup.enter="addCertification"
+                                        />
+                                        <button
+                                        type="button"
+                                        @click="addCertification"
+                                        class="px-4 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors"
+                                        >
+                                        <span class="material-symbols-outlined">add</span>
+                                        </button>
+                                    </div>
 
-                            <!-- Daftar Certification -->
-                            <div v-if="editForm.certification.length" class="space-y-2">
-                                <div
-                                v-for="(cert, i) in editForm.certification"
-                                :key="i"
-                                class="flex items-center gap-3 p-3 rounded-xl bg-pink-50 hover:shadow-sm transition-shadow"
-                                >
-                                <div
-                                    class="w-8 h-8 bg-pink-200 rounded-full flex items-center justify-center"
-                                >
-                                    <span class="material-symbols-outlined text-sm text-pink-600">verified</span>
+                                    <!-- Daftar Certification -->
+                                    <div v-if="editForm.certification.length" class="space-y-2">
+                                        <div
+                                        v-for="(cert, i) in editForm.certification"
+                                        :key="i"
+                                        class="flex items-center gap-3 p-3 rounded-xl bg-pink-50 hover:shadow-sm transition-shadow"
+                                        >
+                                        <div
+                                            class="w-8 h-8 bg-pink-200 rounded-full flex items-center justify-center"
+                                        >
+                                            <span class="material-symbols-outlined text-sm text-pink-600">verified</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-gray-800">{{ cert }}</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            @click="removeCertification(i)"
+                                            class="text-gray-400 hover:text-red-500 transition-colors"
+                                        >
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                        </div>
+                                    </div>
+                                    <p v-else class="text-sm text-gray-500">No certifications added.</p>
                                 </div>
-                                <div class="flex-1">
-                                    <p class="font-medium text-gray-800">{{ cert }}</p>
+
+                                <!-- Specializations Section -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Specializations</label>
+                                    <!-- Input dan Tambah -->
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <input
+                                        type="text"
+                                        v-model="newSpecialization"
+                                        class="flex-1 px-4 py-3 rounded-xl border text-gray-700 border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
+                                        placeholder="Add specialization"
+                                        @keyup.enter="addSpecialization"
+                                        />
+                                        <button
+                                        type="button"
+                                        @click="addSpecialization"
+                                        class="px-4 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors"
+                                        >
+                                        <span class="material-symbols-outlined">add</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Daftar Specializations -->
+                                    <div v-if="editForm.makeup_specializations.length" class="space-y-2">
+                                        <div
+                                        v-for="(spec, i) in editForm.makeup_specializations"
+                                        :key="i"
+                                        class="flex items-center gap-3 p-3 rounded-xl bg-purple-50 hover:shadow-sm transition-shadow"
+                                        >
+                                        <div
+                                            class="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center"
+                                        >
+                                            <span class="material-symbols-outlined text-sm text-purple-600">palette</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-gray-800">{{ spec }}</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            @click="removeSpecialization(i)"
+                                            class="text-gray-400 hover:text-red-500 transition-colors"
+                                        >
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                        </div>
+                                    </div>
+                                    <p v-else class="text-sm text-gray-500">No specializations added.</p>
                                 </div>
-                                <button
-                                    type="button"
-                                    @click="removeCertification(i)"
-                                    class="text-gray-400 hover:text-red-500 transition-colors"
-                                >
-                                    <span class="material-symbols-outlined">delete</span>
-                                </button>
-                                </div>
-                            </div>
-                            <p v-else class="text-sm text-gray-500">No certifications added.</p>
                             </div>
                             <div class="space-y-6">
                                 <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
@@ -476,11 +529,6 @@
                                                     v-model="editForm.available_start_time"
                                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
                                                 />
-                                                <span
-                                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 material-symbols-outlined text-gray-400"
-                                                >
-                                                    schedule
-                                                </span>
                                             </div>
                                         </div>
                                         <div>
@@ -494,11 +542,6 @@
                                                     id="end-time"
                                                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-primary-500 focus:ring focus:ring-primary-200 transition-colors"
                                                 />
-                                                <span
-                                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 material-symbols-outlined text-gray-400"
-                                                >
-                                                    schedule
-                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -607,6 +650,18 @@ function getIconColor(index) {
     return `text-${customColors[index % customColors.length]}-600`
 }
 
+// Function to get skin type specific styling to match the image
+function getSkinTypeStyle(skinType) {
+    const skinTypeStyles = {
+        'Oily': 'bg-pink-100 text-pink-800',
+        'Normal': 'bg-purple-100 text-purple-800', 
+        'Combination': 'bg-yellow-100 text-yellow-800',
+        'Dry': 'bg-blue-100 text-blue-800',
+        'Sensitif': 'bg-green-100 text-green-800'
+    }
+    return skinTypeStyles[skinType] || 'bg-gray-100 text-gray-800'
+}
+
 const services = ref([])
 
 async function fetchServices() {
@@ -624,49 +679,145 @@ async function fetchServices() {
   }
 }
 
+// Helper function to parse array data and handle comma-separated strings
+function parseArrayData(data) {
+  console.log('parseArrayData called with:', typeof data, data);
+  
+  if (!data) {
+    console.log('parseArrayData returning empty array');
+    return []
+  }
+  
+  // If data is already an array, return it directly
+  if (Array.isArray(data)) {
+    const result = data.filter(item => item && item.toString().trim().length > 0)
+    console.log('parseArrayData returning array result:', result);
+    return result
+  }
+  
+  // If data is a string, try to parse it
+  if (typeof data === 'string') {
+    console.log('parseArrayData processing string');
+    // Remove any extra quotes and whitespace
+    const cleanData = data.trim()
+    
+    // Try to parse as JSON first
+    try {
+      const parsed = JSON.parse(cleanData)
+      if (Array.isArray(parsed)) {
+        const result = parsed.filter(item => item && item.toString().trim().length > 0)
+        console.log('parseArrayData returning parsed JSON array:', result);
+        return result
+      }
+      // If it's a single item from JSON, return as array
+      const result = [parsed].filter(item => item && item.toString().trim().length > 0)
+      console.log('parseArrayData returning single item from JSON:', result);
+      return result
+    } catch (e) {
+      console.log('parseArrayData JSON parsing failed, treating as comma-separated');
+      // If JSON parsing fails, treat as comma-separated string
+      if (cleanData.includes(',')) {
+        const result = cleanData.split(',').map(item => item.trim()).filter(item => item.length > 0)
+        console.log('parseArrayData returning comma-separated result:', result);
+        return result
+      }
+      // Single item
+      const result = cleanData.length > 0 ? [cleanData] : []
+      console.log('parseArrayData returning single item result:', result);
+      return result
+    }
+  }
+  
+  // For other data types, convert to string and return as single item array
+  const result = data.toString().trim().length > 0 ? [data.toString().trim()] : []
+  console.log('parseArrayData returning converted result:', result);
+  return result
+}
+
+// Helper function to ensure array data is properly formatted for sending to backend
+function formatArrayForBackend(data) {
+  console.log('formatArrayForBackend called with:', typeof data, data);
+  
+  if (!data) {
+    console.log('formatArrayForBackend returning empty array');
+    return []
+  }
+  
+  // If data is already an array, return as is (backend will handle JSON conversion)
+  if (Array.isArray(data)) {
+    console.log('formatArrayForBackend returning array as is');
+    return data
+  }
+  
+  // If data is a string, check if it's already JSON
+  if (typeof data === 'string') {
+    console.log('formatArrayForBackend processing string');
+    // Try to parse as JSON first
+    try {
+      const parsed = JSON.parse(data)
+      if (Array.isArray(parsed)) {
+        console.log('formatArrayForBackend returning parsed JSON array');
+        return parsed
+      }
+      // If it's a single item from JSON, wrap in array
+      console.log('formatArrayForBackend returning single item wrapped in array');
+      return [parsed]
+    } catch (e) {
+      console.log('formatArrayForBackend JSON parsing failed, treating as comma-separated');
+      // If JSON parsing fails, treat as comma-separated string and convert to array
+      if (data.includes(',')) {
+        const result = data.split(',').map(item => item.trim()).filter(item => item.length > 0)
+        console.log('formatArrayForBackend returning comma-separated result:', result);
+        return result
+      }
+      // Single item
+      const result = data.length > 0 ? [data.trim()] : []
+      console.log('formatArrayForBackend returning single item result:', result);
+      return result
+    }
+  }
+  
+  // For other data types, convert to string and wrap in array
+  const result = data.toString().trim().length > 0 ? [data.toString().trim()] : []
+  console.log('formatArrayForBackend returning converted result:', result);
+  return result
+}
+
 onMounted(async () => {
   try {
     const data = await apiFetch(`/mua/profile`, {});
     profile.value = data
 
+    console.log('Raw profile data:', data.mua_profile)
+
     if (data.mua_profile?.certification) {
-      try {
-        parsedCertifications.value = JSON.parse(data.mua_profile.certification)
-      } catch (e) {
-        parsedCertifications.value = [data.mua_profile.certification]
-      }
+      console.log('Raw certification data:', data.mua_profile.certification)
+      parsedCertifications.value = parseArrayData(data.mua_profile.certification)
+      console.log('Parsed certifications:', parsedCertifications.value)
     }
 
     if (data.mua_profile?.makeup_specializations) {
-      try {
-        parsedSpecializations.value = JSON.parse(data.mua_profile.makeup_specializations)
-      } catch (e) {
-        parsedSpecializations.value = [data.mua_profile.makeup_specializations]
-      }
+      console.log('Raw specializations data:', data.mua_profile.makeup_specializations)
+      parsedSpecializations.value = parseArrayData(data.mua_profile.makeup_specializations)
+      console.log('Parsed specializations:', parsedSpecializations.value)
     }
 
     if (data.mua_profile?.makeup_styles) {
-        try {
-            parsedMakeupStyles.value = JSON.parse(data.mua_profile.makeup_styles)
-        } catch (e) {
-            parsedMakeupStyles.value = [data.mua_profile.makeup_styles]
-        }
+      console.log('Raw makeup styles data:', data.mua_profile.makeup_styles)
+      parsedMakeupStyles.value = parseArrayData(data.mua_profile.makeup_styles)
+      console.log('Parsed makeup styles:', parsedMakeupStyles.value)
     }
 
     if (data.mua_profile?.skin_type) {
-        try {
-            parsedSkinTypes.value = JSON.parse(data.mua_profile.skin_type)
-        } catch (e) {
-            parsedSkinTypes.value = [data.mua_profile.skin_type]
-        }
+      console.log('Raw skin type data:', data.mua_profile.skin_type)
+      parsedSkinTypes.value = parseArrayData(data.mua_profile.skin_type)
+      console.log('Parsed skin types:', parsedSkinTypes.value)
     }
 
     if (data.mua_profile?.available_days) {
-        try {
-            parsedAvailableDays.value = JSON.parse(data.mua_profile.available_days)
-        } catch (e) {
-            parsedAvailableDays.value = [data.mua_profile.available_days]
-        }
+      console.log('Raw available days data:', data.mua_profile.available_days)
+      parsedAvailableDays.value = parseArrayData(data.mua_profile.available_days)
+      console.log('Parsed available days:', parsedAvailableDays.value)
     }
   } catch (err) {
     console.error('Error loading profile:', err)
@@ -695,27 +846,41 @@ const handleFileChange = (event) => {
 function openEditModal() {
   if (profile.value) {
     showEditModal.value = true
+    // User fields (from User table)
     editForm.name = profile.value.name || ''
     editForm.email = profile.value.email || ''
     editForm.phone = profile.value.phone || ''
-    editForm.service_area = profile.value.mua_profile?.service_area || ''
+    // MUA Profile fields (from MuaProfile table)
     editForm.bio = profile.value.mua_profile?.bio || ''
-    editForm.certification = [...parsedCertifications.value]
-    editForm.makeup_specializations = [...parsedSpecializations.value]
-    editForm.makeup_styles = [...parsedMakeupStyles.value]
-    editForm.skin_type = [...parsedSkinTypes.value]
-    editForm.available_days = [...parsedAvailableDays.value]
-    editForm.available_start_time = profile.value.available_start_time || ''
-    editForm.available_end_time = profile.value.available_end_time || ''
+    editForm.service_area = profile.value.mua_profile?.service_area || ''
+    // Use raw data from profile instead of parsed data
+    editForm.certification = profile.value.mua_profile?.certification || []
+    editForm.makeup_specializations = profile.value.mua_profile?.makeup_specializations || []
+    editForm.makeup_styles = profile.value.mua_profile?.makeup_styles || []
+    editForm.skin_type = profile.value.mua_profile?.skin_type || []
+    editForm.available_days = profile.value.mua_profile?.available_days || []
+    editForm.available_start_time = profile.value.mua_profile?.available_start_time || ''
+    editForm.available_end_time = profile.value.mua_profile?.available_end_time || ''
+    
+    // Debug logging untuk available days
+    console.log('Opening edit modal with available days:', editForm.available_days)
+    console.log('Raw certification data:', editForm.certification)
+    console.log('Raw specializations data:', editForm.makeup_specializations)
+    console.log('Raw makeup styles data:', editForm.makeup_styles)
+    console.log('Raw skin type data:', editForm.skin_type)
+    
+    // Log the entire editForm for debugging
+    console.log('Edit form initialized:', editForm)
   }
 }
-
 const editForm = reactive({
+    // User fields (handled by MeController)
     name: '',
     email: '',
     phone: '',
+    // MUA Profile fields (handled by MuaProfileController)
     bio: '',
-    certification: [''],
+    certification: [],
     service_area: '',
     studio_lat: '',
     studio_lng: '',
@@ -734,35 +899,131 @@ const removeImage = () => {
     fileInput.value.value = ''
 }
 
+// New variables for adding certifications and specializations
+const newCertification = ref('')
+const newSpecialization = ref('')
+
+// Functions for managing certifications
+function addCertification() {
+  if (newCertification.value.trim()) {
+    editForm.certification.push(newCertification.value.trim())
+    newCertification.value = ''
+  }
+}
+
+function removeCertification(index) {
+  editForm.certification.splice(index, 1)
+}
+
+// Functions for managing specializations
+function addSpecialization() {
+  if (newSpecialization.value.trim()) {
+    editForm.makeup_specializations.push(newSpecialization.value.trim())
+    newSpecialization.value = ''
+  }
+}
+
+function removeSpecialization(index) {
+  editForm.makeup_specializations.splice(index, 1)
+}
+
 async function saveEdit() {
   try {
-    const formData = new FormData();
+    // Update user data (name, email, phone) via MeController
+    if (editForm.name || editForm.email || editForm.phone) {
+      const userData = {};
+      if (editForm.name) userData.name = editForm.name;
+      if (editForm.email) userData.email = editForm.email;
+      if (editForm.phone) userData.phone = editForm.phone;
 
-    formData.append('bio', editForm.bio);
-    formData.append('certification', JSON.stringify(editForm.certification));
-    formData.append('service_area', editForm.service_area);
-    formData.append('makeup_specializations', JSON.stringify(editForm.makeup_specializations));
-    formData.append('makeup_styles', JSON.stringify(editForm.makeup_styles));
-    formData.append('skin_type', JSON.stringify(editForm.skin_type));
-    formData.append('available_days', JSON.stringify(editForm.available_days));
-    formData.append('available_start_time', editForm.available_start_time);
-    formData.append('available_end_time', editForm.available_end_time);
-
-    if (selectedFile.value) {
-      formData.append('profile_photo', selectedFile.value);
+      // Only send request if there's actual data to update
+      if (Object.keys(userData).length > 0) {
+        await apiFetch('/me', {
+          method: 'PUT',
+          body: JSON.stringify(userData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }
     }
 
-    const response = await apiFetch(`/mua/profile`, {
-      method: 'PUT',
-      body: formData
-    });
-    console.log('Updated profile response:', response);
+    // Update MUA profile data via MuaProfileController
+    const profileData = {};
+    
+    // Add basic fields
+    if (editForm.bio !== undefined) profileData.bio = editForm.bio;
+    if (editForm.service_area !== undefined) profileData.service_area = editForm.service_area;
+    if (editForm.available_start_time !== undefined) profileData.available_start_time = editForm.available_start_time;
+    if (editForm.available_end_time !== undefined) profileData.available_end_time = editForm.available_end_time;
+    
+    // Add JSON fields - ensure they're properly formatted
+    profileData.certification = formatArrayForBackend(editForm.certification);
+    profileData.makeup_specializations = formatArrayForBackend(editForm.makeup_specializations);
+    profileData.makeup_styles = formatArrayForBackend(editForm.makeup_styles);
+    profileData.skin_type = formatArrayForBackend(editForm.skin_type);
+    profileData.available_days = formatArrayForBackend(editForm.available_days);
 
+    console.log('Sending profile data:', profileData);
+    console.log('Certification data type:', typeof editForm.certification, 'value:', editForm.certification);
+    console.log('Formatted certification:', formatArrayForBackend(editForm.certification));
+
+    // Handle file upload if needed
+    if (selectedFile.value) {
+      const profileFormData = new FormData();
+      // Add all JSON fields as strings
+      Object.keys(profileData).forEach(key => {
+        profileFormData.append(key, profileData[key]);
+      });
+      profileFormData.append('profile_photo', selectedFile.value);
+      
+      await apiFetch('/mua/profile', {
+        method: 'PUT',
+        body: profileFormData
+      });
+    } else {
+      // Send as JSON for consistency
+      await apiFetch('/mua/profile', {
+        method: 'PUT',
+        body: JSON.stringify(profileData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+    console.log('Profile updated successfully');
+    alert('Profile updated successfully!');
     closeEditModal();
-    window.location.reload();
+    
+    // Reload profile data instead of full page reload
+    const data = await apiFetch(`/mua/profile`, {});
+    profile.value = data
+
+    if (data.mua_profile?.certification) {
+      parsedCertifications.value = parseArrayData(data.mua_profile.certification)
+    }
+
+    if (data.mua_profile?.makeup_specializations) {
+      parsedSpecializations.value = parseArrayData(data.mua_profile.makeup_specializations)
+    }
+
+    if (data.mua_profile?.makeup_styles) {
+      parsedMakeupStyles.value = parseArrayData(data.mua_profile.makeup_styles)
+    }
+
+    if (data.mua_profile?.skin_type) {
+      parsedSkinTypes.value = parseArrayData(data.mua_profile.skin_type)
+    }
+
+    if (data.mua_profile?.available_days) {
+      parsedAvailableDays.value = parseArrayData(data.mua_profile.available_days)
+    }
+    
   } catch (err) {
     console.error('Failed to save changes:', err);
-    alert('Failed to save profile. Please try again.');
+    console.error('Error details:', err.response || err);
+    alert('Failed to save profile. Please check console for details.');
   }
 }
 
@@ -784,5 +1045,28 @@ const uploadPhoto = async () => {
     } catch (err) {
         alert('Upload failed: ' + err.message)
     }
+}
+
+// Handle image loading errors
+function handleImageError(event) {
+  console.log('Image failed to load:', event.target.src)
+  // Hide the broken image by setting display to none
+  event.target.style.display = 'none'
+  // Show the fallback icon container
+  const fallbackDiv = event.target.nextElementSibling
+  if (fallbackDiv) {
+    fallbackDiv.style.display = 'flex'
+  }
+}
+
+// Format time from HH:MM:SS to HH:MM
+function formatTime(timeString) {
+  if (!timeString) return null
+  // If time is in HH:MM:SS format, extract HH:MM
+  if (timeString.includes(':')) {
+    const parts = timeString.split(':')
+    return `${parts[0]}:${parts[1]}`
+  }
+  return timeString
 }
 </script>

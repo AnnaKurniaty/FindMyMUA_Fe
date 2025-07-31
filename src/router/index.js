@@ -14,10 +14,14 @@ import MuaService from '../pages/Mua/service.vue'
 
 import CustomerHome from '../pages/Customer/dashboard.vue'
 import CustomerBooking from '../pages/Customer/booking.vue'
+import CustomerBookingList from '../pages/Customer/booking_list.vue'
 import CustomerMua from '../pages/Customer/mua.vue'
 import CustomerProfile from '../pages/Customer/profile.vue'
+import WishlistPage from '../pages/Customer/wishlist.vue'
+import LandingPage from '../pages/landingpage.vue'
 
 const routes = [
+  { path: '/guest', name: 'Landing', component: LandingPage },
   { path: '/login/mua', name: 'LoginMua', component: LoginMuaPage },
   { path: '/login/cus', name: 'LoginCus', component: LoginCusPage },
   { path: '/register/cus', name: 'RegisterCusPage', component: RegisterCusPage },
@@ -41,8 +45,9 @@ const routes = [
     children: [
       { path: '', redirect: '/home' },
       { path: 'home', name: 'CustomerHome', component: CustomerHome },
-      { path: 'booking', name: 'CustomerBooking', component: CustomerBooking },
-      { path: 'muaprofile', name: 'CustomerMua', component: CustomerMua },
+      { path: 'booking/:bookingId', name: 'CustomerBooking', component: CustomerBooking },
+      { path: 'booking', name: 'CustomerBookingList', component: CustomerBookingList },
+      { path: 'favorites', name: 'CustomerWishlist', component: WishlistPage },
       { path: 'profile', name: 'CustomerProfile', component: CustomerProfile },
     ]
   }

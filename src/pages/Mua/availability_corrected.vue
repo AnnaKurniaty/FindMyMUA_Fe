@@ -17,6 +17,11 @@
                 </button>
               </div>
             </div>
+            <div class="flex space-x-3">
+                <button class="px-3 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors flex items-center space-x-1">
+                    <span class="material-symbols-outlined text-sm">add</span> <span>New Slot</span>
+                </button>
+            </div>
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div class="lg:col-span-3">
@@ -36,13 +41,13 @@
                       getDateCursorClass(date),
                       'transition-colors border-gray-200',
                     ]"
-                    @click="!isDateBlocked(date.date) && selectDate(date)"
+                    @click="selectDate(date)"
                   >
                     <div class="text-sm font-medium" :class="getDateTextColor(date)">{{ date.day }}</div>
                     
                     <!-- Show "BLOCKED" indicator for blocked dates -->
                     <div v-if="date.isCurrentMonth && isDateBlocked(date.date)" class="absolute top-1 right-1">
-                      <span class="material-symbols-outlined text-red-600 text-xs">block</span>
+                      <span class="material-symbols-outlined text-red-500 text-xs">block</span>
                     </div>
                     
                     <!-- Show "UNAVAILABLE" indicator for unavailable days -->
@@ -50,19 +55,7 @@
                       <span class="material-symbols-outlined text-red-500 text-xs">event_busy</span>
                     </div>
                     
-                    <!-- Show blocked time slots information -->
-                    <div v-if="date.isCurrentMonth && isDateBlocked(date.date)" class="space-y-1 mt-1">
-                      <div
-                        v-for="slot in getBlockedSlotsForDate(date.date)"
-                        :key="slot.id"
-                        class="text-xs p-1 rounded truncate bg-red-100 text-red-800"
-                        :title="slot.reason || 'Blocked'"
-                      >
-                        Blocked
-                      </div>
-                    </div>
-                    
-                    <div v-else-if="date.bookings && date.bookings.length > 0" class="space-y-1 mt-1">
+                    <div v-if="date.bookings && date.bookings.length > 0" class="space-y-1 mt-1">
                       <div
                         v-for="(booking, i) in date.bookings.slice(0, 3)"
                         :key="i"
@@ -144,6 +137,8 @@
                         <p>No bookings for this date</p>
                     </div>
                 </div>
+                
+                <!-- Blocked Time Slots Table -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Blocked Time Slots</h3>
                     <div v-if="blockedTimeSlots.length > 0" class="space-y-3 max-h-60 overflow-y-auto">
@@ -237,20 +232,6 @@ async function fetchBookings() {
       },
     })
     bookings.value = data || []
-    
-    // Update status of past bookings to 'completed'
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to start of day for comparison
-    bookings.value.forEach(booking => {
-      if (booking.status !== 'cancelled' && booking.status !== 'completed') {
-        const bookingDate = new Date(booking.date);
-        bookingDate.setHours(0, 0, 0, 0); // Set to start of day for comparison
-        if (bookingDate < today) {
-          booking.status = 'completed';
-        }
-      }
-    });
-    
     console.log('Fetched bookings:', bookings.value)
   } catch (err) {
     console.error('Failed to load bookings:', err)
@@ -263,7 +244,7 @@ async function fetchBookings() {
 // Fetch blocked time slots from API
 async function fetchBlockedTimeSlots() {
   try {
-    const data = await apiFetch('/blocked-slots', {
+    const data = await apiFetch('/mua/blocked-time-slots', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         Accept: 'application/json',
@@ -272,8 +253,9 @@ async function fetchBlockedTimeSlots() {
     blockedTimeSlots.value = data || []
     
     // Update blockedDates array for backward compatibility
-    blockedDates.value = data.map(slot => slot.date)
-    console.log('Fetched blocked time slots:', blockedTimeSlots.value)
+    blockedDates.value = data
+      .filter(slot => slot.full_day)
+      .map(slot => slot.date)
   } catch (err) {
     console.error('Failed to load blocked time slots:', err)
     blockedTimeSlots.value = []
@@ -331,11 +313,6 @@ const bookingsByDate = computed(() => {
   })
   return grouped
 })
-
-// Get blocked slots for a specific date
-function getBlockedSlotsForDate(dateString) {
-  return blockedTimeSlots.value.filter(slot => slot.date === dateString)
-}
 
 // Get bookings for selected date
 const selectedDateBookings = computed(() => {
@@ -398,7 +375,7 @@ function nextMonth() {
 }
 
 function selectDate(date) {
-  if (date.isCurrentMonth && date.date && isDateAvailable(date.date) && !isDateBlocked(date.date)) {
+  if (date.isCurrentMonth && date.date && isDateAvailable(date.date)) {
     selectedDate.value = date.date
   }
 }
@@ -472,138 +449,6 @@ function getDateClasses(date) {
   }
   
   if (isDateBlocked(date.date)) {
-    return 'bg-red-500 border border-red-600 cursor-not-allowed'
+    return 'bg-red-100 border border-red-300'
   }
   
-  if (!isDateAvailable(date.date)) {
-    return 'bg-red-50 border border-red-200'
-  }
-  
-  return 'bg-white border'
-}
-
-// Get date text color
-function getDateTextColor(date) {
-  if (!date.isCurrentMonth) {
-    return 'text-gray-400'
-  }
-  
-  if (isDateBlocked(date.date) || !isDateAvailable(date.date)) {
-    return 'text-red-600'
-  }
-  
-  return 'text-gray-700'
-}
-
-// Get date cursor class
-function getDateCursorClass(date) {
-  if (!date.isCurrentMonth) {
-    return 'cursor-default'
-  }
-  
-  if (!isDateAvailable(date.date)) {
-    return 'cursor-not-allowed'
-  }
-  
-  return 'cursor-pointer'
-}
-
-// Block selected date
-async function blockSelectedDate() {
-  if (!selectedDate.value) return
-  
-  try {
-    // Send to backend to save blocked time slot (full day block)
-    const response = await apiFetch('/blocked-slots', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        date: selectedDate.value,
-        full_day: true,
-      }),
-    })
-    
-    // Update local blockedDates and blockedTimeSlots
-    if (!blockedDates.value.includes(selectedDate.value)) {
-      blockedDates.value.push(selectedDate.value)
-    }
-    blockedTimeSlots.value.push(response)
-    
-    alert(`Date ${formatDate(selectedDate.value)} has been blocked!`)
-  } catch (err) {
-    console.error('Failed to block date:', err)
-    alert('Failed to block date')
-  }
-}
-
-// Unblock time slot
-async function unblockTimeSlot(id) {
-  try {
-    await apiFetch(`/blocked-slots/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    
-    // Update local blockedDates and blockedTimeSlots
-    const slot = blockedTimeSlots.value.find(s => s.id === id)
-    if (slot) {
-      const index = blockedDates.value.indexOf(slot.date)
-      if (index > -1) {
-        blockedDates.value.splice(index, 1)
-      }
-      
-      const slotIndex = blockedTimeSlots.value.findIndex(s => s.id === id)
-      if (slotIndex > -1) {
-        blockedTimeSlots.value.splice(slotIndex, 1)
-      }
-    }
-    
-    alert('Time slot has been unblocked!')
-  } catch (err) {
-    console.error('Failed to unblock time slot:', err)
-    alert('Failed to unblock time slot')
-  }
-}
-
-async function updateBookingStatus(bookingId, newStatus) {
-  try {
-    await apiFetch(`/mua/bookings/${bookingId}/status`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ status: newStatus })
-    })
-    
-    // Update local booking status
-    const booking = bookings.value.find(b => b.id === bookingId)
-    if (booking) {
-      booking.status = newStatus
-    }
-    
-    alert(`Booking ${newStatus} successfully!`)
-  } catch (err) {
-    console.error('Failed to update booking status:', err)
-    alert('Failed to update booking status')
-  }
-}
-
-// Watch for month/year changes to refetch bookings if needed
-watch([currentMonth, currentYear], () => {
-  // Could add month-specific fetching here if needed
-})
-
-onMounted(() => {
-  fetchBookings()
-  fetchMuaProfile()
-  fetchBlockedTimeSlots()
-})
-</script>

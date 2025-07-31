@@ -7,7 +7,14 @@
                 class="w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row"
             >
                 <div class="md:w-1/2 p-8 md:p-12">
-                    <div class="flex justify-end mb-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <a
+                            href="/guest"
+                            class="bg-white text-[#D56E6E] border border-pink-200 px-4 py-2 rounded-full font-medium hover:bg-pink-50 transition-colors flex items-center"
+                        >
+                            <span class="material-symbols-outlined text-sm mr-1">arrow_back</span>
+                            Back
+                        </a>
                         <div class="flex space-x-2">
                             <a
                                 href="/login/cus"
@@ -107,33 +114,6 @@
                                         v-model="form.address"
                                         placeholder="Enter your complete address"
                                     ></textarea>
-                                </div>
-                            </div>
-                            <div class="space-y-2 mt-4">
-                                <label class="block text-pink-800 font-medium">Studio Location</label>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="relative">
-                                        <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
-                                            <span class="material-symbols-outlined text-sm">public</span>
-                                        </span>
-                                        <input
-                                            type="text"
-                                            class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
-                                            placeholder="Studio Latitude"
-                                            v-model="form.studio_lat"
-                                        />
-                                    </div>
-                                    <div class="relative">
-                                        <span class="absolute inset-y-0 left-3 flex items-center text-pink-400">
-                                            <span class="material-symbols-outlined text-sm">public</span>
-                                        </span>
-                                        <input
-                                            type="text"
-                                            class="w-full pl-10 pr-4 py-3 rounded-full border-2 border-pink-200 focus:border-[#D56E6E] focus:outline-none transition-colors"
-                                            placeholder="Studio Longitude"
-                                            v-model="form.studio_lng"
-                                        />
-                                    </div>
                                 </div>
                             </div>
                             <div class="space-y-2">
@@ -352,8 +332,6 @@ const form = reactive({
   password: '',
   password_confirmation: '',
   address: '',
-  studio_lat: '',
-  studio_lng: '',
   profile_photo: null,
   skin_type: [''],
   skin_tone: '',
@@ -418,16 +396,6 @@ function toggleSelection(array, value) {
     }
 }
 
-function getLocation() {
-    if (!navigator.geolocation) return alert('Geolocation not supported')
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            form.studio_lat = pos.coords.latitude
-            form.studio_lng = pos.coords.longitude
-        },
-        () => alert('Failed to get location')
-    )
-}
 
 async function handleSubmit() {
     if (form.password !== form.password_confirmation) {
@@ -453,8 +421,6 @@ async function handleSubmit() {
 
         const formData = new FormData()
         formData.append('address', form.address)
-        formData.append('studio_lat', form.studio_lat)
-        formData.append('studio_lng', form.studio_lng)
         form.skin_type.forEach((item, index) => {
         formData.append(`skin_type[${index}]`, item)
         })

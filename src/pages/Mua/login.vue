@@ -32,7 +32,14 @@
         </div>
 
         <div class="md:w-1/2 p-8 md:p-12">
-          <div class="flex justify-end mb-8">
+          <div class="flex justify-between items-center mb-8">
+            <a
+              href="/guest"
+              class="bg-white text-[#D56E6E] border border-pink-200 px-4 py-2 rounded-full font-medium hover:bg-pink-50 transition-colors flex items-center"
+            >
+              <span class="material-symbols-outlined text-sm mr-1">arrow_back</span>
+              Back
+            </a>
             <div class="flex space-x-2">
               <RouterLink
                 to="/login/mua"

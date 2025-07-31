@@ -70,8 +70,8 @@
                             <ul class="space-y-2">
                                 <li class="flex items-center gap-2">
                                     <span class="material-symbols-outlined text-[#D56E6E]/80">call</span>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >+1 (555) 123-4567</a
+                                    <a href="https://wa.me/6285860458285" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >+62 858-6045-8285</a
                                     >
                                 </li>
                                 <li class="flex items-center gap-2">
