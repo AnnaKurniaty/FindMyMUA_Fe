@@ -164,22 +164,46 @@
                                         <label class="block text-pink-800 font-medium">Skin Tone</label>
                                         <div class="flex flex-wrap gap-2">
                                             <div
-                                                class="w-8 h-8 rounded-full bg-amber-200 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform"
+                                                @click="form.skin_tone = 'Fair'"
+                                                :class="[
+                                                    'w-8 h-8 rounded-full bg-amber-200 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform',
+                                                    form.skin_tone === 'Fair' ? 'ring-2 ring-pink-500 ring-offset-2' : ''
+                                                ]"
                                             ></div>
                                             <div
-                                                class="w-8 h-8 rounded-full bg-amber-300 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform"
+                                                @click="form.skin_tone = 'Light'"
+                                                :class="[
+                                                    'w-8 h-8 rounded-full bg-amber-300 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform',
+                                                    form.skin_tone === 'Light' ? 'ring-2 ring-pink-500 ring-offset-2' : ''
+                                                ]"
                                             ></div>
                                             <div
-                                                class="w-8 h-8 rounded-full bg-amber-400 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform"
+                                                @click="form.skin_tone = 'Medium'"
+                                                :class="[
+                                                    'w-8 h-8 rounded-full bg-amber-400 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform',
+                                                    form.skin_tone === 'Medium' ? 'ring-2 ring-pink-500 ring-offset-2' : ''
+                                                ]"
                                             ></div>
                                             <div
-                                                class="w-8 h-8 rounded-full bg-amber-600 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform"
+                                                @click="form.skin_tone = 'Olive'"
+                                                :class="[
+                                                    'w-8 h-8 rounded-full bg-amber-600 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform',
+                                                    form.skin_tone === 'Olive' ? 'ring-2 ring-pink-500 ring-offset-2' : ''
+                                                ]"
                                             ></div>
                                             <div
-                                                class="w-8 h-8 rounded-full bg-amber-800 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform"
+                                                @click="form.skin_tone = 'Brown'"
+                                                :class="[
+                                                    'w-8 h-8 rounded-full bg-amber-800 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform',
+                                                    form.skin_tone === 'Brown' ? 'ring-2 ring-pink-500 ring-offset-2' : ''
+                                                ]"
                                             ></div>
                                             <div
-                                                class="w-8 h-8 rounded-full bg-amber-950 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform"
+                                                @click="form.skin_tone = 'Black'"
+                                                :class="[
+                                                    'w-8 h-8 rounded-full bg-amber-950 border-2 border-pink-200 cursor-pointer hover:scale-110 transition-transform',
+                                                    form.skin_tone === 'Black' ? 'ring-2 ring-pink-500 ring-offset-2' : ''
+                                                ]"
                                             ></div>
                                         </div>
                                     </div>
@@ -333,11 +357,11 @@ const form = reactive({
   password_confirmation: '',
   address: '',
   profile_photo: null,
-  skin_type: [''],
+  skin_type: [],
   skin_tone: '',
   skincare_history: '',
   allergies: '',
-  makeup_preferences: [''],
+  makeup_preferences: [],
   skin_issues: ''
 })
 
@@ -404,40 +428,48 @@ async function handleSubmit() {
     }
 
     try {
-        await apiFetch('/auth/register/customer', {
-            method: 'POST',
-            body: JSON.stringify(form)
-        });
+        // Create a single FormData object for the entire registration
+        const formData = new FormData()
         
+        // Add user registration data
+        formData.append('name', form.name)
+        formData.append('email', form.email)
+        formData.append('phone', form.phone)
+        formData.append('password', form.password)
+        formData.append('password_confirmation', form.password_confirmation)
+        
+        // Add profile data
+        formData.append('address', form.address || '')
+        formData.append('skin_tone', form.skin_tone || '')
+        formData.append('skin_type', JSON.stringify(form.skin_type.filter(item => item)) || '[]')
+        formData.append('skincare_history', form.skincare_history || '')
+        formData.append('allergies', form.allergies || '')
+        formData.append('makeup_preferences', JSON.stringify(form.makeup_preferences.filter(item => item)) || '[]')
+        formData.append('skin_issues', form.skin_issues || '')
+        
+        if (form.profile_photo) {
+            formData.append('profile_photo', form.profile_photo)
+        }
+
+        // Single API call to register customer with profile
+        const registerResult = await apiFetch('/auth/register/customer', {
+            method: 'POST',
+            body: formData
+        });
+
+        // Login the user
         const loginResult = await apiFetch('/auth/login/customer', {
             method: 'POST',
-            body: JSON.stringify(form)
+            body: JSON.stringify({
+                email: form.email,
+                password: form.password
+            })
         });
 
         localStorage.setItem('token', loginResult.access_token)
         localStorage.setItem('user', JSON.stringify(loginResult.user))
         localStorage.setItem('user_id', loginResult.user.id)
         localStorage.setItem('role', 'customer')
-
-        const formData = new FormData()
-        formData.append('address', form.address)
-        form.skin_type.forEach((item, index) => {
-        formData.append(`skin_type[${index}]`, item)
-        })
-        form.makeup_preferences.forEach((item, index) => {
-            formData.append(`makeup_preferences[${index}]`, item)
-        })
-        formData.append('skin_tone', form.skin_tone)
-        formData.append('skincare_history',form.skincare_history)
-        formData.append('allergies', form.allergies)
-        formData.append('skin_issues', form.skin_issues)
-        if (form.profile_photo)
-            formData.append('profile_photo', form.profile_photo)
-
-        await apiFetch('/customer/profile', {
-            method: 'POST',
-            body: formData
-        });
 
         alert(`Customer's Account Created!`)
         router.push('/home')

@@ -61,8 +61,6 @@
           </div>
           <div class="bg-gray-50 px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-              <span class="material-symbols-outlined text-gray-500 mr-2">location_on</span>
-              <span class="text-sm text-gray-700">{{ booking.location || 'Lokasi tidak tersedia' }}</span>
             </div>
             <div class="flex space-x-2">
               <button class="p-2 rounded-full hover:bg-gray-200 transition-colors" @click="chat(booking)">

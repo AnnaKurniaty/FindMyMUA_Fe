@@ -32,23 +32,6 @@
             class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
           >
             <div class="relative">
-              <div class="h-48 bg-gradient-to-br from-pink-200 to-rose-200 relative">
-                <template v-if="mua.profile_photo_url">
-                  <img
-                    :src="mua.profile_photo_url"
-                    alt="MUA"
-                    class="w-full h-full object-cover"
-                  />
-                </template>
-                <template v-else>
-                  <div class="w-full h-full bg-gray-300 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                </template>
-                <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-              </div>
               <button
                 @click="removeFromWishlist(mua)"
                 class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-pink-50 transition-colors duration-200"
@@ -74,8 +57,7 @@
                   </div>
                 </template>
                 <div class="ml-4">
-                  <h4 class="font-semibold text-gray-800">{{ mua.user?.name || 'Unknown' }}</h4>
-                  <div class="flex items-center text-sm text-gray-600">{{ mua.user?.email || 'No email' }}</div>
+                  <h4 class="font-semibold text-gray-800">{{ mua.name || 'Unknown' }}</h4>
                 </div>
               </div>
               <div class="text-sm text-gray-600 mb-3" v-if="Array.isArray(mua.makeup_specializations)">
@@ -111,7 +93,7 @@
           </button>
         </div>
         <div class="space-y-5">
-          <h3 class="text-xl font-bold mb-4">Book MUA: {{ bookingMua?.user?.name || 'Unknown' }}</h3>
+          <h3 class="text-xl font-bold mb-4">Book MUA: {{ bookingMua?.name || 'Unknown' }}</h3>
           <div>
             <label class="block text-gray-700 font-medium mb-2">Select Service</label>
             <div class="relative">
@@ -123,14 +105,15 @@
           </div>
           <div>
             <label class="block text-gray-700 font-medium mb-2">Date</label>
-            <div class="relative">
-              <input
-                type="date"
-                class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                v-model="bookingDate"
-                :min="new Date().toISOString().split('T')[0]"
-              />
-            </div>
+           <div class="relative">
+            <input
+            type="date"
+            class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            min="2025-07-28"
+            v-model="bookingDate"
+            :min="new Date().toISOString().split('T')[0]"
+            />
+          </div>
           </div>
           <div>
             <label class="block text-gray-700 font-medium mb-2">Time</label>
@@ -139,6 +122,8 @@
                 type="time"
                 v-model="bookingTime"
                 class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                :min="bookingMua?.muaProfile?.available_start_time || '00:00'"
+                :max="bookingMua?.muaProfile?.available_end_time || '23:59'"
               />
             </div>
           </div>
@@ -191,25 +176,20 @@ async function fetchWishlist() {
         Accept: 'application/json',
       },
     })
-    
-    // Fetch full MUA details for each item in wishlist
-    const muaDetailsPromises = wishlist.map(async (item) => {
-      try {
-        const mua = await apiFetch(`/mua/${item.mua_id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-        })
-        return mua
-      } catch (err) {
-        console.error(`Failed to fetch MUA ${item.mua_id}:`, err)
-        return null
+
+    // Use MUA data from wishlist response directly
+    wishlist.forEach(item => {
+      if (item.mua && Array.isArray(item.mua.services)) {
+        const prices = item.mua.services.map(s => s.price || 0)
+        item.mua.starting_price = prices.length > 0 ? Math.min(...prices) : 0
+      } else {
+        if (item.mua) {
+          item.mua.starting_price = 0
+        }
       }
     })
-    
-    const muaDetails = await Promise.all(muaDetailsPromises)
-    wishlistMuas.value = muaDetails.filter(mua => mua !== null)
+
+    wishlistMuas.value = wishlist.map(item => item.mua).filter(mua => mua !== null)
   } catch (err) {
     console.error('Failed to fetch wishlist:', err)
   } finally {

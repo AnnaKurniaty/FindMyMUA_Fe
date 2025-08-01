@@ -10,7 +10,7 @@
                   class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4 transition-transform group-hover:scale-105"
                 >
                   <img
-                    :src="profile.customer_profile?.profile_photo ? profile.customer_profile.profile_photo : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330'"
+                    :src="profile.profile_photo ? (apiUrl + '/storage/profile_photos/' + profile.profile_photo) : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330'"
                     alt="Profile Photo"
                     class="w-full h-full object-cover"
                     keywords="woman, portrait, professional, makeup artist"
@@ -46,7 +46,7 @@
                   <span class="material-symbols-outlined text-primary-500 mr-3">location_on</span>
                   <div class="flex flex-col">
                     <span class="text-sm text-gray-600">Address</span>
-                    <span class="text-gray-800 font-medium">{{ profile.customer_profile?.address }}</span>
+                    <span class="text-gray-800 font-medium">{{ profile.address }}</span>
                   </div>
                 </div>
                 <div class="flex items-center">
@@ -67,22 +67,22 @@
                   <li class="flex items-start">
                     <span class="material-symbols-outlined text-primary-500 mr-2">palette</span>
                     <span class="text-gray-700 font-medium">Skin Tone:</span>
-                    <span class="ml-2">{{ form.skin_tone }}</span>
+                    <span class="ml-2">{{ profile.skin_tone || form.skin_tone }}</span>
                   </li>
                   <li class="flex items-start">
                     <span class="material-symbols-outlined text-primary-500 mr-2">water_drop</span>
                     <span class="text-gray-700 font-medium">Skin Type:</span>
-                    <span class="ml-2">{{ skinTypeDisplay }}</span>
+                    <span class="ml-2">{{ profile.skin_type ? profile.skin_type.join(', ') : form.skin_type.join(', ') }}</span>
                   </li>
                   <li class="flex items-start">
                     <span class="material-symbols-outlined text-primary-500 mr-2">health_and_safety</span>
                     <span class="text-gray-700 font-medium">Skin Issues:</span>
-                    <span class="ml-2">{{ form.skin_issues }}</span>
+                    <span class="ml-2">{{ profile.skin_issues || form.skin_issues }}</span>
                   </li>
                   <li class="flex items-start">
                     <span class="material-symbols-outlined text-primary-500 mr-2">brush</span>
                     <span class="text-gray-700 font-medium">Makeup Preferences:</span>
-                    <span class="ml-2">{{ form.makeup_preferences }}</span>
+                    <span class="ml-2">{{ profile.makeup_preferences ? profile.makeup_preferences.join(', ') : form.makeup_preferences.join(', ') }}</span>
                   </li>
                 </ul>
               </div>
@@ -92,17 +92,15 @@
                 </h3>
                 <div class="mb-3">
                   <h4 class="font-medium text-gray-700">Skincare History:</h4>
-                  <p class="text-sm mt-1">{{ form.skincare_history }}</p>
+                  <p class="text-sm mt-1">{{ profile.skincare_history || form.skincare_history }}</p>
                 </div>
                 <div>
                   <h4 class="font-medium text-gray-700">Allergies:</h4>
                   <div class="flex flex-wrap gap-2 mt-1">
                     <span
-                      v-for="allergy in form.allergies"
-                      :key="allergy"
                       class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm hover:bg-red-200 transition-colors"
                     >
-                      {{ allergy }}
+                      {{ profile.allergies || form.allergies }}
                     </span>
                   </div>
                 </div>
@@ -268,6 +266,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import { apiFetch } from '@/config'
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const profile = ref(null)
 const showEditForm = ref(false)
 const successMessage = ref('')
@@ -325,18 +325,18 @@ onMounted(async () => {
     form.name = data.name || ''
     form.email = data.email || ''
     form.phone = data.phone || ''
-    form.address = data.customer_profile?.address || ''
-    form.skin_tone = data.customer_profile?.skin_tone || ''
+    form.address = data.address || ''
+    form.skin_tone = data.skin_tone || ''
     try {
-      if (data.customer_profile?.skin_type) {
-        if (typeof data.customer_profile.skin_type === 'string') {
+      if (data.skin_type) {
+        if (typeof data.skin_type === 'string') {
           try {
-            form.skin_type = JSON.parse(data.customer_profile.skin_type)
+            form.skin_type = JSON.parse(data.skin_type)
           } catch {
-            form.skin_type = data.customer_profile.skin_type.split(',')
+            form.skin_type = data.skin_type.split(',')
           }
-        } else if (Array.isArray(data.customer_profile.skin_type)) {
-          form.skin_type = data.customer_profile.skin_type
+        } else if (Array.isArray(data.skin_type)) {
+          form.skin_type = data.skin_type
         } else {
           form.skin_type = []
         }
@@ -346,19 +346,19 @@ onMounted(async () => {
     } catch (e) {
       form.skin_type = []
     }
-    form.skin_issues = data.customer_profile?.skin_issues || ''
-    form.skincare_history = data.customer_profile?.skincare_history || ''
-    form.allergies = data.customer_profile?.allergies || ''
+    form.skin_issues = data.skin_issues || ''
+    form.skincare_history = data.skincare_history || ''
+    form.allergies = data.allergies || ''
 try {
-  if (data.customer_profile?.makeup_preferences) {
-    if (typeof data.customer_profile.makeup_preferences === 'string') {
+  if (data.makeup_preferences) {
+    if (typeof data.makeup_preferences === 'string') {
       try {
-        form.makeup_preferences = JSON.parse(data.customer_profile.makeup_preferences)
+        form.makeup_preferences = JSON.parse(data.makeup_preferences)
       } catch {
-        form.makeup_preferences = data.customer_profile.makeup_preferences.split(',')
+        form.makeup_preferences = data.makeup_preferences.split(',')
       }
-    } else if (Array.isArray(data.customer_profile.makeup_preferences)) {
-      form.makeup_preferences = data.customer_profile.makeup_preferences
+    } else if (Array.isArray(data.makeup_preferences)) {
+      form.makeup_preferences = data.makeup_preferences
     } else {
       form.makeup_preferences = []
     }
@@ -381,6 +381,40 @@ function toggleEditForm() {
   showEditForm.value = !showEditForm.value
   successMessage.value = ''
   errorMessage.value = ''
+  if (showEditForm.value && profile.value) {
+    form.name = profile.value.name || ''
+    form.email = profile.value.email || ''
+    form.phone = profile.value.phone || ''
+    form.address = profile.value.customer_profile?.address || ''
+    form.skin_tone = profile.value.customer_profile?.skin_tone || ''
+    try {
+      form.skin_type = profile.value.customer_profile?.skin_type ? JSON.parse(profile.value.customer_profile.skin_type) : []
+    } catch (e) {
+      form.skin_type = profile.value.customer_profile?.skin_type ? profile.value.customer_profile.skin_type.split(',') : []
+    }
+    form.skin_issues = profile.value.customer_profile?.skin_issues || ''
+    form.skincare_history = profile.value.customer_profile?.skincare_history || ''
+    form.allergies = profile.value.customer_profile?.allergies || ''
+    try {
+      if (profile.value.customer_profile?.makeup_preferences) {
+        if (typeof profile.value.customer_profile.makeup_preferences === 'string') {
+          try {
+            form.makeup_preferences = JSON.parse(profile.value.customer_profile.makeup_preferences)
+          } catch {
+            form.makeup_preferences = profile.value.customer_profile.makeup_preferences.split(',')
+          }
+        } else if (Array.isArray(profile.value.customer_profile.makeup_preferences)) {
+          form.makeup_preferences = profile.value.customer_profile.makeup_preferences
+        } else {
+          form.makeup_preferences = []
+        }
+      } else {
+        form.makeup_preferences = []
+      }
+    } catch {
+      form.makeup_preferences = []
+    }
+  }
 }
 
 function triggerFileInput() {
@@ -473,27 +507,27 @@ async function submitForm() {
     form.name = user.name || ''
     form.email = user.email || ''
     form.phone = user.phone || ''
-    form.address = profile.value.customer_profile?.address || ''
-    form.skin_tone = profile.value.customer_profile?.skin_tone || ''
+    form.address = profile.value.address || ''
+    form.skin_tone = profile.value.skin_tone || ''
 
     try {
-      form.skin_type = profile.value.customer_profile?.skin_type ? JSON.parse(profile.value.customer_profile.skin_type) : []
+      form.skin_type = profile.value.skin_type ? JSON.parse(profile.value.skin_type) : []
     } catch (e) {
-      form.skin_type = profile.value.customer_profile?.skin_type ? profile.value.customer_profile.skin_type.split(',') : []
+      form.skin_type = profile.value.skin_type ? profile.value.skin_type.split(',') : []
     }
-    form.skin_issues = profile.value.customer_profile?.skin_issues || ''
-    form.skincare_history = profile.value.customer_profile?.skincare_history || ''
-    form.allergies = profile.value.customer_profile?.allergies || ''
+    form.skin_issues = profile.value.skin_issues || ''
+    form.skincare_history = profile.value.skincare_history || ''
+    form.allergies = profile.value.allergies || ''
     try {
-      if (profile.value.customer_profile?.makeup_preferences) {
-        if (typeof profile.value.customer_profile.makeup_preferences === 'string') {
+      if (profile.value.makeup_preferences) {
+        if (typeof profile.value.makeup_preferences === 'string') {
           try {
-            form.makeup_preferences = JSON.parse(profile.value.customer_profile.makeup_preferences)
+            form.makeup_preferences = JSON.parse(profile.value.makeup_preferences)
           } catch {
-            form.makeup_preferences = profile.value.customer_profile.makeup_preferences.split(',')
+            form.makeup_preferences = profile.value.makeup_preferences.split(',')
           }
-        } else if (Array.isArray(profile.value.customer_profile.makeup_preferences)) {
-          form.makeup_preferences = profile.value.customer_profile.makeup_preferences
+        } else if (Array.isArray(profile.value.makeup_preferences)) {
+          form.makeup_preferences = profile.value.makeup_preferences
         } else {
           form.makeup_preferences = []
         }
@@ -519,19 +553,18 @@ function cancelEdit() {
     form.name = profile.value.name || ''
     form.email = profile.value.email || ''
     form.phone = profile.value.phone || ''
-    form.address = profile.value.customer_profile?.address || ''
-    form.skin_tone = profile.value.customer_profile?.skin_tone || ''
+    form.address = profile.value.address || ''
+    form.skin_tone = profile.value.skin_tone || ''
   try {
-    form.skin_type = profile.value.customer_profile?.skin_type ? JSON.parse(profile.value.customer_profile.skin_type) : []
+    form.skin_type = profile.value.skin_type ? JSON.parse(profile.value.skin_type) : []
   } catch (e) {
-    form.skin_type = profile.value.customer_profile?.skin_type ? profile.value.customer_profile.skin_type.split(',') : []
+    form.skin_type = profile.value.skin_type ? profile.value.skin_type.split(',') : []
   }
-  form.skin_issues = profile.value.customer_profile?.skin_issues || ''
-  form.skincare_history = profile.value.customer_profile?.skincare_history || ''
-  form.allergies = profile.value.customer_profile?.allergies || ''
-  form.makeup_preferences = profile.value.customer_profile?.makeup_preferences ? JSON.parse(profile.value.customer_profile.makeup_preferences) : ''
+  form.skin_issues = profile.value.skin_issues || ''
+  form.skincare_history = profile.value.skincare_history || ''
+  form.allergies = profile.value.allergies || ''
+  form.makeup_preferences = profile.value.makeup_preferences ? JSON.parse(profile.value.makeup_preferences) : ''
   skinTypeDisplay.value = mapSkinTypeToDisplay(form.skin_type)
   }
 }
 </script>
-

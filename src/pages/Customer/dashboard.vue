@@ -19,7 +19,7 @@
                         </div>
                         <div class="flex gap-2">
                             <button
-                                class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
                                 <span class="material-symbols-outlined mr-2">search</span> Search
                             </button>
@@ -118,7 +118,7 @@
                             </div>
                             <button
                             class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                            :class="favorites.has(mua.id) ? 'bg-pink-600 text-white' : 'bg-gradient-to-br from-pink-100 to-rose-100 text-pink-600'"
+                            :class="favorites.has(mua.id) ? 'bg-pink-600' : 'bg-gradient-to-br from-pink-100 to-rose-100 text-pink-600'"
                             @click="toggleFavorite(mua)"
                             >
                             <span
@@ -128,7 +128,7 @@
                             >{{ favorites.has(mua.id) ? 'favorite' : 'favorite_border' }}</span>
                             </button>
                             <button
-                                class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 bg-pink-500 text-white hover:bg-pink-600 transition-colors duration-200"
+                                class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 bg-pink-500 hover:bg-pink-600 transition-colors duration-200"
                                 @click="openBookingModal(mua)"
                                 title="Book MUA"
                             >
@@ -154,7 +154,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Bridal Makeup</h3>
                             <p class="text-gray-600 mb-4">Perfect for your special day</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
                                 Explore
                             </button>
@@ -176,7 +176,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Party Makeup</h3>
                             <p class="text-gray-600 mb-4">Glam looks for any celebration</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
                                 Explore
                             </button>
@@ -198,7 +198,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Professional</h3>
                             <p class="text-gray-600 mb-4">Corporate and headshot ready</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
                                 Explore
                             </button>
@@ -288,7 +288,7 @@
           <button
             v-if="!modalConfirmCallback"
             @click="closeModal"
-            class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 transition"
+            class="bg-pink-600 px-4 py-2 rounded hover:bg-pink-700 transition"
           >
             OK
           </button>
@@ -346,7 +346,7 @@
       </button>
       <button
        @click="submitBooking"
-      class="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+      class="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
       >
         Confirm Booking
       </button>
