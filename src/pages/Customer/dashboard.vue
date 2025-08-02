@@ -141,20 +141,12 @@
                     <div
                         class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
                     >
-                        <div class="h-48 bg-gradient-to-br from-pink-200 to-rose-200 relative">
-                            <img
-                                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&amp;h=200&amp;fit=crop"
-                                alt="Bridal Makeup"
-                                keywords="bridal, wedding, makeup, beauty, elegant"
-                                class="w-full h-full object-cover"
-                            />
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                        </div>
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Bridal Makeup</h3>
                             <p class="text-gray-600 mb-4">Perfect for your special day</p>
                             <button
                                 class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                @click="navigateToMua('bridal')"
                             >
                                 Explore
                             </button>
@@ -163,20 +155,12 @@
                     <div
                         class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
                     >
-                        <div class="h-48 bg-gradient-to-br from-pink-200 to-rose-200 relative">
-                            <img
-                                src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&amp;h=200&amp;fit=crop"
-                                alt="Party Makeup"
-                                keywords="party, celebration, makeup, glam, night"
-                                class="w-full h-full object-cover"
-                            />
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                        </div>
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Party Makeup</h3>
                             <p class="text-gray-600 mb-4">Glam looks for any celebration</p>
                             <button
                                 class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                @click="navigateToMua('party')"
                             >
                                 Explore
                             </button>
@@ -185,20 +169,12 @@
                     <div
                         class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
                     >
-                        <div class="h-48 bg-gradient-to-br from-pink-200 to-rose-200 relative">
-                            <img
-                                src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&amp;h=200&amp;fit=crop"
-                                alt="Professional Makeup"
-                                keywords="professional, business, makeup, corporate, headshot"
-                                class="w-full h-full object-cover"
-                            />
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                        </div>
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Professional</h3>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Regular</h3>
                             <p class="text-gray-600 mb-4">Corporate and headshot ready</p>
                             <button
                                 class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                @click="navigateToMua('regular')"
                             >
                                 Explore
                             </button>
@@ -549,7 +525,7 @@ onMounted(async () => {
         Accept: 'application/json',
       },
     })
-    profile.value = profileData
+    profile.value = { customer_profile: profileData }
 
     const recommendationRes = await apiFetch('/customer/recommendations', {
       headers: {
@@ -565,5 +541,9 @@ onMounted(async () => {
     console.error('Error:', err)
   }
 })
+
+function navigateToMua(styleType) {
+  router.push({ name: 'CustomerMua', query: { style: styleType } })
+}
 
 </script>

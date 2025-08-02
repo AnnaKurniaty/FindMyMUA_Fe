@@ -80,25 +80,6 @@
                                 placeholder="Tell us about your skills and experience" v-model="form.bio"></textarea>
                         </div>
                         <div>
-                            <div class="flex items-center justify-between">
-                                <label class="block text-sm font-medium">Studio Location</label>
-                                <span
-                                    class="text-xs text-pink-500 cursor-pointer hover:text-pink-600 transition-colors flex items-center">
-                                    <button type="button" @click="getLocation"
-                                        class="material-symbols-outlined text-sm mr-1">my_location</button> Use
-                                    My Current Location
-                                </span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="text"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
-                                    placeholder="Latitude" v-model="form.studio_lat" readonly />
-                                <input type="text"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all"
-                                    placeholder="Longitude" v-model="form.studio_lng" readonly />
-                            </div>
-                        </div>
-                        <div>
                             <label class="block text-[#D56E6E] font-medium mb-2">Service Location</label>
                             <textarea
                                 class="w-full p-3 border-2 border-pink-200 rounded-xl focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 h-32 resize-none"
@@ -251,8 +232,6 @@ const form = reactive({
     bio: '',
     certification: [''],
     service_area: '',
-    studio_lat: '',
-    studio_lng: '',
     available_days: [],
     available_start_time: '',
     available_end_time: '',
@@ -325,17 +304,6 @@ function removeCertification(index) {
     form.certification.splice(index, 1)
 }
 
-function getLocation() {
-    if (!navigator.geolocation) return alert('Geolocation not supported')
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            form.studio_lat = pos.coords.latitude
-            form.studio_lng = pos.coords.longitude
-        },
-        () => alert('Failed to get location')
-    )
-}
-
 async function handleSubmit() {
     if (form.password !== form.password_confirmation) {
         passwordMismatch.value = true
@@ -362,8 +330,6 @@ async function handleSubmit() {
         formData.append('bio', form.bio)
         formData.append('certification', JSON.stringify(form.certification))
         formData.append('service_area', form.service_area)
-        formData.append('studio_lat', form.studio_lat)
-        formData.append('studio_lng', form.studio_lng)
         formData.append('available_start_time', form.available_start_time + ':00')
         formData.append('available_end_time', form.available_end_time + ':00')
         formData.append('available_days', JSON.stringify(form.available_days))

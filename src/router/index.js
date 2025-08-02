@@ -49,6 +49,7 @@ const routes = [
       { path: 'booking', name: 'CustomerBookingList', component: CustomerBookingList },
       { path: 'favorites', name: 'CustomerWishlist', component: WishlistPage },
       { path: 'profile', name: 'CustomerProfile', component: CustomerProfile },
+      { path: 'mua', name: 'CustomerMua', component: CustomerMua },
     ]
   }
 ]

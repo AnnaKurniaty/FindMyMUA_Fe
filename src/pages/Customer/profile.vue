@@ -10,10 +10,12 @@
                   class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4 transition-transform group-hover:scale-105"
                 >
                   <img
-                    :src="profile.profile_photo ? (apiUrl + '/storage/profile_photos/' + profile.profile_photo) : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330'"
+                    :src="profile.profile_photo && profile.profile_photo !== '' ? (mediaBaseUrl + '/storage/profile_photos/' + profile.profile_photo + '?t=' + Date.now()) : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330'"
                     alt="Profile Photo"
                     class="w-full h-full object-cover"
                     keywords="woman, portrait, professional, makeup artist"
+                    @error="onImageError"
+                    @load="console.log('Profile photo loaded:', profile.profile_photo)"
                   />
                 </div>
                 <div
@@ -164,12 +166,12 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                         v-model="form.skin_tone"
                       >
-                        <option value="light">Light with cool undertones</option>
-                        <option value="lightWarm">Light with warm undertones</option>
-                        <option value="medium">Medium with warm undertones</option>
-                        <option value="mediumCool">Medium with cool undertones</option>
-                        <option value="deep">Deep with warm undertones</option>
-                        <option value="deepCool">Deep with cool undertones</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Light">Light</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Olive">Olives</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Black">Black</option>
                       </select>
                     </div>
                     <div class="space-y-2">
@@ -266,7 +268,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { apiFetch } from '@/config'
 
-const apiUrl = import.meta.env.VITE_API_URL
+import { config } from '@/config'
+
+const apiUrl = config.baseURL.replace(/\/api\/?$/, '') // Remove trailing /api if present
+const mediaBaseUrl = apiUrl
 
 const profile = ref(null)
 const showEditForm = ref(false)
@@ -297,11 +302,7 @@ const skinTypeOptions = [
 ]
 
 const makeupPreferencesOptions = [
-  'Sheer',
-  'Light',
-  'Medium',
-  'Medium to Full',
-  'Full'
+  'Neutrals', 'Glam ', 'Soft Glam ', 'Bold', 'Korean'
 ]
 
 
@@ -385,35 +386,41 @@ function toggleEditForm() {
     form.name = profile.value.name || ''
     form.email = profile.value.email || ''
     form.phone = profile.value.phone || ''
-    form.address = profile.value.customer_profile?.address || ''
-    form.skin_tone = profile.value.customer_profile?.skin_tone || ''
-    try {
-      form.skin_type = profile.value.customer_profile?.skin_type ? JSON.parse(profile.value.customer_profile.skin_type) : []
-    } catch (e) {
-      form.skin_type = profile.value.customer_profile?.skin_type ? profile.value.customer_profile.skin_type.split(',') : []
-    }
-    form.skin_issues = profile.value.customer_profile?.skin_issues || ''
-    form.skincare_history = profile.value.customer_profile?.skincare_history || ''
-    form.allergies = profile.value.customer_profile?.allergies || ''
-    try {
-      if (profile.value.customer_profile?.makeup_preferences) {
-        if (typeof profile.value.customer_profile.makeup_preferences === 'string') {
-          try {
-            form.makeup_preferences = JSON.parse(profile.value.customer_profile.makeup_preferences)
-          } catch {
-            form.makeup_preferences = profile.value.customer_profile.makeup_preferences.split(',')
-          }
-        } else if (Array.isArray(profile.value.customer_profile.makeup_preferences)) {
-          form.makeup_preferences = profile.value.customer_profile.makeup_preferences
-        } else {
-          form.makeup_preferences = []
+    form.address = profile.value.address || ''
+    form.skin_tone = profile.value.skin_tone || ''
+    if (profile.value.skin_type) {
+      if (typeof profile.value.skin_type === 'string') {
+        try {
+          form.skin_type = JSON.parse(profile.value.skin_type)
+        } catch {
+          form.skin_type = profile.value.skin_type.split(',')
         }
+      } else if (Array.isArray(profile.value.skin_type)) {
+        form.skin_type = profile.value.skin_type
       } else {
-        form.makeup_preferences = []
+        form.skin_type = []
       }
-    } catch {
+    } else {
+      form.skin_type = []
+    }
+    form.skin_issues = profile.value.skin_issues || ''
+    form.skincare_history = profile.value.skincare_history || ''
+    form.allergies = profile.value.allergies || ''
+  if (profile.value.makeup_preferences) {
+    if (typeof profile.value.makeup_preferences === 'string') {
+      try {
+        form.makeup_preferences = JSON.parse(profile.value.makeup_preferences)
+      } catch {
+        form.makeup_preferences = profile.value.makeup_preferences.split(',')
+      }
+    } else if (Array.isArray(profile.value.makeup_preferences)) {
+      form.makeup_preferences = profile.value.makeup_preferences
+    } else {
       form.makeup_preferences = []
     }
+  } else {
+    form.makeup_preferences = []
+  }
   }
 }
 
@@ -421,10 +428,51 @@ function triggerFileInput() {
   fileInput.value.click()
 }
 
-function handleFileChange(event) {
+async function handleFileChange(event) {
   const files = event.target.files
   if (files.length > 0) {
     selectedFile.value = files[0]
+    
+    // Automatically upload the selected photo
+    await uploadProfilePhoto(selectedFile.value)
+  }
+}
+
+async function uploadProfilePhoto(file) {
+  try {
+    // Create FormData for profile update
+    const profileData = new FormData()
+    profileData.append('profile_photo', file)
+    profileData.append('_method', 'PUT')
+
+    // Update CustomerProfile with new photo
+    await apiFetch('/customer/profile', {
+      method: 'POST', // Using POST because we're sending FormData with _method=PUT
+      body: profileData
+    })
+
+    // Show success message
+    successMessage.value = 'Profile photo updated successfully'
+    errorMessage.value = ''
+
+    // Refresh profile data to show updated photo
+    const token = localStorage.getItem('token')
+    const response = await apiFetch('/customer/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    })
+    
+    // Update profile with the response data
+    profile.value = response;
+
+    // Clear the file input
+    fileInput.value.value = ''
+  } catch (err) {
+    console.error('Failed to update profile photo', err)
+    errorMessage.value = err.message || 'Failed to update profile photo'
+    successMessage.value = ''
   }
 }
 
@@ -479,8 +527,12 @@ async function submitForm() {
 
   try {
     // Update CustomerProfile
+    const token = localStorage.getItem('token')
     const profileResponse = await apiFetch('/customer/profile', {
-      method: 'PUT',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
       body: profileData
     })
 
@@ -510,11 +562,21 @@ async function submitForm() {
     form.address = profile.value.address || ''
     form.skin_tone = profile.value.skin_tone || ''
 
-    try {
-      form.skin_type = profile.value.skin_type ? JSON.parse(profile.value.skin_type) : []
-    } catch (e) {
-      form.skin_type = profile.value.skin_type ? profile.value.skin_type.split(',') : []
+  if (profile.value.skin_type) {
+    if (typeof profile.value.skin_type === 'string') {
+      try {
+        form.skin_type = JSON.parse(profile.value.skin_type)
+      } catch {
+        form.skin_type = profile.value.skin_type.split(',')
+      }
+    } else if (Array.isArray(profile.value.skin_type)) {
+      form.skin_type = profile.value.skin_type
+    } else {
+      form.skin_type = []
     }
+  } else {
+    form.skin_type = []
+  }
     form.skin_issues = profile.value.skin_issues || ''
     form.skincare_history = profile.value.skincare_history || ''
     form.allergies = profile.value.allergies || ''
@@ -563,7 +625,21 @@ function cancelEdit() {
   form.skin_issues = profile.value.skin_issues || ''
   form.skincare_history = profile.value.skincare_history || ''
   form.allergies = profile.value.allergies || ''
-  form.makeup_preferences = profile.value.makeup_preferences ? JSON.parse(profile.value.makeup_preferences) : ''
+  if (profile.value.makeup_preferences) {
+    if (typeof profile.value.makeup_preferences === 'string') {
+      try {
+        form.makeup_preferences = JSON.parse(profile.value.makeup_preferences)
+      } catch {
+        form.makeup_preferences = profile.value.makeup_preferences.split(',')
+      }
+    } else if (Array.isArray(profile.value.makeup_preferences)) {
+      form.makeup_preferences = profile.value.makeup_preferences
+    } else {
+      form.makeup_preferences = []
+    }
+  } else {
+    form.makeup_preferences = []
+  }
   skinTypeDisplay.value = mapSkinTypeToDisplay(form.skin_type)
   }
 }

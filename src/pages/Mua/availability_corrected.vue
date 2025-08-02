@@ -452,3 +452,4 @@ function getDateClasses(date) {
     return 'bg-red-100 border border-red-300'
   }
   
+  

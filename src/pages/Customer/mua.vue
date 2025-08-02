@@ -2,7 +2,7 @@
     ><div id="webcrumbs">
         <div class="bg-gray-50 min-h-screen p-4 md:p-6 lg:p-8 text-gray-800">
             <div class="max-w-6xl mx-auto">
-                <h1 class="text-2xl md:text-3xl font-bold mb-6">MUA Favorites</h1>
+                <h1 class="text-2xl md:text-3xl font-bold mb-6">MUA</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div
                             v-for="(profile, index) in profileList"
