@@ -18,7 +18,7 @@ import CustomerBookingList from '../pages/Customer/booking_list.vue'
 import CustomerMua from '../pages/Customer/mua.vue'
 import CustomerProfile from '../pages/Customer/profile.vue'
 import WishlistPage from '../pages/Customer/wishlist.vue'
-import LandingPage from '../pages/landingpage.vue'
+import LandingPage from '../pages/LandingPage.vue'
 
 const routes = [
   { path: '/guest', name: 'Landing', component: LandingPage },

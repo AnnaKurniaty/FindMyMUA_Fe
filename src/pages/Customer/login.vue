@@ -115,6 +115,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { config, apiFetch } from '@/config'
 
 const email = ref('')
 const password = ref('')
@@ -122,29 +123,23 @@ const router = useRouter()
 
 const handleLogin = async () => {
   try {
-    const res = await fetch('https://findmymua-production.up.railway.app/auth/login/customer', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      body: JSON.stringify({
-        email: email.value,
+    const res = await apiFetch('/auth/login/customer', {
+            method: 'POST',
+            body: JSON.stringify({
+               email: email.value,
         password: password.value
-      })
-    })
+            })
+        });
 
-    const data = await res.json()
-
-    if (res.ok) {
-      localStorage.setItem('token', data.access_token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      localStorage.setItem('user_id', data.user.id)
+    if (res) {
+      localStorage.setItem('token', res.access_token)
+      localStorage.setItem('user', JSON.stringify(res.user))
+      localStorage.setItem('user_id', res.user.id)
       localStorage.setItem('role', 'customer')
       alert('Login berhasil!')
       router.push('/home')
     } else {
-      alert(data.error || 'Email atau password salah.')
+      alert('Email atau password salah.')
     }
   } catch (error) {
     alert('Gagal login. Silakan cek koneksi Anda.')

@@ -118,6 +118,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { config, apiFetch } from '@/config'
 
 const email = ref('')
 const password = ref('')
@@ -125,17 +126,13 @@ const router = useRouter()
 
 const handleLogin = async () => {
   try {
-    const res = await fetch('https://findmymua-production.up.railway.app/auth/login/mua', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value
-      })
-    })
+    const res = await apiFetch('/auth/login/mua', {
+            method: 'POST',
+            body: JSON.stringify({
+                email: email.email,
+                password: password.password
+            })
+        });
 
     const data = await res.json()
 
