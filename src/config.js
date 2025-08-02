@@ -1,5 +1,5 @@
 export const config = {
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'https://findmymua-production.up.railway.app',
   frontendURL: 'http://localhost:5173'
 }
 

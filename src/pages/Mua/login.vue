@@ -125,7 +125,7 @@ const router = useRouter()
 
 const handleLogin = async () => {
   try {
-    const res = await fetch('http://localhost:8000/api/auth/login/mua', {
+    const res = await fetch('https://findmymua-production.up.railway.app/auth/login/mua', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
