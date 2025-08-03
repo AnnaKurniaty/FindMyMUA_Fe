@@ -50,6 +50,7 @@ const routes = [
       { path: 'favorites', name: 'CustomerWishlist', component: WishlistPage },
       { path: 'profile', name: 'CustomerProfile', component: CustomerProfile },
       { path: 'mua', name: 'CustomerMua', component: CustomerMua },
+      { path: 'mua/:id', name: 'CustomerMuaDetail', component: () => import('../pages/Customer/mua_detail.vue') }
     ]
   }
 ]

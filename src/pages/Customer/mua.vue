@@ -7,7 +7,8 @@
                         <div
                             v-for="(profile, index) in profileList"
                             :key="index"
-                            class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
+                            class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+                            @click="goToMuaDetail(profile.id)"
                         >
                             <div class="relative h-56">
                             <img
@@ -78,8 +79,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { apiFetch } from '@/config'
+import { useRouter } from 'vue-router'
 
 const profileList = ref([])
+const router = useRouter()
 
 onMounted(async () => {
   const token = localStorage.getItem('token')
@@ -109,6 +112,10 @@ function formatPriceRange(services) {
 
 function formatRupiah(number) {
   return new Intl.NumberFormat('id-ID').format(number)
+}
+
+function goToMuaDetail(muaId) {
+  router.push(`/mua/${muaId}`)
 }
 
 </script>

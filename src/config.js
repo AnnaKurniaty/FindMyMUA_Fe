@@ -1,7 +1,12 @@
 export const config = {
-  baseURL: 'https://findmymua-production.up.railway.app',
+  baseURL: 'http://localhost:8000/api',
   frontendURL: 'http://localhost:5173'
 }
+
+// export const config = {
+//   baseURL: 'https://findmymua-production.up.railway.app',
+//   frontendURL: 'https://wezzbeauty.netlify.app'
+// }
 
 export async function apiFetch(endpoint, options = {}) {
   // Remove leading slash from endpoint if it exists and baseURL already ends with /api
