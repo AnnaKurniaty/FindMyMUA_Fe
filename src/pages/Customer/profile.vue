@@ -322,12 +322,16 @@ onMounted(async () => {
         Accept: 'application/json'
       }
     })
+
     profile.value = data
     form.name = data.name || ''
     form.email = data.email || ''
     form.phone = data.phone || ''
     form.address = data.address || ''
     form.skin_tone = data.skin_tone || ''
+
+    // console.log(profile.value.profile_photo)
+    // console.log("DATA GAMBAR", mediaBaseUrl + '/storage/profile_photos/' + profile.value.profile_photo + '?t=' + Date.now())
     try {
       if (data.skin_type) {
         if (typeof data.skin_type === 'string') {

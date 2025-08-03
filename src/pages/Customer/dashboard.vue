@@ -17,13 +17,13 @@
                                 class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                             />
                         </div>
-                        <div class="flex gap-2">
-                            <button
-                                class="bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                            >
-                                <span class="material-symbols-outlined mr-2">search</span> Search
-                            </button>
-                        </div>
+                       <div class="flex gap-2">
+                        <button
+                          class="flex items-center bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                        >
+                          <span class="material-symbols-outlined mr-2">search</span> Search
+                        </button>
+                      </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -145,7 +145,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Bridal Makeup</h3>
                             <p class="text-gray-600 mb-4">Perfect for your special day</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                                 @click="navigateToMua('bridal')"
                             >
                                 Explore
@@ -159,7 +159,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Party Makeup</h3>
                             <p class="text-gray-600 mb-4">Glam looks for any celebration</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                                 @click="navigateToMua('party')"
                             >
                                 Explore
@@ -173,7 +173,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Regular</h3>
                             <p class="text-gray-600 mb-4">Corporate and headshot ready</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                                 @click="navigateToMua('regular')"
                             >
                                 Explore

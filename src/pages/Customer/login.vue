@@ -109,6 +109,24 @@
                 </div>
             </div>
         </div>
+
+         <!-- Success Modal -->
+        <div v-if="showSuccessModal" class="fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-[360px] text-center animate-fadeIn">
+            <div class="mb-4">
+            <svg class="mx-auto h-12 w-12 text-pink-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            </div>
+            <h2 class="text-xl font-bold text-pink-500 mb-2">Welcome, {{ loggedInUsername }}! 💖</h2>
+            <p class="text-sm text-gray-700 mb-6">Here’s to a day as radiant as your smile.<br/>Let’s make today glow ✨</p>
+            <button @click="closeModal"
+                    class="w-full bg-gradient-to-r from-[#D56E6E] to-[#D56E6E]/80 text-white py-2 px-2 rounded-full hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 text-md">
+            ok
+            </button>
+        </div>
+        </div>
+
     </div>
 </template>
 
@@ -120,30 +138,42 @@ import { config, apiFetch } from '@/config'
 const email = ref('')
 const password = ref('')
 const router = useRouter()
+const showSuccessModal = ref(false)
+const loggedInUsername = ref('Beautiful')
 
 const handleLogin = async () => {
   try {
     const res = await apiFetch('/auth/login/customer', {
             method: 'POST',
             body: JSON.stringify({
-               email: email.value,
-        password: password.value
+                email: email.value,
+                password: password.value
             })
         });
 
     if (res) {
-      localStorage.setItem('token', res.access_token)
-      localStorage.setItem('user', JSON.stringify(res.user))
-      localStorage.setItem('user_id', res.user.id)
-      localStorage.setItem('role', 'customer')
-      alert('Login berhasil!')
-      router.push('/home')
+        localStorage.setItem('token', res.access_token)
+        localStorage.setItem('user', JSON.stringify(res.user))
+        localStorage.setItem('user_id', res.user.id)
+        localStorage.setItem('role', 'customer')
+        
+        showSuccessModal.value = true
+        loggedInUsername.value = res.user.name
+        setTimeout(() => {
+        showSuccessModal.value = false
+        router.push('/home')
+        }, 2000)
     } else {
-      alert('Email atau password salah.')
+        alert('Email atau password salah.')
     }
-  } catch (error) {
-    alert('Gagal login. Silakan cek koneksi Anda.')
-    console.error(error)
+    } catch (error) {
+        alert('Gagal login. Silakan cek koneksi Anda.')
+        console.error(error)
   }
+}
+
+const closeModal = () => {
+  showSuccessModal.value = false
+  router.push('/home')
 }
 </script>
