@@ -48,6 +48,15 @@
         <span class="font-medium">Favorites</span>
       </div>
       <div
+        @click="router.push('/notifications')"
+        :class="[
+          'flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer',
+          isActiveRoute('notifications') ? 'bg-primary-50 text-primary-600' : 'text-gray-600 hover:bg-gray-100'
+        ]"
+      >
+        <span class="font-medium">Notification</span>
+      </div>
+      <div
         @click="logout"
         class="flex items-center gap-3 p-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
       >

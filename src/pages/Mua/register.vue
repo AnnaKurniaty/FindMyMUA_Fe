@@ -1,22 +1,14 @@
 <template>
     <div id="webcrumbs">
-<div class="w-full p-8 bg-pink-50 min-h-screen text-customred">
+<div class="w-full p-8 bg-pink-50 min-h-screen text-customred text-gray-800">
 <div
 class="max-w-md mx-auto md:max-w-xl lg:max-w-4xl bg-white rounded-3xl shadow-lg p-8 border-2 border-customred">
-                <div class="flex justify-between items-center mb-8">
-<a
-                        href="/guest"
-                        class="bg-white text-customred border border-pink-200 px-4 py-2 rounded-full font-medium hover:bg-pink-50 transition-colors flex items-center"
-                    >
-                        <span class="material-symbols-outlined text-sm mr-1">arrow_back</span>
-                        Back
-                    </a>
-                    <div class="text-center flex-1">
-<div
-                            class="w-16 h-16 bg-gradient-to-br from-customred to-pink-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-2xl text-white">palette</span>
+                <div class="text-center mb-8">
+                    <div class="flex flex-col items-center">
+                        <div class="mb-4">
+                            <img src="@/assets/logo.jpg" alt="Wezz Beauty Logo" class="w-20 h-20 rounded-full mx-auto">
                         </div>
-<h1 class="text-2xl font-bold text-customred mb-2">MUA Registration</h1>
+                        <h1 class="text-2xl font-bold text-customred mb-2">MUA Registration</h1>
                         <p class="text-pink-800 text-sm">Join our beauty community!</p>
                     </div>
                 </div>
@@ -243,7 +235,7 @@ const form = reactive({
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const specializations = ['Bridal', 'Pre-wedding', 'Graduation', 'Party', 'Content Creator', 'Regular']
-const styles = ['Neutrals', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
+const styles = ['Natural', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
 const skin = ['Dry', 'Oily', 'Combination', 'Sensitive', 'Normal']
 
 const showPassword = ref(false)

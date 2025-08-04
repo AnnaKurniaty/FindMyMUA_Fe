@@ -10,82 +10,37 @@
                                 class="bg-white/90 rounded-3xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-[#D56E6E]/20"
                             >
                                 <img
-                                    src="https://images.unsplash.com/photo-1709477542170-f11ee7d471a0?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxtYWtldXAlMjBhcnRpc3R8ZW58MHx8fHwxNzUxNDY0NTk3fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
-                                    alt="Professional makeup artist Sarah"
+                                    src="@/assets/nanathnadia.jpg"
+                                    alt="Professional makeup artist Nanathnadia"
                                     class="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-[#D56E6E]/20"
                                 />
-                                <h3 class="text-xl font-bold text-center mb-2 text-[#D56E6E]">Sarah Johnson</h3>
+                                <h3 class="text-xl font-bold text-center mb-2 text-[#D56E6E]">Nanathnadia</h3>
                                 <p class="text-pink-600 text-center mb-4">Wedding &amp; Event Specialist</p>
-                                <div class="flex justify-center items-center mb-4">
-                                    <div class="flex text-yellow-400">
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                    </div>
-                                    <span class="ml-2 text-pink-600">(47 reviews)</span>
-                                </div>
-                                <p class="text-center text-2xl font-bold text-pink-600 mb-4">$150/session</p>
-                                <button
-                                    class="w-full bg-gradient-to-r from-[#D56E6E] to-[#D56E6E]/80 text-white py-2 rounded-full hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
-                                >
-                                    View Profile
-                                </button>
+                                <p class="text-center text-2xl font-bold text-pink-600 mb-4">Rp 400.000/session</p>
                             </div>
                             <div
                                 class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-[#D56E6E]/20"
                             >
                                 <img
-                                    src="https://images.unsplash.com/photo-1736849816780-6ca0730061a6?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYWtldXAlMjBhcnRpc3QlMjBtYXlhfGVufDB8fHx8MTc1MTQ2NjMwMHww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
-                                    alt="Professional makeup artist Maya"
+                                    src="@/assets/maisahasna.jpg"
+                                    alt="Professional makeup artist Maisa Hasna"
                                     class="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-[#D56E6E]/20"
                                 />
-                                <h3 class="text-xl font-bold text-center mb-2 text-[#D56E6E]">Maya Patel</h3>
+                                <h3 class="text-xl font-bold text-center mb-2 text-[#D56E6E]">Maisa Hasna</h3>
                                 <p class="text-[#D56E6E] text-center mb-4">Skin Specialist &amp; Bridal MUA</p>
-                                <div class="flex justify-center items-center mb-4">
-                                    <div class="flex text-yellow-400">
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star_half</span>
-                                    </div>
-                                    <span class="ml-2 text-[#D56E6E]">(38 reviews)</span>
-                                </div>
-                                <p class="text-center text-2xl font-bold text-[#D56E6E] mb-4">$180/session</p>
-                                <button
-                                    class="w-full bg-gradient-to-r from-[#D56E6E] to-[#D56E6E]/80 text-white py-3 rounded-full hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
-                                >
-                                    View Profile
-                                </button>
+                                <p class="text-center text-2xl font-bold text-[#D56E6E] mb-4">Rp 500.000/session</p>
                             </div>
                             <div
                                 class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-[#D56E6E]/20"
                             >
-                                <img
-                                    src="https://images.unsplash.com/photo-1660675104528-c8d22837fe08?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYWtldXAlMjBhcnRpc3QlMjBkYW5pZWx8ZW58MHx8fHwxNzUxNDY2MzA0fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
-                                    alt="Professional makeup artist Daniel"
+                                 <img
+                                    src="@/assets/desone.jpg"
+                                    alt="Professional makeup artist Desone Salon"
                                     class="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-[#D56E6E]/20"
                                 />
-                                <h3 class="text-xl font-bold text-center mb-2 text-[#D56E6E]">Daniel Kim</h3>
+                                <h3 class="text-xl font-bold text-center mb-2 text-[#D56E6E]">Desone Salon</h3>
                                 <p class="text-[#D56E6E] text-center mb-4">Celebrity &amp; Editorial Expert</p>
-                                <div class="flex justify-center items-center mb-4">
-                                    <div class="flex text-yellow-400">
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                        <span class="material-symbols-outlined">star</span>
-                                    </div>
-                                    <span class="ml-2 text-[#D56E6E]">(65 reviews)</span>
-                                </div>
-                                <p class="text-center text-2xl font-bold text-[#D56E6E] mb-4">$220/session</p>
-                                <button
-                                    class="w-full bg-gradient-to-r from-[#D56E6E] to-[#D56E6E]/80 text-white py-2 rounded-full hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
-                                >
-                                    View Profile
-                                </button>
+                                <p class="text-center text-2xl font-bold text-[#D56E6E] mb-4">Rp 200.000/session</p>
                             </div>
                         </div>
                     </div>

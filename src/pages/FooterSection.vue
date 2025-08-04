@@ -73,6 +73,9 @@
                                     <a href="https://wa.me/6285860458285" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
                                         >+62 858-6045-8285</a
                                     >
+                                    <a href="https://wa.me/6285173270089" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >+62 851-7327-0089</a
+                                    >
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="material-symbols-outlined text-[#D56E6E]/80">mail</span>

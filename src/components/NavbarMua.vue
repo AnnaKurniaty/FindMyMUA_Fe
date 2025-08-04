@@ -132,7 +132,8 @@ const tabs = [
   { name: 'Dashboard', label: 'Dashboard', icon: 'dashboard' },
   { name: 'Services', label: 'Services', icon: 'business_center' },
   { name: 'Profile', label: 'Profile', icon: 'person' },
-  { name: 'Calendar', label: 'Calendar', icon: 'calendar_month' }
+  { name: 'Calendar', label: 'Calendar', icon: 'calendar_month' },
+  { name: 'Notifications', label: 'Notifications' }
 ]
 
 function isActiveRoute(tabName) {

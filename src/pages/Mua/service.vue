@@ -121,7 +121,7 @@
                         </div>
                         <form class="space-y-4" @submit.prevent="submitService">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Service Name</label>
+                                <label class="block text-sm font-semibold text-pink-500 mb-2">Service Name</label>
                                 <input
                                     type="text"
                                     class="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
@@ -131,7 +131,7 @@
                             </div>
                             <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Price (Rp)</label>
+                                    <label class="block text-sm font-semibold text-pink-500 mb-2">Price (Rp)</label>
                                     <input
                                         type="number"
                                         class="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
@@ -140,7 +140,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Duration (Hours)</label>
+                                    <label class="block text-sm font-semibold text-pink-500 mb-2">Duration (Hours)</label>
                                     <input
                                         class="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
                                         v-model="form.duration"
@@ -148,7 +148,7 @@
                                         placeholder="e.g., 1 - 2"
                                     />
                                 </div>
-                                <div>
+                                <!-- <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                                     <select
                                         v-model="form.category"
@@ -162,10 +162,24 @@
                                         <option value="Content Creator">Content Creator</option>
                                         <option value="Regular">Regular</option>
                                     </select>
+                                </div> -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-pink-500 mb-2">Choose a Category</label>
+                                    <select
+                                        v-model="form.category"
+                                        class="w-full px-4 py-3 bg-white text-pink-500 border border-pink-200 rounded-xl shadow-sm focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all duration-300 ease-in-out">
+                                        <option disabled value="">-- Select Category --</option>
+                                        <option value="Bridal">👰 Bridal</option>
+                                        <option value="Pre-wedding">💍 Pre-wedding</option>
+                                        <option value="Graduation">🎓 Graduation</option>
+                                        <option value="Party">🎉 Party</option>
+                                        <option value="Content Creator">📸 Content Creator</option>
+                                        <option value="Regular">💄 Regular</option>
+                                    </select>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <label class="block text-sm font-semibold text-pink-500 mb-2">Description</label>
                                 <textarea
                                     class="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 h-20 resize-none"
                                     placeholder="Describe your service..."
@@ -174,6 +188,28 @@
                             </div>
                             <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
                                 <div>
+                                    <label class="block text-sm font-semibold text-pink-500 mb-2">Photo</label>
+                                    <!-- Drop Area -->
+                                    <div class="block border-2 border-dashed border-pink-300 rounded-xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
+                                        @click="triggerFileInput">
+                                        <input type="file" ref="fileInput" accept="image/*" class="hidden"
+                                            @change="handleFileChange" />
+                                        <template v-if="previewUrl">
+                                            <img :src="previewUrl" alt="Preview" class="mx-auto max-h-40 rounded-md" />
+                                            <button @click.stop="removeImage" class="mt-2 text-sm underline text-pink-600">
+                                                Remove Image
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <span class="material-symbols-outlined text-4xl text-pink-400 mb-2 block">
+                                                add_a_photo
+                                            </span>
+                                            <p class="text-pink-500 font-medium">Click to upload</p>
+                                            <p class="text-sm text-pink-400">JPG, PNG up to 5MB</p>
+                                        </template>
+                                    </div>
+                                </div>
+                                <!-- <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2"
                                         >Photo</label
                                     >
@@ -185,9 +221,9 @@
                                         >
                                         <input type="file" class="text-gray-600" accept="image/*" @change="handleFileUpload" />
                                     </div>
-                                </div>
+                                </div> -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Make up Style</label>
+                                    <label class="block text-sm font-semibold text-pink-500 mb-2">Make up Style</label>
                                     <input
                                         type="text"
                                         v-model="form.makeup_style"
@@ -249,8 +285,26 @@
                 </div>
             </div>
         </div>
-    </div></template
->
+    </div>
+
+     <!-- Success Modal -->
+    <div v-if="showSuccessModal" class="fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300">
+      <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-[400px] text-center animate-fadeIn">
+        <div class="mb-4">
+          <svg class="mx-auto h-12 w-12 text-pink-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold text-pink-500 mb-2">Service added!</h2>
+        <p class="text-sm text-gray-700 mb-6">Service with name {{ addedServiceName }}<br/> successfully {{ modalAction }} ✨</p>
+        <button @click="closeModal"
+                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-2 px-2 rounded-full hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 text-md">
+          ok
+        </button>
+      </div>
+    </div>
+    
+</template>
 
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
@@ -259,11 +313,19 @@ import { apiFetch } from '@/config'
 const services = ref([])
 const editingId = ref(null)
 const isEditing = ref(false)
+const isDeleting = ref(false)
 const analytics = ref({
   total_bookings: 0,
   total_revenue: 0,
   average_rating: 0,
   most_popular_category: 'No data'
+})
+const showSuccessModal = ref(false)
+const addedServiceName = ref('')
+const modalAction = computed(() => {
+  if (editingId.value !== null) return 'updated'
+  if (isDeleting.value) return 'deleted'
+  return 'added'
 })
 
 onMounted(() => {
@@ -274,12 +336,7 @@ onMounted(() => {
 async function fetchServices() {
   const token = localStorage.getItem('token')
   try {
-    const data = await apiFetch('/mua/services', {
-        headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-        }
-    })
+    const data = await apiFetch('/mua/services')
     services.value = data
     } catch (err) {
     console.error('Failed to load services', err)
@@ -287,14 +344,8 @@ async function fetchServices() {
 }
 
 async function fetchAnalytics() {
-  const token = localStorage.getItem('token')
   try {
-    const data = await apiFetch('/mua/services/analytics', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    })
+    const data = await apiFetch('/mua/services/analytics')
     analytics.value = data
   } catch (err) {
     console.error('Failed to load analytics', err)
@@ -329,17 +380,12 @@ function resetForm() {
   isEditing.value = false
 }
 
-function handleFileUpload(event) {
-  form.photo = event.target.files[0]
-}
-
 async function submitService() {
-  const token = localStorage.getItem('token')
-  const fd = new FormData()
+  const formData = new FormData()
 
   for (const key in form) {
     if (form[key] !== null) {
-      fd.append(key, key === 'photo' ? form[key] : String(form[key]))
+      formData.append(key, key === 'photo' ? form[key] : String(form[key]))
     }
   }
 
@@ -347,21 +393,20 @@ async function submitService() {
   const url = isUpdate
     ? `/mua/services/${editingId.value}`
     : '/mua/services'
-
+  
   if (isUpdate) {
-    fd.append('_method', 'PUT')
+    formData.append('_method', 'PUT')
   }
 
   try {
     const data = await apiFetch(url, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: fd
+      body: formData
     })
 
-    alert(isUpdate ? 'Service updated!' : 'Service added!')
+    showSuccessModal.value = true
+    addedServiceName.value = data.service.name
+    editingId.value = editingId.value
     resetForm()
     fetchServices()
     fetchAnalytics() // Refresh analytics after service changes
@@ -387,24 +432,52 @@ async function deleteService(id) {
   const confirmDelete = confirm("Are you sure you want to delete this service?")
   if (!confirmDelete) return
 
-  const token = localStorage.getItem('token')
-
   try {
-    await apiFetch(`/mua/services/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
+    isDeleting.value = true
+    
+    const data = await apiFetch(`/mua/services/${id}`, {
+      method: 'DELETE'
     })
 
-    alert('Service deleted!')
+    showSuccessModal.value = true
+    addedServiceName.value = data.name
     fetchServices()
     fetchAnalytics() // Refresh analytics after service deletion
+    isDeleting.value = false
   } catch (err) {
     console.error("❌ Delete Error:", err)
     alert(err.message || 'Gagal menghapus service.')
   }
 }
 
+//-- SERVICE PHOTO --
+const fileInput = ref(null)
+const previewUrl = ref(null)
+const selectedFile = ref(null)
+
+const triggerFileInput = () => {
+    fileInput.value.click()
+}
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        form.photo = file
+        selectedFile.value = file
+        previewUrl.value = URL.createObjectURL(file)
+    }
+}
+
+const removeImage = () => {
+    selectedFile.value = null
+    previewUrl.value = null
+    fileInput.value.value = null
+}
+//-- END Service Photo --
+
+
+const closeModal = () => {
+    showSuccessModal.value = false
+    isDeleting.value = false
+}
 </script>
