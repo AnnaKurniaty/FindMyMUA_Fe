@@ -5,6 +5,13 @@
       <div class="bg-white rounded-lg shadow-lg p-6">
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl font-bold text-gray-900">Notifications</h1>
+          <button
+            v-if="notifications.length > 0"
+            @click="markAllAsRead"
+            class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors"
+          >
+            Mark All as Read
+          </button>
         </div>
 
         <div v-if="loading" class="text-center py-8">
@@ -40,6 +47,13 @@
                 <p class="text-gray-600 mb-2">{{ notification.message }}</p>
                 <p class="text-sm text-gray-400">{{ formatTime(notification.created_at) }}</p>
               </div>
+              <button
+                v-if="!notification.read"
+                @click="markAsRead(notification.id)"
+                class="text-sm text-pink-500 hover:text-pink-700"
+              >
+                Mark as read
+              </button>
             </div>
           </div>
         </div>
@@ -61,6 +75,16 @@ const fetchNotifications = async () => {
   await notificationStore.fetchNotifications()
   notifications.value = notificationStore.notifications
   loading.value = false
+}
+
+const markAllAsRead = async () => {
+  await notificationStore.markAllAsRead()
+  await fetchNotifications()
+}
+
+const markAsRead = async (id) => {
+  await notificationStore.markAsRead(id)
+  await fetchNotifications()
 }
 
 const formatTime = (dateString) => {

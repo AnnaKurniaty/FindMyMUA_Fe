@@ -58,6 +58,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { apiFetch } from '@/config'
 
 const router = useRouter()
 const route = useRoute()
@@ -85,11 +86,11 @@ onMounted(async () => {
   const token = localStorage.getItem('token')
   if (token) {
     try {
-      const res = await fetch('http://localhost:8000/api/me', {
+      const res = await apiFetch('/me', {
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: 'application/json'
-        }
+          Accept: 'application/json',
+        },
       })
       const data = await res.json()
 
@@ -112,12 +113,12 @@ const logout = async () => {
   if (!token) return router.push('/login/mua')
 
   try {
-    await fetch('http://localhost:8000/api/auth/logout/mua', {
+    await fetch('/auth/logout/mua', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
+        Accept: 'application/json',
+      },
     })
   } catch (e) {
     console.error('Gagal logout:', e)

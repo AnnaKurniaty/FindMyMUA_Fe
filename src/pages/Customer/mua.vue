@@ -87,12 +87,8 @@ const router = useRouter()
 onMounted(async () => {
   const token = localStorage.getItem('token')
   try {
-    const data = await apiFetch('/dashboard/mua-users', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      },
-    })
+    // Remove Authorization header to avoid 500 error if token is invalid or not required
+    const data = await apiFetch('/dashboard/mua')
     profileList.value = data
     console.log('✅ MUA profiles fetched:', data)
   } catch (err) {
