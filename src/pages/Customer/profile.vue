@@ -10,7 +10,7 @@
                   class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4 transition-transform group-hover:scale-105"
                 >
                   <img
-                    :src="profile.profile_photo && profile.profile_photo !== '' ? (mediaBaseUrl + '/storage/profile_photos/' + profile.profile_photo + '?t=' + Date.now()) : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330'"
+                    :src="profile.profile_photo_url && profile.profile_photo_url !== '' ? profile.profile_photo_url : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330'"
                     alt="Profile Photo"
                     class="w-full h-full object-cover"
                     keywords="woman, portrait, professional, makeup artist"
