@@ -246,6 +246,7 @@
                     </div>
                 </div>
             </div>
+
             <div
             v-if="showEditModal"
             class="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm flex items-center justify-center"
@@ -271,11 +272,14 @@
                                             class="relative group w-40 h-40 rounded-full overflow-hidden border-4 border-primary-100 hover:border-primary-300 transition-all duration-300 cursor-pointer"
                                             @click="triggerFileInput"
                                         >
-                                            <div
-                                                class="w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center"
-                                            >
-                                                <span v-if="!previewUrl" class="text-4xl">👤</span>
-                                                <img v-if="previewUrl" :src="previewUrl" alt="Profile Preview" class="w-full h-full object-cover" />
+                                            <div class="w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center">
+                                              <span v-if="!previewUrl && !editForm.profile_photo" class="text-4xl">👤</span>
+                                                <img
+                                                    v-else
+                                                    :src="previewUrl ? previewUrl : editForm.profile_photo"
+                                                    alt="Profile Preview"
+                                                    class="w-full h-full object-cover"
+                                                />
                                             </div>
                                             <div
                                                 class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -640,23 +644,23 @@ async function fetchServices() {
 
 // Helper function to parse array data and handle comma-separated strings
 function parseArrayData(data) {
-  console.log('parseArrayData called with:', typeof data, data);
+//   console.log('parseArrayData called with:', typeof data, data);
   
   if (!data) {
-    console.log('parseArrayData returning empty array');
+    // console.log('parseArrayData returning empty array');
     return []
   }
   
   // If data is already an array, return it directly
   if (Array.isArray(data)) {
     const result = data.filter(item => item && item.toString().trim().length > 0)
-    console.log('parseArrayData returning array result:', result);
+    // console.log('parseArrayData returning array result:', result);
     return result
   }
   
   // If data is a string, try to parse it
   if (typeof data === 'string') {
-    console.log('parseArrayData processing string');
+    // console.log('parseArrayData processing string');
     // Remove any extra quotes and whitespace
     const cleanData = data.trim()
     
@@ -665,80 +669,71 @@ function parseArrayData(data) {
       const parsed = JSON.parse(cleanData)
       if (Array.isArray(parsed)) {
         const result = parsed.filter(item => item && item.toString().trim().length > 0)
-        console.log('parseArrayData returning parsed JSON array:', result);
+        // console.log('parseArrayData returning parsed JSON array:', result);
         return result
       }
       // If it's a single item from JSON, return as array
       const result = [parsed].filter(item => item && item.toString().trim().length > 0)
-      console.log('parseArrayData returning single item from JSON:', result);
+    //   console.log('parseArrayData returning single item from JSON:', result);
       return result
     } catch (e) {
-      console.log('parseArrayData JSON parsing failed, treating as comma-separated');
+    //   console.log('parseArrayData JSON parsing failed, treating as comma-separated');
       // If JSON parsing fails, treat as comma-separated string
       if (cleanData.includes(',')) {
         const result = cleanData.split(',').map(item => item.trim()).filter(item => item.length > 0)
-        console.log('parseArrayData returning comma-separated result:', result);
+        // console.log('parseArrayData returning comma-separated result:', result);
         return result
       }
       // Single item
       const result = cleanData.length > 0 ? [cleanData] : []
-      console.log('parseArrayData returning single item result:', result);
+    //   console.log('parseArrayData returning single item result:', result);
       return result
     }
   }
   
   // For other data types, convert to string and return as single item array
   const result = data.toString().trim().length > 0 ? [data.toString().trim()] : []
-  console.log('parseArrayData returning converted result:', result);
+//   console.log('parseArrayData returning converted result:', result);
   return result
 }
 
 // Helper function to ensure array data is properly formatted for sending to backend
 function formatArrayForBackend(data) {
-  console.log('formatArrayForBackend called with:', typeof data, data);
-  
   if (!data) {
-    console.log('formatArrayForBackend returning empty array');
     return []
   }
   
   // If data is already an array, return as is (backend will handle JSON conversion)
   if (Array.isArray(data)) {
-    console.log('formatArrayForBackend returning array as is');
     return data
   }
   
   // If data is a string, check if it's already JSON
   if (typeof data === 'string') {
-    console.log('formatArrayForBackend processing string');
     // Try to parse as JSON first
     try {
       const parsed = JSON.parse(data)
       if (Array.isArray(parsed)) {
-        console.log('formatArrayForBackend returning parsed JSON array');
+        // console.log('formatArrayForBackend returning parsed JSON array');
         return parsed
       }
-      // If it's a single item from JSON, wrap in array
-      console.log('formatArrayForBackend returning single item wrapped in array');
+    // If it's a single item from JSON, wrap in array
       return [parsed]
     } catch (e) {
-      console.log('formatArrayForBackend JSON parsing failed, treating as comma-separated');
       // If JSON parsing fails, treat as comma-separated string and convert to array
       if (data.includes(',')) {
         const result = data.split(',').map(item => item.trim()).filter(item => item.length > 0)
-        console.log('formatArrayForBackend returning comma-separated result:', result);
+        // console.log('formatArrayForBackend returning comma-separated result:', result);
         return result
       }
       // Single item
       const result = data.length > 0 ? [data.trim()] : []
-      console.log('formatArrayForBackend returning single item result:', result);
       return result
     }
   }
   
   // For other data types, convert to string and wrap in array
   const result = data.toString().trim().length > 0 ? [data.toString().trim()] : []
-  console.log('formatArrayForBackend returning converted result:', result);
   return result
 }
 
@@ -747,36 +742,36 @@ onMounted(async () => {
     const data = await apiFetch(`/mua/profile`, {});
     profile.value = data
 
-    console.log('Raw profile data:', data.mua_profile)
+    // console.log('Raw profile data:', data.mua_profile)
 
     if (data.mua_profile?.certification) {
-      console.log('Raw certification data:', data.mua_profile.certification)
+    //   console.log('Raw certification data:', data.mua_profile.certification)
       parsedCertifications.value = parseArrayData(data.mua_profile.certification)
-      console.log('Parsed certifications:', parsedCertifications.value)
+    //   console.log('Parsed certifications:', parsedCertifications.value)
     }
 
     if (data.mua_profile?.makeup_specializations) {
-      console.log('Raw specializations data:', data.mua_profile.makeup_specializations)
+    //   console.log('Raw specializations data:', data.mua_profile.makeup_specializations)
       parsedSpecializations.value = parseArrayData(data.mua_profile.makeup_specializations)
-      console.log('Parsed specializations:', parsedSpecializations.value)
+    //   console.log('Parsed specializations:', parsedSpecializations.value)
     }
 
     if (data.mua_profile?.makeup_styles) {
-      console.log('Raw makeup styles data:', data.mua_profile.makeup_styles)
+    //   console.log('Raw makeup styles data:', data.mua_profile.makeup_styles)
       parsedMakeupStyles.value = parseArrayData(data.mua_profile.makeup_styles)
-      console.log('Parsed makeup styles:', parsedMakeupStyles.value)
+    //   console.log('Parsed makeup styles:', parsedMakeupStyles.value)
     }
 
     if (data.mua_profile?.skin_type) {
-      console.log('Raw skin type data:', data.mua_profile.skin_type)
+    //   console.log('Raw skin type data:', data.mua_profile.skin_type)
       parsedSkinTypes.value = parseArrayData(data.mua_profile.skin_type)
-      console.log('Parsed skin types:', parsedSkinTypes.value)
+    //   console.log('Parsed skin types:', parsedSkinTypes.value)
     }
 
     if (data.mua_profile?.available_days) {
-      console.log('Raw available days data:', data.mua_profile.available_days)
+    //   console.log('Raw available days data:', data.mua_profile.available_days)
       parsedAvailableDays.value = parseArrayData(data.mua_profile.available_days)
-      console.log('Parsed available days:', parsedAvailableDays.value)
+    //   console.log('Parsed available days:', parsedAvailableDays.value)
     }
   } catch (err) {
     console.error('Error loading profile:', err)
@@ -796,8 +791,7 @@ const triggerFileInput = () => {
 
 const handleFileChange = (event) => {
     const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-        editForm.profile_photo = file
+    if (file) {
         selectedFile.value = file
         previewUrl.value = URL.createObjectURL(file)
     }
@@ -821,17 +815,17 @@ function openEditModal() {
     editForm.available_days = parseArrayData(profile.value.mua_profile?.available_days)
     editForm.available_start_time = profile.value.mua_profile?.available_start_time || ''
     editForm.available_end_time = profile.value.mua_profile?.available_end_time || ''
-    editForm.profile_photo = profile.value.mua_profile?.profile_photo || null
+    editForm.profile_photo = profile.value.mua_profile?.profile_photo_url || null
     
     // Debug logging untuk available days
-    console.log('Opening edit modal with available days:', editForm.available_days)
-    console.log('Parsed certification data:', editForm.certification)
-    console.log('Parsed specializations data:', editForm.makeup_specializations)
-    console.log('Parsed makeup styles data:', editForm.makeup_styles)
-    console.log('Parsed skin type data:', editForm.skin_type)
+    // console.log('Opening edit modal with available days:', editForm.available_days)
+    // console.log('Parsed certification data:', editForm.certification)
+    // console.log('Parsed specializations data:', editForm.makeup_specializations)
+    // console.log('Parsed makeup styles data:', editForm.makeup_styles)
+    // console.log('Parsed skin type data:', editForm.skin_type)
     
     // Log the entire editForm for debugging
-    console.log('Edit form initialized:', editForm)
+    // console.log('Edit form initialized:', editForm)
   }
 }
 const editForm = reactive({
@@ -900,11 +894,8 @@ async function saveEdit() {
       // Only send request if there's actual data to update
       if (Object.keys(userData).length > 0) {
         await apiFetch('/me', {
-          method: 'PUT',
-          body: JSON.stringify(userData),
-          headers: {
-            'Content-Type': 'application/json'
-          }
+            method: 'PUT',
+            body: JSON.stringify(userData)
         });
       }
     }
@@ -925,35 +916,42 @@ async function saveEdit() {
     profileData.skin_type = formatArrayForBackend(editForm.skin_type);
     profileData.available_days = formatArrayForBackend(editForm.available_days);
 
-    console.log('Sending profile data:', profileData);
-    console.log('Certification data type:', typeof editForm.certification, 'value:', editForm.certification);
-    console.log('Formatted certification:', formatArrayForBackend(editForm.certification));
+    // console.log('Sending profile data:', profileData);
+    // console.log('Certification data type:', typeof editForm.certification, 'value:', editForm.certification);
+    // console.log('Formatted certification:', formatArrayForBackend(editForm.certification));
 
     // Handle file upload if needed
     if (selectedFile.value) {
       const profileFormData = new FormData();
       // Add all JSON fields as strings
       Object.keys(profileData).forEach(key => {
-        profileFormData.append(key, profileData[key]);
+        const value = profileData[key];
+        if (Array.isArray(value)) {
+          profileFormData.append(key, JSON.stringify(value));
+        } else {
+          profileFormData.append(key, value ?? '');
+        }
       });
-      profileFormData.append('profile_photo', selectedFile.value);
-      
+
+      if (selectedFile.value instanceof File) {
+        profileFormData.append('profile_photo', selectedFile.value);
+      }
+
+      profileFormData.append('_method', 'PUT');
+     
       await apiFetch('/mua/profile', {
-        method: 'PUT',
+        method: 'POST',
         body: profileFormData
       });
     } else {
       // Send as JSON for consistency
       await apiFetch('/mua/profile', {
         method: 'PUT',
-        body: JSON.stringify(profileData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: JSON.stringify(profileData)
       });
     }
 
-    console.log('Profile updated successfully');
+    // console.log('Profile updated successfully');
     alert('Profile updated successfully!');
     closeEditModal();
     
@@ -983,34 +981,16 @@ async function saveEdit() {
     
   } catch (err) {
     console.error('Failed to save changes:', err);
-    console.error('Error details:', err.response || err);
+      console.error('Error details:', err.response || err);
+    // console.log('Error details:', err.response || err);
+    
     alert('Failed to save profile. Please check console for details.');
   }
 }
 
-const uploadPhoto = async () => {
-    if (!selectedFile.value) return
-
-    const formData = new FormData()
-    formData.append('file', selectedFile.value)
-
-    try {
-        await apiFetch(`/mua/portfolio/upload/${userId}`, {
-            method: 'POST',
-            body: formData
-        })
-
-        alert('Upload successful!')
-        isModalOpen.value = false
-        removeImage()
-    } catch (err) {
-        alert('Upload failed: ' + err.message)
-    }
-}
-
 // Handle image loading errors
 function handleImageError(event) {
-  console.log('Image failed to load:', event.target.src)
+//   console.log('Image failed to load:', event.target.src)
   // Hide the broken image by setting display to none
   event.target.style.display = 'none'
   // Show the fallback icon container

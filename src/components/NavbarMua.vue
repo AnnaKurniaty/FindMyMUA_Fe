@@ -4,7 +4,7 @@
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-full overflow-hidden bg-pink-100 border border-pink-200">
           <img
-            :src="profile?.profile_photo_url || '/images/default-avatar.png'"
+            :src="profile?.profile_photo_url || '/storage/default-avatar.png'"
             alt="Foto Profil"
             class="object-cover w-full h-full"
           />
