@@ -501,7 +501,7 @@ function getDateCursorClass(date) {
     return 'cursor-default'
   }
   
-  if (!isDateAvailable(date.date)) {
+  if (!isDateAvailable(date.date) || isDateBlocked(date.date)) {
     return 'cursor-not-allowed'
   }
   
@@ -514,7 +514,7 @@ async function blockSelectedDate() {
   
   try {
     // Send to backend to save blocked time slot (full day block)
-    const response = await apiFetch('/blocked-slots', {
+    const blockedSlot = await apiFetch('/blocked-slots', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -522,15 +522,15 @@ async function blockSelectedDate() {
       },
       body: JSON.stringify({
         date: selectedDate.value,
-        full_day: true,
+        is_full_day: true,
       }),
     })
     
-    // Update local blockedDates and blockedTimeSlots
-    if (!blockedDates.value.includes(selectedDate.value)) {
-      blockedDates.value.push(selectedDate.value)
+    // Update local blockedDates and blockedTimeSlots with correct data
+    if (!blockedDates.value.includes(blockedSlot.date)) {
+      blockedDates.value.push(blockedSlot.date)
     }
-    blockedTimeSlots.value.push(response)
+    blockedTimeSlots.value.push(blockedSlot)
     
     alert(`Date ${formatDate(selectedDate.value)} has been blocked!`)
   } catch (err) {

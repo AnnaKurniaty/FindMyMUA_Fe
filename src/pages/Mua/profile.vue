@@ -1,6 +1,6 @@
 <template>
     <div id="webcrumbs">
-        <div class="w-full min-h-screen">
+        <div class="w-full min-h-screen text-gray-800">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-6">
 
@@ -80,20 +80,19 @@
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h4 class="font-semibold text-gray-800 mb-3">Certifications</h4>
+                                <h4 class="font-semibold mb-3">Certifications</h4>
                                 <div class="space-y-3" v-if="parsedCertifications.length > 0">
-                                    <div
-                                        v-for="(cert, index) in parsedCertifications"
-                                        :key="index"
-                                        class="flex items-center gap-3 p-3 rounded-xl hover:shadow-sm transition-shadow"
-                                        :class="getBg(index)"
-                                    >
-                                        <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                                             :class="getIconBg(index)">
-                                            <span class="material-symbols-outlined text-sm"
+                                    <div class="flex flex-wrap gap-3">
+                                        <span 
+                                            v-for="(cert, index) in parsedCertifications"
+                                            :key="index"
+                                            class="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium"
+                                            :class="getBg(index)"
+                                        >
+                                            <span class="material-symbols-outlined text-sm mr-2"
                                                   :class="getIconColor(index)">verified</span>
-                                        </div>
-                                        <div><p class="text-sm text-gray-800">{{ cert }}</p></div>
+                                            {{ cert }}
+                                        </span>
                                     </div>
                                 </div>
                                 <div v-else class="text-gray-500 text-sm italic">
@@ -269,12 +268,14 @@
                                 <div class="flex flex-col md:flex-row gap-6">
                                     <div class="w-full md:w-1/3 flex flex-col items-center">
                                         <div
-                                            class="relative group w-40 h-40 rounded-full overflow-hidden border-4 border-primary-100 hover:border-primary-300 transition-all duration-300"
+                                            class="relative group w-40 h-40 rounded-full overflow-hidden border-4 border-primary-100 hover:border-primary-300 transition-all duration-300 cursor-pointer"
+                                            @click="triggerFileInput"
                                         >
                                             <div
                                                 class="w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center"
                                             >
-                                                <span class="text-4xl">👤</span>
+                                                <span v-if="!previewUrl" class="text-4xl">👤</span>
+                                                <img v-if="previewUrl" :src="previewUrl" alt="Profile Preview" class="w-full h-full object-cover" />
                                             </div>
                                             <div
                                                 class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -286,6 +287,7 @@
                                                     <span class="material-symbols-outlined">add_a_photo</span>
                                                 </button>
                                             </div>
+                                            <input type="file" ref="fileInput" accept="image/*" class="hidden" @change="handleFileChange" />
                                         </div>
                                         <p class="text-sm text-gray-500 mt-2">Upload Profile Photo</p>
                                     </div>
@@ -577,49 +579,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal Add Image Portfolio -->
-    <div v-if="isModalOpen" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl p-8 w-full max-w-md shadow-lg relative">
-            <!-- Modal Title -->
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-pink-500">Upload Portfolio Photo</h2>
-                <button @click="isModalOpen = false" class="text-gray-400 hover:text-black text-2xl focus:outline-none">
-                    &times;
-                </button>
-            </div>
-
-            <!-- Upload Area -->
-            <div>
-                <div class="block border-2 border-dashed border-pink-300 rounded-xl p-6 text-center bg-pink-50 hover:bg-pink-100 transition-colors cursor-pointer relative"
-                    @click="triggerFileInput">
-                    <input type="file" ref="fileInput" accept="image/*" class="hidden" @change="handleFileChange" />
-
-                    <template v-if="previewUrl">
-                        <img :src="previewUrl" alt="Preview" class="mx-auto max-h-40 rounded-lg" />
-                        <button @click.stop="removeImage" style="color: #ef4444 !important;"
-                            class="mt-2 text-sm underline">
-                            Remove Image
-                        </button>
-                    </template>
-
-                    <template v-else>
-                        <span class="material-symbols-outlined text-4xl text-pink-400 mb-2 block">
-                            add_a_photo
-                        </span>
-                        <p class="text-pink-500 font-medium">Click to upload</p>
-                        <p class="text-sm text-pink-400">JPG, PNG up to 5MB</p>
-                    </template>
-                </div>
-            </div>
-            <!-- Upload Button -->
-            <button :disabled="!selectedFile" @click="uploadPhoto" :class="[
-                'mt-6 w-full text-white py-2 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed',
-                selectedFile ? 'bg-pink-500' : 'bg-pink-300'
-            ]">
-                Upload
-            </button>
-        </div>
-    </div>
 </template>
 
 
@@ -853,21 +812,21 @@ function openEditModal() {
     // MUA Profile fields (from MuaProfile table)
     editForm.bio = profile.value.mua_profile?.bio || ''
     editForm.service_area = profile.value.mua_profile?.service_area || ''
-    // Use raw data from profile instead of parsed data
-    editForm.certification = profile.value.mua_profile?.certification || []
-    editForm.makeup_specializations = profile.value.mua_profile?.makeup_specializations || []
-    editForm.makeup_styles = profile.value.mua_profile?.makeup_styles || []
-    editForm.skin_type = profile.value.mua_profile?.skin_type || []
-    editForm.available_days = profile.value.mua_profile?.available_days || []
+    // Parse JSON strings to arrays if needed
+    editForm.certification = parseArrayData(profile.value.mua_profile?.certification)
+    editForm.makeup_specializations = parseArrayData(profile.value.mua_profile?.makeup_specializations)
+    editForm.makeup_styles = parseArrayData(profile.value.mua_profile?.makeup_styles)
+    editForm.skin_type = parseArrayData(profile.value.mua_profile?.skin_type)
+    editForm.available_days = parseArrayData(profile.value.mua_profile?.available_days)
     editForm.available_start_time = profile.value.mua_profile?.available_start_time || ''
     editForm.available_end_time = profile.value.mua_profile?.available_end_time || ''
     
     // Debug logging untuk available days
     console.log('Opening edit modal with available days:', editForm.available_days)
-    console.log('Raw certification data:', editForm.certification)
-    console.log('Raw specializations data:', editForm.makeup_specializations)
-    console.log('Raw makeup styles data:', editForm.makeup_styles)
-    console.log('Raw skin type data:', editForm.skin_type)
+    console.log('Parsed certification data:', editForm.certification)
+    console.log('Parsed specializations data:', editForm.makeup_specializations)
+    console.log('Parsed makeup styles data:', editForm.makeup_styles)
+    console.log('Parsed skin type data:', editForm.skin_type)
     
     // Log the entire editForm for debugging
     console.log('Edit form initialized:', editForm)

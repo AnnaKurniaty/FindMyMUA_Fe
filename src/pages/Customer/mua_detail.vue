@@ -1,219 +1,88 @@
-<template
-    ><div id="webcrumbs">
-        <div class="max-w-7xl mx-auto p-4 md:p-8">
-            <div class="flex flex-col md:flex-row gap-6 mb-8">
-                <div class="w-full md:w-1/3">
-                    <img
-                        src="https://images.unsplash.com/photo-1709477542170-f11ee7d471a0?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3MzkyNDZ8MHwxfHNlYXJjaHwxfHxtYWtldXAlMjBhcnRpc3R8ZW58MHx8fHwxNzU0MTIyMTg5fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080"
-                        alt="MUA Profile"
-                        class="w-full h-64 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                        keywords="makeup artist, professional, beauty, portrait"
-                    />
+<template>
+        <div id="webcrumbs" v-if="mua">
+            <div class="max-w-full mx-auto p-4 md:p-8 text-gray-800">
+                <div class="flex flex-col md:flex-row mb-8">
+                    <div class="w-full md:w-1/3 flex flex-col items-start">
+                        <img
+                            :src="mua.mua_profile?.profile_photo_url || '/images/default-mua-placeholder.png'"
+                            alt="MUA Profile"
+                            class="w-64 h-64 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                            keywords="makeup artist, professional, beauty, portrait"
+                        />
+                    </div>
+                    <div class="w-full md:w-2/3 md:pl-8 mt-6 md:mt-0">
+                        <h1 class="text-3xl font-bold mt-4">{{ mua.name }}</h1>
+                        <p class="text-gray-600 mb-4">{{ mua.mua_profile?.service_area }}</p>
+                        <button
+                           @click="openBookingModal(mua)"
+                            class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-colors duration-300 flex items-center"
+                        >
+                            <span class="material-symbols-outlined mr-2">calendar_month</span> Booking Sekarang
+                        </button>
+                    </div>
                 </div>
-                <div class="w-full md:w-2/3">
-                    <h1 class="text-3xl font-bold mb-2">Anisa Dewi</h1>
-                    <div class="flex items-center mb-3">
-                        <div class="flex text-yellow-400 mr-2">
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star_half</span>
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold mb-4">Portofolio</h2>
+                <div class="relative">
+                    <div ref="portfolioContainer" class="overflow-x-hidden pb-4">
+                        <div class="flex gap-4" :style="{ transform: `translateX(-${portfolioScrollPosition}px)` }">
+                            <div v-for="(service, index) in displayedServices" :key="service.id" class="w-72 h-80 flex-shrink-0 relative group">
+                                <img
+                                    :src="service.service_photo_url || 'https://via.placeholder.com/400x300?text=Service+Image'"
+                                    :alt="service.name"
+                                    class="w-72 h-80 object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
+                                    :keywords="service.name"
+                                />
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                >
+                                    <p class="text-white font-medium">{{ service.name }}</p>
+                                    <p class="text-white/80 text-sm">{{ service.description }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <span class="font-medium">4.8</span> <span class="text-gray-500 ml-2">(124 ulasan)</span>
                     </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">Wedding</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">Natural Look</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">Party</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">Prewedding</span>
-                    </div>
-                    <p class="text-gray-600 mb-4">Jakarta Selatan • Berpengalaman 5+ tahun • Tersedia untuk travel</p>
-                    <button
-                        class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-colors duration-300 flex items-center"
+                    <button 
+                        @click="scrollPortfolio('left')" 
+                        class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+                        :disabled="portfolioScrollPosition <= 0"
                     >
-                        <span class="material-symbols-outlined mr-2">calendar_month</span> Booking Sekarang
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button 
+                        @click="scrollPortfolio('right')" 
+                        class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
+                        :disabled="portfolioScrollPosition >= maxScroll"
+                    >
+                        <span class="material-symbols-outlined">chevron_right</span>
                     </button>
                 </div>
             </div>
-            <div class="mb-12">
-                <h2 class="text-2xl font-bold mb-4">Portofolio</h2>
-                <div class="overflow-x-auto pb-4">
-                    <div class="flex gap-4" style="min-width: max-content">
-                        <div class="w-72 h-80 flex-shrink-0 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1523883918151-e5f4d677b867?q=80&amp;w=1760&amp;auto=format&amp;fit=crop"
-                                alt="Portfolio 1"
-                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
-                                keywords="makeup, beauty, portfolio, professional makeup, bride makeup"
-                            />
-                            <div
-                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            >
-                                <p class="text-white font-medium">Wedding Makeup</p>
-                                <p class="text-white/80 text-sm">Natural Glam Look</p>
-                            </div>
-                        </div>
-                        <div class="w-72 h-80 flex-shrink-0 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1523883918152-e5f4d677b867?q=80&amp;w=1760&amp;auto=format&amp;fit=crop"
-                                alt="Portfolio 2"
-                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
-                                keywords="makeup, beauty, portfolio, professional makeup, bride makeup"
-                            />
-                            <div
-                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            >
-                                <p class="text-white font-medium">Wedding Makeup</p>
-                                <p class="text-white/80 text-sm">Natural Glam Look</p>
-                            </div>
-                        </div>
-                        <div class="w-72 h-80 flex-shrink-0 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1523883918153-e5f4d677b867?q=80&amp;w=1760&amp;auto=format&amp;fit=crop"
-                                alt="Portfolio 3"
-                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
-                                keywords="makeup, beauty, portfolio, professional makeup, bride makeup"
-                            />
-                            <div
-                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            >
-                                <p class="text-white font-medium">Wedding Makeup</p>
-                                <p class="text-white/80 text-sm">Natural Glam Look</p>
-                            </div>
-                        </div>
-                        <div class="w-72 h-80 flex-shrink-0 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1523883918154-e5f4d677b867?q=80&amp;w=1760&amp;auto=format&amp;fit=crop"
-                                alt="Portfolio 4"
-                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
-                                keywords="makeup, beauty, portfolio, professional makeup, bride makeup"
-                            />
-                            <div
-                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            >
-                                <p class="text-white font-medium">Wedding Makeup</p>
-                                <p class="text-white/80 text-sm">Natural Glam Look</p>
-                            </div>
-                        </div>
-                        <div class="w-72 h-80 flex-shrink-0 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1523883918155-e5f4d677b867?q=80&amp;w=1760&amp;auto=format&amp;fit=crop"
-                                alt="Portfolio 5"
-                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
-                                keywords="makeup, beauty, portfolio, professional makeup, bride makeup"
-                            />
-                            <div
-                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            >
-                                <p class="text-white font-medium">Wedding Makeup</p>
-                                <p class="text-white/80 text-sm">Natural Glam Look</p>
-                            </div>
-                        </div>
-                        <div class="w-72 h-80 flex-shrink-0 relative group">
-                            <img
-                                src="https://images.unsplash.com/photo-1523883918156-e5f4d677b867?q=80&amp;w=1760&amp;auto=format&amp;fit=crop"
-                                alt="Portfolio 6"
-                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
-                                keywords="makeup, beauty, portfolio, professional makeup, bride makeup"
-                            />
-                            <div
-                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            >
-                                <p class="text-white font-medium">Wedding Makeup</p>
-                                <p class="text-white/80 text-sm">Natural Glam Look</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="mb-12 bg-gray-50 rounded-xl p-6">
-                <h2 class="text-2xl font-bold mb-4">Tentang Anisa</h2>
+                <h2 class="text-2xl font-bold mb-4">Tentang {{ mua.name }}</h2>
                 <p class="text-gray-700 mb-4">
-                    Saya adalah makeup artist profesional dengan pengalaman lebih dari 5 tahun di industri kecantikan.
-                    Spesialisasi saya adalah makeup wedding dan prewedding dengan sentuhan natural yang elegan. Setiap
-                    klien adalah kanvas unik, dan saya selalu berusaha menyesuaikan makeup dengan karakter dan keinginan
-                    klien.
+                    {{ mua.mua_profile?.bio || 'Deskripsi MUA belum tersedia.' }}
                 </p>
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg mb-2">Sertifikasi:</h3>
-                    <ul class="list-disc pl-5 text-gray-700">
-                        <li>Certified Professional MUA - Makeup Artist Academy Jakarta (2018)</li>
-                        <li>International Beauty Workshop - Singapore (2019)</li>
-                        <li>Advanced Bridal Makeup Techniques - Beauty Institute Indonesia (2020)</li>
-                    </ul>
-                </div>
+                    <div class="mt-6" v-if="mua.mua_profile?.certification && mua.mua_profile?.certification.length > 0">
+                        <h3 class="font-semibold text-lg mb-2">Sertifikasi:</h3>
+                        <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm">
+                            {{ Array.isArray(mua.mua_profile.certification) ? mua.mua_profile.certification.join(', ').replace(/[\[\]"]/g, '') : mua.mua_profile.certification.replace(/[\[\]"]/g, '') }}
+                        </span>
+                    </div>
             </div>
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-4">Layanan &amp; Harga</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
+                    <div v-for="service in services" :key="service.id" class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
                         <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-bold text-lg">Makeup Wedding</h3>
-                            <span class="font-bold text-primary-600">Rp 2.500.000</span>
+                            <h3 class="font-bold text-lg">{{ service.name }}</h3>
+                            <span class="font-bold text-primary-600">Rp {{ formatRupiah(service.price) }}</span>
                         </div>
                         <div class="flex items-center text-gray-500 mb-3">
                             <span class="material-symbols-outlined mr-1 text-sm">schedule</span>
-                            <span class="text-sm">3 jam</span>
+                            <span class="text-sm">{{ service.duration }}</span>
                         </div>
-                        <p class="text-gray-600 text-sm">Termasuk makeup pengantin, touch up, dan hair styling.</p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-bold text-lg">Makeup Prewedding</h3>
-                            <span class="font-bold text-primary-600">Rp 1.800.000</span>
-                        </div>
-                        <div class="flex items-center text-gray-500 mb-3">
-                            <span class="material-symbols-outlined mr-1 text-sm">schedule</span>
-                            <span class="text-sm">2 jam</span>
-                        </div>
-                        <p class="text-gray-600 text-sm">Termasuk 2 look berbeda dan touch up selama sesi foto.</p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-bold text-lg">Makeup Party/Event</h3>
-                            <span class="font-bold text-primary-600">Rp 850.000</span>
-                        </div>
-                        <div class="flex items-center text-gray-500 mb-3">
-                            <span class="material-symbols-outlined mr-1 text-sm">schedule</span>
-                            <span class="text-sm">1.5 jam</span>
-                        </div>
-                        <p class="text-gray-600 text-sm">Makeup untuk acara formal, pesta, atau gathering.</p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-bold text-lg">Makeup Wisuda</h3>
-                            <span class="font-bold text-primary-600">Rp 650.000</span>
-                        </div>
-                        <div class="flex items-center text-gray-500 mb-3">
-                            <span class="material-symbols-outlined mr-1 text-sm">schedule</span>
-                            <span class="text-sm">1.5 jam</span>
-                        </div>
-                        <p class="text-gray-600 text-sm">Termasuk makeup dan hair styling untuk acara wisuda.</p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-bold text-lg">Makeup Trial</h3>
-                            <span class="font-bold text-primary-600">Rp 500.000</span>
-                        </div>
-                        <div class="flex items-center text-gray-500 mb-3">
-                            <span class="material-symbols-outlined mr-1 text-sm">schedule</span>
-                            <span class="text-sm">2 jam</span>
-                        </div>
-                        <p class="text-gray-600 text-sm">Konsultasi dan uji coba makeup sebelum acara besar.</p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-bold text-lg">Kursus Makeup Pribadi</h3>
-                            <span class="font-bold text-primary-600">Rp 1.200.000</span>
-                        </div>
-                        <div class="flex items-center text-gray-500 mb-3">
-                            <span class="material-symbols-outlined mr-1 text-sm">schedule</span>
-                            <span class="text-sm">3 jam</span>
-                        </div>
-                        <p class="text-gray-600 text-sm">
-                            Pembelajaran one-on-one teknik makeup dasar hingga lanjutan.
-                        </p>
+                        <p class="text-gray-600 text-sm">{{ service.description }}</p>
                     </div>
                 </div>
             </div>
@@ -221,11 +90,11 @@
                 <h2 class="text-2xl font-bold mb-4">Ketersediaan</h2>
                 <div class="bg-white border border-gray-200 rounded-lg p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-300">
+                        <button @click="prevMonth" class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-300">
                             <span class="material-symbols-outlined">arrow_back_ios</span>
                         </button>
-                        <h3 class="font-semibold text-lg">November 2023</h3>
-                        <button class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-300">
+                        <h3 class="font-semibold text-lg">{{ currentMonthName }} {{ currentYear }}</h3>
+                        <button @click="nextMonth" class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-300">
                             <span class="material-symbols-outlined">arrow_forward_ios</span>
                         </button>
                     </div>
@@ -240,116 +109,42 @@
                     </div>
                     <div class="grid grid-cols-7 gap-2 text-center">
                         <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 text-gray-300 cursor-not-allowed"
+                            v-for="day in calendarDays"
+                            :key="day.date"
+                            :class="[
+                                'py-3 rounded-lg cursor-pointer transition-all duration-300 text-sm font-medium',
+                                day.isCurrentMonth ? '' : 'text-gray-300 cursor-not-allowed',
+                                day.isBlocked && day.isCurrentMonth ? 'bg-red-100 text-red-700 border border-red-300' : '',
+                                day.isBooked && day.isCurrentMonth && !day.isBlocked ? 'bg-orange-100 text-orange-700 border border-orange-300' : '',
+                                day.isAvailable && day.isCurrentMonth && !day.isBooked && !day.isBlocked ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200' : '',
+                                !day.isAvailable && !day.isBooked && !day.isBlocked && day.isCurrentMonth ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''
+                            ]"
+                            @click="day.isAvailable && !day.isBooked && !day.isBlocked && day.isCurrentMonth ? openBookingModal(mua, day.date) : null"
                         >
-                            1
+                            {{ day.day }}
+                            <div class="text-xs mt-1">
+                                <span v-if="day.isBlocked" class="text-red-600">Blocked</span>
+                                <span v-else-if="day.isBooked" class="text-orange-600">Booked</span>
+                                <span v-else-if="day.isAvailable" class="text-green-600">Available</span>
+                                <span v-else class="text-gray-400">Off</span>
+                            </div>
                         </div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            2
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 bg-gray-100 text-gray-500 cursor-not-allowed"
-                        >
-                            3
-                            <div class="w-1 h-1 bg-gray-400 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">4</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            5
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">6</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">7</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            8
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 bg-gray-100 text-gray-500 cursor-not-allowed"
-                        >
-                            9
-                            <div class="w-1 h-1 bg-gray-400 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">10</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">11</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            12
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">13</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">14</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            15
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 bg-gray-100 text-gray-500 cursor-not-allowed"
-                        >
-                            16
-                            <div class="w-1 h-1 bg-gray-400 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">17</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">18</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            19
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">20</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">21</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            22
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 bg-gray-100 text-gray-500 cursor-not-allowed"
-                        >
-                            23
-                            <div class="w-1 h-1 bg-gray-400 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">24</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">25</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            26
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">27</div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">28</div>
-                        <div
-                            class="py-3 rounded-lg cursor-pointer transition-all duration-300 hover:bg-primary-50 text-primary-700 font-medium"
-                        >
-                            29
-                            <div class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"></div>
-                        </div>
-                        <div class="py-3 rounded-lg cursor-pointer transition-all duration-300">30</div>
                     </div>
-                    <div class="flex gap-6 mt-6 text-sm">
+                    <div class="flex gap-4 mt-6 text-sm flex-wrap">
                         <div class="flex items-center">
-                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
                             <span>Tersedia</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-3 h-3 bg-gray-400 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
                             <span>Sudah Dibooking</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-3 h-3 bg-gray-200 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                            <span>Blocked</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-gray-300 rounded-full mr-2"></div>
                             <span>Tidak Tersedia</span>
                         </div>
                     </div>
@@ -364,8 +159,8 @@
                         Lihat Semua <span class="material-symbols-outlined ml-1">arrow_forward</span>
                     </button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
+                <div v-if="reviews.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div v-for="review in reviews" :key="review.id" class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
                         <div class="flex justify-between mb-3">
                             <div class="flex items-center">
                                 <div
@@ -374,117 +169,100 @@
                                     <span class="material-symbols-outlined">person</span>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold">Dian Purnama</h3>
-                                    <p class="text-gray-500 text-sm">Oktober 2023</p>
+                                    <h3 class="font-semibold">{{ review.customer_name || 'Anonymous' }}</h3>
+                                    <p class="text-gray-500 text-sm">{{ formatDate(review.created_at) }}</p>
                                 </div>
                             </div>
                             <div class="flex text-yellow-400">
-                                <span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span>
+                                <span v-for="n in 5" :key="n" class="material-symbols-outlined text-sm">
+                                    {{ n <= review.rating ? 'star' : 'star_outline' }}
+                                </span>
                             </div>
                         </div>
                         <p class="text-gray-600 text-sm">
-                            Hasil makeup-nya sangat natural dan tahan lama. Anisa sangat detail dan memahami keinginan
-                            saya untuk makeup wedding. Semua tamu memuji hasil makeupnya!
-                        </p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between mb-3">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-10 h-10 bg-gray-200 rounded-full mr-3 flex items-center justify-center text-gray-500"
-                                >
-                                    <span class="material-symbols-outlined">person</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">Ratna Sari</h3>
-                                    <p class="text-gray-500 text-sm">September 2023</p>
-                                </div>
-                            </div>
-                            <div class="flex text-yellow-400">
-                                <span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm">
-                            Anisa sangat profesional dan tepat waktu. Saya suka bagaimana dia bisa memberikan saran yang
-                            cocok untuk bentuk wajah saya. Makeup prewedding jadi terlihat sempurna di foto.
-                        </p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between mb-3">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-10 h-10 bg-gray-200 rounded-full mr-3 flex items-center justify-center text-gray-500"
-                                >
-                                    <span class="material-symbols-outlined">person</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">Maya Indriani</h3>
-                                    <p class="text-gray-500 text-sm">Agustus 2023</p>
-                                </div>
-                            </div>
-                            <div class="flex text-yellow-400">
-                                <span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm">
-                            Pelayanannya ramah dan hasilnya memuaskan. Saya booking untuk acara wisuda dan sangat senang
-                            dengan hasilnya. Hanya sedikit masukan untuk hair styling bisa lebih rapi.
-                        </p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-300">
-                        <div class="flex justify-between mb-3">
-                            <div class="flex items-center">
-                                <div
-                                    class="w-10 h-10 bg-gray-200 rounded-full mr-3 flex items-center justify-center text-gray-500"
-                                >
-                                    <span class="material-symbols-outlined">person</span>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">Fira Amalia</h3>
-                                    <p class="text-gray-500 text-sm">Juli 2023</p>
-                                </div>
-                            </div>
-                            <div class="flex text-yellow-400">
-                                <span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span
-                                ><span class="material-symbols-outlined text-sm">star</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm">
-                            Terbaik! Anisa sangat telaten dan hasil makeupnya awet seharian meski acara outdoor. Akan
-                            merekomendasikan ke teman-teman yang lain.
+                            {{ review.comment || 'Tidak ada komentar' }}
                         </p>
                     </div>
                 </div>
+                <div v-else class="text-center py-8">
+                    <p class="text-gray-500">Belum ada review</p>
+                </div>
             </div>
             <div class="bg-primary-50 rounded-xl p-8 text-center">
-                <h2 class="text-2xl font-bold mb-3">Siap untuk tampil cantik bersama Anisa?</h2>
+                <h2 class="text-2xl font-bold mb-3">Siap untuk tampil cantik bersama {{ mua.name }}?</h2>
                 <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
                     Jadwalkan konsultasi atau booking layanan makeup untuk acara spesial Anda. Slot tanggal cepat
                     terisi, jangan sampai kehabisan!
                 </p>
                 <button
+                    @click="openBookingModal(mua)"
                     class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-colors duration-300 mx-auto flex items-center"
                 >
                     <span class="material-symbols-outlined mr-2">calendar_month</span> Booking Sekarang
                 </button>
             </div>
         </div>
-    </div></template
->
+        <div v-if="bookingModalVisible" class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 text-gray-700" style="display: flex">
+      <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 ease-in-out">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-gray-800">Book Your MUA</h3>
+          <button  @click="closeBookingModal" class="p-1 rounded-full hover:bg-gray-100 transition-colors duration-200">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="space-y-5">
+          <h3 class="text-xl font-bold mb-4">Book MUA: {{ bookingMua?.user?.name || 'Unknown' }}</h3>
+          <div>
+              <label class="block text-gray-700 font-medium mb-2">Select Service</label>
+              <div class="relative">
+                <select v-model="bookingServiceId" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 appearance-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                  <option disabled value="">Choose a service</option>
+                  <option v-for="service in bookingServices" :key="service.id" :value="service.id">{{ service.name }}</option>
+                </select>
+              </div>
+          </div>
+        <div>
+        <label class="block text-gray-700 font-medium mb-2">Date</label>
+        <div class="relative">
+          <input
+          type="date"
+          class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+          min="2025-07-28"
+          v-model="bookingDate"
+          :min="new Date().toISOString().split('T')[0]"
+          />
+        </div>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Time</label>
+        <div class="relative">
+          <input
+          type="time"
+          v-model="bookingTime"
+          class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-4 mt-8">
+      <button
+      class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-xl hover:bg-gray-300 transition-all duration-200 font-medium"
+       @click="closeBookingModal"
+      >
+        Cancel
+      </button>
+      <button
+       @click="submitBooking"
+      class="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+      >
+        Confirm Booking
+      </button>
+    </div>
+  </div>
+</div>
+</div> 
+</template>
+
 
 <style scoped>
     @import url(https://fonts.googleapis.com/css2?family=Lato&display=swap);
@@ -1249,4 +1027,323 @@
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
-</style>
+    </style>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { apiFetch } from '@/config'
+
+const mua = ref(null)
+const services = ref([])
+const reviews = ref([])
+const route = useRoute()
+const router = useRouter()
+const portfolioScrollPosition = ref(0)
+const portfolioContainer = ref(null)
+
+    // Calendar state
+    const currentMonth = ref(new Date().getMonth())
+    const currentYear = ref(new Date().getFullYear())
+    const bookedDates = ref([])
+    const availableDates = ref([])
+    const blockedDates = ref([])
+
+// Booking modal state
+const bookingModalVisible = ref(false)
+const bookingMua = ref(null)
+const bookingDate = ref('')
+const bookingTime = ref('')
+const bookingServiceId = ref(null)
+const bookingServices = ref([])
+
+// Computed properties for calendar
+const currentMonthName = computed(() => {
+  const months = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ]
+  return months[currentMonth.value]
+})
+
+    const calendarDays = computed(() => {
+      const days = []
+      const firstDay = new Date(currentYear.value, currentMonth.value, 1)
+      const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0)
+      const startDate = new Date(firstDay)
+      startDate.setDate(startDate.getDate() - firstDay.getDay())
+      
+      const endDate = new Date(lastDay)
+      endDate.setDate(endDate.getDate() + (6 - lastDay.getDay()))
+      
+      const currentDate = new Date(startDate)
+      
+      while (currentDate <= endDate) {
+        const dateStr = currentDate.toISOString().split('T')[0]
+        const isCurrentMonth = currentDate.getMonth() === currentMonth.value
+        const day = currentDate.getDate()
+        
+        // Check if date is blocked
+        const isBlocked = isCurrentMonth && blockedDates.value.includes(dateStr)
+        
+        // Check if date is booked (only if not blocked)
+        const isBooked = isCurrentMonth && !isBlocked && bookedDates.value.includes(dateStr)
+        
+        // Check if date is available (only if not blocked and not booked)
+        const isAvailable = isCurrentMonth && !isBlocked && !isBooked && availableDates.value.includes(dateStr)
+        
+        days.push({
+          date: dateStr,
+          day,
+          isCurrentMonth,
+          isAvailable,
+          isBooked,
+          isBlocked
+        })
+        
+        currentDate.setDate(currentDate.getDate() + 1)
+      }
+      
+      return days
+    })
+
+// Format number to Rupiah currency
+function formatRupiah(number) {
+  return new Intl.NumberFormat('id-ID').format(number)
+}
+
+// Format date to Indonesian format (e.g., "12 Oktober 2023")
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Date(dateString).toLocaleDateString('id-ID', options)
+}
+
+// Format specializations array into a readable string
+function formatSpecializations(specializations) {
+  if (!specializations || !Array.isArray(specializations) || specializations.length === 0) {
+    return 'Specialization not specified'
+  }
+  return specializations.join(', ')
+}
+
+// Calculate maximum scroll position for portfolio
+const maxScroll = computed(() => {
+  if (!portfolioContainer.value) return 0
+  const containerWidth = portfolioContainer.value.offsetWidth
+  const totalWidth = services.value.length * 288 + (services.value.length - 1) * 16
+  return Math.max(0, totalWidth - containerWidth)
+})
+
+// Displayed services (first 4 items)
+const displayedServices = computed(() => {
+  return services.value.slice(0, 4)
+})
+
+// Scroll portfolio left or right
+function scrollPortfolio(direction) {
+  const container = portfolioContainer.value
+  if (!container) return
+  
+  const scrollAmount = 288 + 16 // width of one item + gap
+  const containerWidth = container.offsetWidth
+  
+  if (direction === 'left') {
+    portfolioScrollPosition.value = Math.max(0, portfolioScrollPosition.value - scrollAmount)
+  } else {
+    portfolioScrollPosition.value = Math.min(maxScroll.value, portfolioScrollPosition.value + scrollAmount)
+  }
+}
+
+// Calendar navigation
+function prevMonth() {
+  if (currentMonth.value === 0) {
+    currentMonth.value = 11
+    currentYear.value--
+  } else {
+    currentMonth.value--
+  }
+  fetchAvailabilityData()
+}
+
+function nextMonth() {
+  if (currentMonth.value === 11) {
+    currentMonth.value = 0
+    currentYear.value++
+  } else {
+    currentMonth.value++
+  }
+  fetchAvailabilityData()
+}
+
+// Fetch availability data for current month
+async function fetchAvailabilityData() {
+  if (!mua.value) return
+  
+  try {
+    // Fetch booked dates for the current month
+    const startDate = new Date(currentYear.value, currentMonth.value, 1).toISOString().split('T')[0]
+    const endDate = new Date(currentYear.value, currentMonth.value + 1, 0).toISOString().split('T')[0]
+    
+    // Fetch booked dates from backend
+    const bookingsResponse = await apiFetch(`/customer/bookings?mua_id=${mua.value.id}&start_date=${startDate}&end_date=${endDate}`)
+    const bookings = bookingsResponse.data || bookingsResponse
+    
+    // Extract booked dates
+    bookedDates.value = bookings.map(booking => booking.date)
+    
+    // Fetch blocked dates from backend
+    const blockedResponse = await apiFetch(`/mua/${mua.value.id}/blocked-slots?start_date=${startDate}&end_date=${endDate}`)
+    const blockedSlots = blockedResponse.data || blockedResponse
+    
+    // Extract blocked dates
+    blockedDates.value = blockedSlots.map(slot => slot.date)
+    
+    // Fetch available dates from backend
+    const availabilityResponse = await apiFetch(`/mua/${mua.value.id}/availability?date=${startDate}`)
+    const availability = availabilityResponse.data || availabilityResponse
+    
+    // Extract available dates
+    availableDates.value = availability.available_slots || []
+    
+    // Get MUA's available days from profile
+    const muaAvailableDays = mua.value.mua_profile?.available_days || []
+    
+    // Generate available dates based on MUA's available days
+    const currentDate = new Date(currentYear.value, currentMonth.value, 1)
+    const lastDate = new Date(currentYear.value, currentMonth.value + 1, 0)
+    
+    while (currentDate <= lastDate) {
+      const dayOfWeek = currentDate.getDay() // 0 = Sunday, 1 = Monday, etc.
+      const dateStr = currentDate.toISOString().split('T')[0]
+      
+      // Check if this day is in MUA's available days and not already booked or blocked
+      if (muaAvailableDays.includes(dayOfWeek.toString()) && 
+          !bookedDates.value.includes(dateStr) && 
+          !blockedDates.value.includes(dateStr)) {
+        availableDates.value.push(dateStr)
+      }
+      
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+  } catch (error) {
+    console.error('Failed to fetch availability data:', error)
+  }
+}
+
+async function openBookingModal(mua, date = null) {
+  bookingMua.value = mua
+  bookingModalVisible.value = true
+  bookingDate.value = date || ''
+  bookingTime.value = ''
+  bookingServiceId.value = null
+  try {
+    const token = localStorage.getItem('token')
+    const services = await apiFetch(`/mua/${mua.user?.id || mua.id}/services`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    })
+    bookingServices.value = services
+    console.log('✅ services fetched:', services)
+  } catch (err) {
+    console.error('Failed to fetch services:', err)
+    bookingServices.value = []
+  }
+}
+
+function closeBookingModal() {
+  bookingModalVisible.value = false
+  bookingMua.value = null
+  bookingDate.value = ''
+  bookingTime.value = ''
+  bookingServiceId.value = null
+  bookingServices.value = []
+}
+
+// Submit booking
+async function submitBooking() {
+  try {
+    const response = await apiFetch('/customer/bookings', {
+      method: 'POST',
+      body: JSON.stringify({
+        mua_id: bookingMua.value.id,
+        service_id: bookingServiceId.value,
+        date: bookingDate.value,
+        time: bookingTime.value
+      }),
+    })
+    
+    // Close the modal
+    closeBookingModal()
+    
+    // Show success message
+    alert('Booking berhasil dibuat!')
+    
+    // Redirect to the booking page with the new booking ID
+    router.push(`/booking/${response.data.id}`)
+  } catch (error) {
+    console.error('Failed to create booking:', error)
+    alert('Failed to create booking. Please try again.')
+  }
+}
+
+// Initiate booking process
+const initiateBooking = async () => {
+  try {
+    // Create a new booking with the MUA ID
+    const response = await apiFetch('/customer/bookings', {
+      method: 'POST',
+      body: JSON.stringify({
+        mua_id: mua.value.id,
+        service_id: services.value[0]?.id || null, // Use the first service or null if no services
+        date: new Date().toISOString().split('T')[0], // Today's date as default
+        time: '09:00' // Default time
+      }),
+    })
+    
+    // Redirect to the booking page with the new booking ID
+    router.push(`/booking/${response.data.id}`)
+  } catch (error) {
+    console.error('Failed to create booking:', error)
+    alert('Failed to initiate booking. Please try again.')
+  }
+}
+
+onMounted(async () => {
+  const muaId = route.params.id
+  try {
+    // Fetch MUA profile
+    const profileData = await apiFetch(`/mua/${muaId}`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    mua.value = profileData.data || profileData
+    console.log('✅ MUA profile fetched:', mua.value)
+    
+    // Fetch MUA services
+    const servicesData = await apiFetch(`/mua/${muaId}/services`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    services.value = servicesData.data || servicesData
+    console.log('✅ MUA services fetched:', services.value)
+    
+    // Fetch MUA reviews
+    const reviewsData = await apiFetch(`/mua/${muaId}/reviews`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    reviews.value = reviewsData.data || reviewsData
+    console.log('✅ MUA reviews fetched:', reviews.value)
+    
+    // Fetch availability data
+    fetchAvailabilityData()
+  } catch (err) {
+    console.error('❌ Failed to fetch MUA data:', err)
+  }
+})
+</script>

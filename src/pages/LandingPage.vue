@@ -4,11 +4,7 @@
             <header class="w-full px-6 py-4 bg-pink-100/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
                 <nav class="max-w-7xl mx-auto flex items-center justify-between">
                     <div class="flex items-center space-x-1">
-                        <div
-                            class="w-10 h-10 bg-gradient-to-r from-[#D56E6E] to-[#D56E6E]/80 rounded-full flex items-center justify-center"
-                        >
-                            <span class="material-symbols-outlined text-white text-xl">palette</span>
-                        </div>
+                        <img src="@/assets/logo.jpg" alt="Wezz Beauty Logo" class="w-10 h-10 rounded-full">
                         <span
                             class="text-2xl font-bold bg-gradient-to-r from-[#D56E6E] to-[#D56E6E]/80 bg-clip-text text-transparent"
                             >Wezz Beauty</span

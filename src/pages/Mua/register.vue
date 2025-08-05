@@ -1,59 +1,51 @@
 <template>
     <div id="webcrumbs">
-        <div class="w-full p-8 bg-pink-50 min-h-screen text-[#D56E6E]">
-            <div
-                class="max-w-md mx-auto md:max-w-xl lg:max-w-4xl bg-white rounded-3xl shadow-lg p-8 border-2 border-[#D56E6E]">
-                <div class="flex justify-between items-center mb-8">
-                    <a
-                        href="/guest"
-                        class="bg-white text-[#D56E6E] border border-pink-200 px-4 py-2 rounded-full font-medium hover:bg-pink-50 transition-colors flex items-center"
-                    >
-                        <span class="material-symbols-outlined text-sm mr-1">arrow_back</span>
-                        Back
-                    </a>
-                    <div class="text-center flex-1">
-                        <div
-                            class="w-16 h-16 bg-gradient-to-br from-[#D56E6E] to-pink-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-2xl text-white">palette</span>
+<div class="w-full p-8 bg-pink-50 min-h-screen text-customred text-gray-800">
+<div
+class="max-w-md mx-auto md:max-w-xl lg:max-w-4xl bg-white rounded-3xl shadow-lg p-8 border-2 border-customred">
+                <div class="text-center mb-8">
+                    <div class="flex flex-col items-center">
+                        <div class="mb-4">
+                            <img src="@/assets/logo.jpg" alt="Wezz Beauty Logo" class="w-20 h-20 rounded-full mx-auto">
                         </div>
-                        <h1 class="text-2xl font-bold text-[#D56E6E] mb-2">MUA Registration</h1>
+                        <h1 class="text-2xl font-bold text-customred mb-2">MUA Registration</h1>
                         <p class="text-pink-800 text-sm">Join our beauty community!</p>
                     </div>
                 </div>
                 <form @submit.prevent="handleSubmit" class="space-y-4">
                     <div class="md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3 md:space-y-0">
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Brand Name/Makeup Artist
+<label class="block text-customred font-medium mb-2">Brand Name/Makeup Artist
                                 Name</label>
-                            <input type="text"
-                                class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50"
+<input type="text"
+                                class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-customred focus:outline-none transition-colors bg-pink-50"
                                 placeholder="Your brand or professional name" v-model="form.name" />
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Email</label>
-                            <input type="text"
-                                class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50"
-                                placeholder="Your email" v-model="form.email" />
+<label class="block text-customred font-medium mb-2">Email</label>
+<input type="text"
+    class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-customred focus:outline-none transition-colors bg-pink-50"
+    placeholder="Your email" v-model="form.email" />
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Phone Number</label>
-                            <input type="tel"
-                                class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50"
-                                placeholder="+62" v-model="form.phone" />
+<label class="block text-customred font-medium mb-2">Phone Number</label>
+<input type="tel"
+    class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-customred focus:outline-none transition-colors bg-pink-50"
+    placeholder="+62" v-model="form.phone" />
                         </div>
                         <div>
                             <div>
-                                <label class="block text-[#D56E6E] font-medium mb-2">Password</label>
-                                <div class="relative">
-                                    <input :type="showPassword ? 'text' : 'password'"
-                                        class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 pr-10"
-                                        placeholder="Enter your password" required v-model="form.password" />
-                                    <span
-                                        class="material-symbols-outlined absolute right-3 top-3 text-[#D56E6E] cursor-pointer hover:text-purple-600 transition-colors"
-                                        @click="togglePassword">
-                                        {{ showPassword ? 'visibility' : 'visibility_off' }}
-                                    </span>
-                                </div>
+<label class="block text-customred font-medium mb-2">Password</label>
+<div class="relative">
+<input :type="showPassword ? 'text' : 'password'"
+    class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-customred focus:outline-none transition-colors bg-pink-50 pr-10"
+    placeholder="Enter your password" required v-model="form.password" />
+<span
+    class="material-symbols-outlined absolute right-3 top-3 text-customred cursor-pointer hover:text-purple-600 transition-colors"
+    @click="togglePassword">
+    {{ showPassword ? 'visibility' : 'visibility_off' }}
+</span>
+</div>
                                 <p v-if="passwordWarning" class="text-xs text-pink-800 mt-1">
                                     {{ passwordWarning }}
                                 </p>
@@ -61,56 +53,56 @@
                         </div>
                         <div>
                             <div>
-                                <label class="block text-[#D56E6E] font-medium mb-2">Confirm Password</label>
-                                <div class="relative">
-                                    <input type="password"
-                                        class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 pr-10"
-                                        placeholder="Confirm your password" required
-                                        v-model="form.password_confirmation" />
-                                </div>
-                                <p class="text-xs text-pink-800 mt-1" v-if="passwordMismatch">Both passwords must
-                                    match</p>
-                            </div>
+<label class="block text-customred font-medium mb-2">Confirm Password</label>
+<div class="relative">
+<input type="password"
+    class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-customred focus:outline-none transition-colors bg-pink-50 pr-10"
+    placeholder="Confirm your password" required
+    v-model="form.password_confirmation" />
+</div>
+<p class="text-xs text-pink-800 mt-1" v-if="passwordMismatch">Both passwords must
+    match</p>
+</div>
 
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Professional Bio</label>
-                            <textarea
-                                class="w-full p-3 border-2 border-pink-200 rounded-xl focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 h-32 resize-none"
-                                placeholder="Tell us about your skills and experience" v-model="form.bio"></textarea>
+<label class="block text-customred font-medium mb-2">Professional Bio</label>
+<textarea
+    class="w-full p-3 border-2 border-pink-200 rounded-xl focus:border-customred focus:outline-none transition-colors bg-pink-50 h-32 resize-none"
+    placeholder="Tell us about your skills and experience" v-model="form.bio"></textarea>
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Service Location</label>
-                            <textarea
-                                class="w-full p-3 border-2 border-pink-200 rounded-xl focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 h-32 resize-none"
-                                placeholder="Your service area" v-model="form.service_area"></textarea>
+<label class="block text-customred font-medium mb-2">Service Location</label>
+<textarea
+    class="w-full p-3 border-2 border-pink-200 rounded-xl focus:border-customred focus:outline-none transition-colors bg-pink-50 h-32 resize-none"
+    placeholder="Your service area" v-model="form.service_area"></textarea>
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Schedule</label>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="text-xs text-pink-800 mb-1 block">Available Days</label>
-                                    <div class="flex flex-wrap gap-2">
-                                        <label
-                                            class="inline-flex items-center p-2 rounded-lg hover:bg-pink-100 cursor-pointer transition-colors"
-                                            v-for="day in days" :key="day">
-                                            <input type="checkbox" :value="day" v-model="form.available_days"
-                                                class="w-3 h-3 text-pink-800 rounded mr-1 focus:ring-[#D56E6E]" />
-                                            <span class="text-[#D56E6E] text-xs">{{ day }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="text-xs text-pink-800 mb-1 block">Start Time</label>
-                                    <input
-                                        class="w-full p-2 border-2 border-pink-200 rounded-lg focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 mb-2"
-                                        type="time" v-model="form.available_start_time" required />
-                                    <label class="text-xs text-pink-800 mb-1 block">End Time</label>
-                                    <input
-                                        class="w-full p-2 border-2 border-pink-200 rounded-lg focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50 mb-2"
-                                        type="time" v-model="form.available_end_time" required />
-                                </div>
-                            </div>
+<label class="block text-customred font-medium mb-2">Schedule</label>
+<div class="grid grid-cols-2 gap-3">
+    <div>
+        <label class="text-xs text-pink-800 mb-1 block">Available Days</label>
+        <div class="flex flex-wrap gap-2">
+            <label
+                class="inline-flex items-center p-2 rounded-lg hover:bg-pink-100 cursor-pointer transition-colors"
+                v-for="day in days" :key="day">
+                <input type="checkbox" :value="day" v-model="form.available_days"
+                    class="w-3 h-3 text-pink-800 rounded mr-1 focus:ring-customred" />
+                <span class="text-customred text-xs">{{ day }}</span>
+            </label>
+        </div>
+    </div>
+    <div>
+        <label class="text-xs text-pink-800 mb-1 block">Start Time</label>
+        <input
+            class="w-full p-2 border-2 border-pink-200 rounded-lg focus:border-customred focus:outline-none transition-colors bg-pink-50 mb-2"
+            type="time" v-model="form.available_start_time" required />
+        <label class="text-xs text-pink-800 mb-1 block">End Time</label>
+        <input
+            class="w-full p-2 border-2 border-pink-200 rounded-lg focus:border-customred focus:outline-none transition-colors bg-pink-50 mb-2"
+            type="time" v-model="form.available_end_time" required />
+    </div>
+</div>
                         </div>
                         <div>
                             <label class="block font-medium mb-2">Profile Photo</label>
@@ -135,38 +127,38 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Certification</label>
-                            <div class="space-y-3">
-                                <div v-for="(cert, index) in form.certification" :key="index"
-                                    class="flex space-x-2 items-center">
-                                    <input v-model="form.certification[index]"
-                                        :placeholder="'Certification ' + (index + 1)"
-                                        class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-[#D56E6E] focus:outline-none transition-colors bg-pink-50"
-                                        type="text" />
-                                    <button v-if="index > 0" type="button" @click="removeCertification(index)"
-                                        class="text-red-500 hover:text-red-700 text-lg">
-                                        ✕
-                                    </button>
-                                </div>
+<label class="block text-customred font-medium mb-2">Certification</label>
+<div class="space-y-3">
+    <div v-for="(cert, index) in form.certification" :key="index"
+        class="flex space-x-2 items-center">
+        <input v-model="form.certification[index]"
+            :placeholder="'Certification ' + (index + 1)"
+            class="w-full p-3 border-2 border-pink-200 rounded-full focus:border-customred focus:outline-none transition-colors bg-pink-50"
+            type="text" />
+        <button v-if="index > 0" type="button" @click="removeCertification(index)"
+            class="text-red-500 hover:text-red-700 text-lg">
+            ✕
+        </button>
+    </div>
 
-                                <div class="flex items-center">
-                                    <button type="button" @click="addCertification"
-                                        class="text-pink-800 hover:text-purple-700 text-sm flex items-center transition-colors">
-                                        <span class="material-symbols-outlined text-lg mr-1">add_circle</span>
-                                        Add another certification
-                                    </button>
-                                </div>
-                            </div>
+    <div class="flex items-center">
+        <button type="button" @click="addCertification"
+            class="text-pink-800 hover:text-purple-700 text-sm flex items-center transition-colors">
+            <span class="material-symbols-outlined text-lg mr-1">add_circle</span>
+            Add another certification
+        </button>
+    </div>
+</div>
                         </div>
                         <div>
-                            <label class="block text-[#D56E6E] font-medium mb-2">Specialization</label>
-                            <div class="grid grid-cols-2 gap-3">
-                                <label class="flex items-center space-x-2 cursor-pointer" v-for="sp in specializations"
-                                    :key="sp">
-                                    <input type="checkbox" class="w-4 h-4 text-pink-800 rounded focus:ring-[#D56E6E]"
-                                        :value="sp" v-model="form.makeup_specializations" />
-                                    <span class="text-[#D56E6E] text-sm">{{ sp }}</span> </label>
-                            </div>
+<label class="block text-customred font-medium mb-2">Specialization</label>
+<div class="grid grid-cols-2 gap-3">
+    <label class="flex items-center space-x-2 cursor-pointer" v-for="sp in specializations"
+        :key="sp">
+        <input type="checkbox" class="w-4 h-4 text-pink-800 rounded focus:ring-customred"
+            :value="sp" v-model="form.makeup_specializations" />
+        <span class="text-customred text-sm">{{ sp }}</span> </label>
+</div>
                         </div>
                         <div>
                             <label class="block text-[#D56E6E] font-medium mb-2">Color/Skin/Technique
@@ -243,7 +235,7 @@ const form = reactive({
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const specializations = ['Bridal', 'Pre-wedding', 'Graduation', 'Party', 'Content Creator', 'Regular']
-const styles = ['Neutrals', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
+const styles = ['Natural', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
 const skin = ['Dry', 'Oily', 'Combination', 'Sensitive', 'Normal']
 
 const showPassword = ref(false)

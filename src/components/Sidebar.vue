@@ -48,6 +48,15 @@
         <span class="font-medium">Favorites</span>
       </div>
       <div
+        @click="router.push('/notifications')"
+        :class="[
+          'flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer',
+          isActiveRoute('notifications') ? 'bg-primary-50 text-primary-600' : 'text-gray-600 hover:bg-gray-100'
+        ]"
+      >
+        <span class="font-medium">Notification</span>
+      </div>
+      <div
         @click="logout"
         class="flex items-center gap-3 p-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
       >
@@ -62,6 +71,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { apiFetch } from '@/config'
 
 const router = useRouter()
 const route = useRoute()
@@ -87,24 +97,23 @@ onMounted(async () => {
   userName.value = savedName || 'MUA'
 
   const token = localStorage.getItem('token')
-  if (token) {
-    try {
-      const res = await fetch('http://localhost:8000/api/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json'
+      if (token) {
+        try {
+          const data = await apiFetch('/me', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+            },
+          })
+
+          userName.value = data.name || 'MUA'
+          profile.value = data.mua_profile || data.muaProfile || null
+
+          localStorage.setItem('user_name', data.name)
+        } catch (e) {
+          console.error('Gagal ambil data user:', e)
         }
-      })
-      const data = await res.json()
-
-      userName.value = data.name || 'MUA'
-      profile.value = data.mua_profile || data.muaProfile || null
-
-      localStorage.setItem('user_name', data.name)
-    } catch (e) {
-      console.error('Gagal ambil data user:', e)
-    }
-  }
+      }
 })
 
 onBeforeUnmount(() => {
@@ -116,12 +125,12 @@ const logout = async () => {
   if (!token) return router.push('/login/cus')
 
   try {
-    await fetch('http://localhost:8000/api/auth/logout/mua', {
+    await apiFetch('/auth/logout/mua', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
+        Accept: 'application/json',
+      },
     })
   } catch (e) {
     console.error('Gagal logout:', e)

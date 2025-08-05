@@ -346,7 +346,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const specializations = ['Bridal', 'Pre-wedding', 'Graduation', 'Party', 'Content Creator', 'Regular']
-const styles = ['Neutrals', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
+const styles = ['Natural', 'Glam ', 'Soft Glam ', 'Bold', 'Korean']
 const skin = ['Dry', 'Oily', 'Combination', 'Sensitive', 'Normal']
 
 const form = reactive({

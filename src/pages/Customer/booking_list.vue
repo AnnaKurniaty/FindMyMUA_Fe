@@ -12,7 +12,7 @@
             <option value="">Semua Status</option>
             <option value="pending">Menunggu Konfirmasi</option>
             <option value="confirmed">Dikonfirmasi</option>
-            <option value="finished">Selesai</option>
+            <option value="completed">Selesai</option>
             <option value="cancelled">Dibatalkan</option>
           </select>
         </div>
@@ -67,7 +67,7 @@
                 <span class="material-symbols-outlined text-gray-600">chat</span>
               </button>
               <button
-                v-if="booking.status === 'finished'"
+                v-if="booking.status === 'completed'"
                 class="p-2 rounded-full hover:bg-gray-200 transition-colors"
                 @click="reviewBooking(booking)"
               >
@@ -144,7 +144,7 @@ function statusText(status) {
       return 'Menunggu Konfirmasi';
     case 'confirmed':
       return 'Dikonfirmasi';
-    case 'finished':
+    case 'completed':
       return 'Selesai';
     case 'cancelled':
       return 'Dibatalkan';
@@ -159,7 +159,7 @@ function statusBadgeColor(status) {
       return 'bg-yellow-100 text-yellow-700';
     case 'confirmed':
       return 'bg-green-100 text-green-700';
-    case 'finished':
+    case 'completed':
       return 'bg-gray-100 text-gray-700';
     case 'cancelled':
       return 'bg-red-100 text-red-600';
@@ -174,7 +174,7 @@ function statusBorderColor(status) {
       return 'border-yellow-400';
     case 'confirmed':
       return 'border-green-400';
-    case 'finished':
+    case 'completed':
       return 'border-gray-400';
     case 'cancelled':
       return 'border-red-400';
@@ -239,6 +239,10 @@ function reviewBooking(booking) {
 }
 
 async function submitReview() {
+  if (reviewRating.value < 1 || reviewRating.value > 5) {
+    alert('Please select a rating between 1 and 5 stars.');
+    return;
+  }
   try {
     const payload = {
       booking_id: currentReviewBooking.value.id,
@@ -250,8 +254,14 @@ async function submitReview() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+    if (response.status && response.status !== 200) {
+      alert(response.message || 'Failed to submit review');
+      return;
+    }
     alert(response.message || 'Review submitted successfully');
     showReviewModal.value = false;
+    // Refresh bookings to update review status
+    await fetchBookings();
   } catch (error) {
     console.error(error);
     alert(error.message || 'Failed to submit review');

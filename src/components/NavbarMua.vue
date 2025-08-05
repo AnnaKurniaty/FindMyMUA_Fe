@@ -58,6 +58,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { apiFetch } from '@/config'
 
 const router = useRouter()
 const route = useRoute()
@@ -85,13 +86,12 @@ onMounted(async () => {
   const token = localStorage.getItem('token')
   if (token) {
     try {
-      const res = await fetch('http://localhost:8000/api/me', {
+      const data = await apiFetch('/me', {
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: 'application/json'
-        }
+          Accept: 'application/json',
+        },
       })
-      const data = await res.json()
 
       userName.value = data.name || 'MUA'
       profile.value = data.mua_profile || data.muaProfile || null
@@ -112,12 +112,12 @@ const logout = async () => {
   if (!token) return router.push('/login/mua')
 
   try {
-    await fetch('http://localhost:8000/api/auth/logout/mua', {
+    await fetch('/auth/logout/mua', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
+        Accept: 'application/json',
+      },
     })
   } catch (e) {
     console.error('Gagal logout:', e)
@@ -132,7 +132,8 @@ const tabs = [
   { name: 'Dashboard', label: 'Dashboard', icon: 'dashboard' },
   { name: 'Services', label: 'Services', icon: 'business_center' },
   { name: 'Profile', label: 'Profile', icon: 'person' },
-  { name: 'Calendar', label: 'Calendar', icon: 'calendar_month' }
+  { name: 'Calendar', label: 'Calendar', icon: 'calendar_month' },
+  { name: 'Notifications', label: 'Notifications' }
 ]
 
 function isActiveRoute(tabName) {

@@ -2,16 +2,27 @@
     ><div id="webcrumbs">
         <div class="bg-gray-50 min-h-screen p-4 md:p-6 lg:p-8 text-gray-800">
             <div class="max-w-6xl mx-auto">
-                <h1 class="text-2xl md:text-3xl font-bold mb-6">MUA</h1>
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl md:text-3xl font-bold">MUA</h1>
+                </div>
+                
+                <div v-if="profileList.length === 0" class="text-center py-12">
+                    <div class="text-gray-500 text-lg mb-4">No MUAs found</div>
+                    <button @click="clearFilter" class="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600 transition-colors">
+                        Show All MUAs
+                    </button>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div
-                            v-for="(profile, index) in profileList"
-                            :key="index"
-                            class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-                        >
+                    <div
+                    v-for="(profile, index) in filteredProfiles"
+                    :key="index"
+                    class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+                    @click="goToMuaDetail(profile.id)"
+                    >
                             <div class="relative h-56">
                             <img
-                                :src="profile.mua_profile?.profile_photo_url || 'https://via.placeholder.com/400x300?text=MUA'"
+                                :src="profile.mua_profile?.profile_photo_url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSIjNkI3MjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5NVUEgUHJvZmlsZTwvdGV4dD4KPC9zdmc+'"
                                 alt="MUA Profile"
                                 class="w-full h-full object-cover"
                             />
@@ -76,24 +87,46 @@
 >
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { apiFetch } from '@/config'
+import { useRouter, useRoute } from 'vue-router'
 
 const profileList = ref([])
+const router = useRouter()
+const route = useRoute()
+
+const filteredProfiles = computed(() => {
+  const style = route.query.style
+  if (!style || !Array.isArray(profileList.value)) return Array.isArray(profileList.value) ? profileList.value : []
+  
+  // Helper to normalize strings by lowercasing and removing spaces/hyphens
+  const normalize = str => str.toLowerCase().replace(/[\s-]/g, '')
+  
+  return profileList.value.filter(profile => {
+    if (!profile.makeup_specializations) return false
+    
+    let specs = []
+    if (Array.isArray(profile.makeup_specializations)) {
+      specs = profile.makeup_specializations.map(s => normalize(s))
+    } else if (typeof profile.makeup_specializations === 'string') {
+      try {
+        specs = JSON.parse(profile.makeup_specializations).map(s => normalize(s))
+      } catch {
+        specs = [normalize(profile.makeup_specializations)]
+      }
+    }
+  })
+})
 
 onMounted(async () => {
   const token = localStorage.getItem('token')
   try {
-    const data = await apiFetch('/dashboard/mua-users', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      },
-    })
-    profileList.value = data
+    const data = await apiFetch('/dashboard/mua')
+    profileList.value = Array.isArray(data) ? data : []
     console.log('✅ MUA profiles fetched:', data)
   } catch (err) {
     console.error('❌ Failed to fetch MUA profiles:', err)
+    profileList.value = []
   }
 })
 
@@ -111,6 +144,13 @@ function formatRupiah(number) {
   return new Intl.NumberFormat('id-ID').format(number)
 }
 
+function goToMuaDetail(muaId) {
+  router.push(`/mua/${muaId}`)
+}
+
+function clearFilter() {
+  router.push({ name: 'CustomerMua' })
+}
 </script>
 
 

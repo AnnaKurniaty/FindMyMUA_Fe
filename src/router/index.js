@@ -11,12 +11,14 @@ import MuaDashboard from '../pages/Mua/dashboard.vue'
 import MuaAvailable from '../pages/Mua/availability.vue'
 import MuaProfile from '../pages/Mua/profile.vue'
 import MuaService from '../pages/Mua/service.vue'
+import MuaNotifications from '../pages/Mua/notifications.vue'
 
 import CustomerHome from '../pages/Customer/dashboard.vue'
 import CustomerBooking from '../pages/Customer/booking.vue'
 import CustomerBookingList from '../pages/Customer/booking_list.vue'
 import CustomerMua from '../pages/Customer/mua.vue'
 import CustomerProfile from '../pages/Customer/profile.vue'
+import CustomerNotifications from '../pages/Customer/notifications.vue'
 import WishlistPage from '../pages/Customer/wishlist.vue'
 import LandingPage from '../pages/LandingPage.vue'
 
@@ -36,6 +38,7 @@ const routes = [
       { path: 'calendar', name: 'MuaAvailable', component: MuaAvailable },
       { path: 'services', name: 'MuaService', component: MuaService },
       { path: 'profile', name: 'MuaProfile', component: MuaProfile },
+      { path: 'notifications', name: 'MuaNotifications', component: MuaNotifications },
     ]
   },
   {
@@ -49,7 +52,9 @@ const routes = [
       { path: 'booking', name: 'CustomerBookingList', component: CustomerBookingList },
       { path: 'favorites', name: 'CustomerWishlist', component: WishlistPage },
       { path: 'profile', name: 'CustomerProfile', component: CustomerProfile },
+      { path: 'notifications', name: 'CustomerNotifications', component: CustomerNotifications },
       { path: 'mua', name: 'CustomerMua', component: CustomerMua },
+      { path: 'mua/:id', name: 'CustomerMuaDetail', component: () => import('../pages/Customer/mua_detail.vue') }
     ]
   }
 ]
