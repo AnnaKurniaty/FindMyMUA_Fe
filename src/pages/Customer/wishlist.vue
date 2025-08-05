@@ -60,14 +60,6 @@
                   <h4 class="font-semibold text-gray-800">{{ mua.name || 'Unknown' }}</h4>
                 </div>
               </div>
-              <div class="text-sm text-gray-600 mb-3" v-if="Array.isArray(mua.makeup_specializations)">
-                <ul class="list-disc list-inside">
-                  <li v-for="(spec, idx) in mua.makeup_specializations" :key="idx">{{ spec }}</li>
-                </ul>
-              </div>
-              <p class="text-sm text-gray-600 mb-3" v-else>
-                {{ mua.makeup_specializations || 'No specialization listed' }}
-              </p>
               <div class="flex items-center justify-between">
                 <span class="text-pink-600 font-semibold">From Rp. {{ (mua.starting_price || 0).toString().replace(/\.00$/, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}</span>
               </div>

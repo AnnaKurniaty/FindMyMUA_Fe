@@ -4,7 +4,7 @@
                 <div class="flex flex-col md:flex-row mb-8">
                     <div class="w-full md:w-1/3 flex flex-col items-start">
                         <img
-                            :src="mua.mua_profile?.profile_photo_url || 'https://via.placeholder.com/400x300?text=MUA'"
+                            :src="mua.mua_profile?.profile_photo_url || '/images/default-mua-placeholder.png'"
                             alt="MUA Profile"
                             class="w-64 h-64 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
                             keywords="makeup artist, professional, beauty, portrait"
@@ -112,36 +112,39 @@
                             v-for="day in calendarDays"
                             :key="day.date"
                             :class="[
-                                'py-3 rounded-lg cursor-pointer transition-all duration-300',
+                                'py-3 rounded-lg cursor-pointer transition-all duration-300 text-sm font-medium',
                                 day.isCurrentMonth ? '' : 'text-gray-300 cursor-not-allowed',
-                                day.isAvailable && day.isCurrentMonth ? 'hover:bg-primary-50 text-primary-700 font-medium' : '',
-                                day.isBooked && day.isCurrentMonth ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : '',
-                                !day.isAvailable && !day.isBooked && day.isCurrentMonth ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : ''
+                                day.isBlocked && day.isCurrentMonth ? 'bg-red-100 text-red-700 border border-red-300' : '',
+                                day.isBooked && day.isCurrentMonth && !day.isBlocked ? 'bg-orange-100 text-orange-700 border border-orange-300' : '',
+                                day.isAvailable && day.isCurrentMonth && !day.isBooked && !day.isBlocked ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200' : '',
+                                !day.isAvailable && !day.isBooked && !day.isBlocked && day.isCurrentMonth ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''
                             ]"
-                            @click="day.isAvailable && day.isCurrentMonth ? openBookingModal(mua, day.date) : null"
+                            @click="day.isAvailable && !day.isBooked && !day.isBlocked && day.isCurrentMonth ? openBookingModal(mua, day.date) : null"
                         >
                             {{ day.day }}
-                            <div
-                                v-if="day.isAvailable"
-                                class="w-1 h-1 bg-primary-500 rounded-full mx-auto mt-1"
-                            ></div>
-                            <div
-                                v-else-if="day.isBooked"
-                                class="w-1 h-1 bg-gray-400 rounded-full mx-auto mt-1"
-                            ></div>
+                            <div class="text-xs mt-1">
+                                <span v-if="day.isBlocked" class="text-red-600">Blocked</span>
+                                <span v-else-if="day.isBooked" class="text-orange-600">Booked</span>
+                                <span v-else-if="day.isAvailable" class="text-green-600">Available</span>
+                                <span v-else class="text-gray-400">Off</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex gap-6 mt-6 text-sm">
+                    <div class="flex gap-4 mt-6 text-sm flex-wrap">
                         <div class="flex items-center">
-                            <div class="w-3 h-3 bg-primary-500 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
                             <span>Tersedia</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-3 h-3 bg-gray-400 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
                             <span>Sudah Dibooking</span>
                         </div>
                         <div class="flex items-center">
-                            <div class="w-3 h-3 bg-gray-200 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                            <span>Blocked</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-gray-300 rounded-full mr-2"></div>
                             <span>Tidak Tersedia</span>
                         </div>
                     </div>
@@ -1039,11 +1042,12 @@ const router = useRouter()
 const portfolioScrollPosition = ref(0)
 const portfolioContainer = ref(null)
 
-// Calendar state
-const currentMonth = ref(new Date().getMonth())
-const currentYear = ref(new Date().getFullYear())
-const bookedDates = ref([])
-const availableDates = ref([])
+    // Calendar state
+    const currentMonth = ref(new Date().getMonth())
+    const currentYear = ref(new Date().getFullYear())
+    const bookedDates = ref([])
+    const availableDates = ref([])
+    const blockedDates = ref([])
 
 // Booking modal state
 const bookingModalVisible = ref(false)
@@ -1062,42 +1066,46 @@ const currentMonthName = computed(() => {
   return months[currentMonth.value]
 })
 
-const calendarDays = computed(() => {
-  const days = []
-  const firstDay = new Date(currentYear.value, currentMonth.value, 1)
-  const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0)
-  const startDate = new Date(firstDay)
-  startDate.setDate(startDate.getDate() - firstDay.getDay())
-  
-  const endDate = new Date(lastDay)
-  endDate.setDate(endDate.getDate() + (6 - lastDay.getDay()))
-  
-  const currentDate = new Date(startDate)
-  
-  while (currentDate <= endDate) {
-    const dateStr = currentDate.toISOString().split('T')[0]
-    const isCurrentMonth = currentDate.getMonth() === currentMonth.value
-    const day = currentDate.getDate()
-    
-    // Check if date is available (in MUA's available dates)
-    const isAvailable = isCurrentMonth && availableDates.value.includes(dateStr)
-    
-    // Check if date is booked (has bookings)
-    const isBooked = isCurrentMonth && bookedDates.value.includes(dateStr)
-    
-    days.push({
-      date: dateStr,
-      day,
-      isCurrentMonth,
-      isAvailable,
-      isBooked
+    const calendarDays = computed(() => {
+      const days = []
+      const firstDay = new Date(currentYear.value, currentMonth.value, 1)
+      const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0)
+      const startDate = new Date(firstDay)
+      startDate.setDate(startDate.getDate() - firstDay.getDay())
+      
+      const endDate = new Date(lastDay)
+      endDate.setDate(endDate.getDate() + (6 - lastDay.getDay()))
+      
+      const currentDate = new Date(startDate)
+      
+      while (currentDate <= endDate) {
+        const dateStr = currentDate.toISOString().split('T')[0]
+        const isCurrentMonth = currentDate.getMonth() === currentMonth.value
+        const day = currentDate.getDate()
+        
+        // Check if date is blocked
+        const isBlocked = isCurrentMonth && blockedDates.value.includes(dateStr)
+        
+        // Check if date is booked (only if not blocked)
+        const isBooked = isCurrentMonth && !isBlocked && bookedDates.value.includes(dateStr)
+        
+        // Check if date is available (only if not blocked and not booked)
+        const isAvailable = isCurrentMonth && !isBlocked && !isBooked && availableDates.value.includes(dateStr)
+        
+        days.push({
+          date: dateStr,
+          day,
+          isCurrentMonth,
+          isAvailable,
+          isBooked,
+          isBlocked
+        })
+        
+        currentDate.setDate(currentDate.getDate() + 1)
+      }
+      
+      return days
     })
-    
-    currentDate.setDate(currentDate.getDate() + 1)
-  }
-  
-  return days
-})
 
 // Format number to Rupiah currency
 function formatRupiah(number) {
@@ -1183,6 +1191,13 @@ async function fetchAvailabilityData() {
     // Extract booked dates
     bookedDates.value = bookings.map(booking => booking.date)
     
+    // Fetch blocked dates from backend
+    const blockedResponse = await apiFetch(`/mua/${mua.value.id}/blocked-slots?start_date=${startDate}&end_date=${endDate}`)
+    const blockedSlots = blockedResponse.data || blockedResponse
+    
+    // Extract blocked dates
+    blockedDates.value = blockedSlots.map(slot => slot.date)
+    
     // Fetch available dates from backend
     const availabilityResponse = await apiFetch(`/mua/${mua.value.id}/availability?date=${startDate}`)
     const availability = availabilityResponse.data || availabilityResponse
@@ -1201,8 +1216,10 @@ async function fetchAvailabilityData() {
       const dayOfWeek = currentDate.getDay() // 0 = Sunday, 1 = Monday, etc.
       const dateStr = currentDate.toISOString().split('T')[0]
       
-      // Check if this day is in MUA's available days and not already booked
-      if (muaAvailableDays.includes(dayOfWeek.toString()) && !bookedDates.value.includes(dateStr)) {
+      // Check if this day is in MUA's available days and not already booked or blocked
+      if (muaAvailableDays.includes(dayOfWeek.toString()) && 
+          !bookedDates.value.includes(dateStr) && 
+          !blockedDates.value.includes(dateStr)) {
         availableDates.value.push(dateStr)
       }
       

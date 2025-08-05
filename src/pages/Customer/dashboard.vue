@@ -50,8 +50,8 @@
                         <h3 class="font-semibold text-gray-800 text-sm">Wedding Makeup</h3>
                     </button>
                     <button
-                        @click="specializationFilter = ['graduation']; sortMethod = null"
-                        :class="['bg-white rounded-xl p-4 shadow-lg transition-all duration-200 transform border', specializationFilter && specializationFilter.includes('graduation') ? 'border-pink-500 shadow-xl -translate-y-1' : 'border-pink-100 hover:shadow-xl hover:-translate-y-1']"
+                        @click="specializationFilter = ['Graduation']; sortMethod = null"
+                        :class="['bg-white rounded-xl p-4 shadow-lg transition-all duration-200 transform border', specializationFilter && specializationFilter.includes('Graduation') ? 'border-pink-500 shadow-xl -translate-y-1' : 'border-pink-100 hover:shadow-xl hover:-translate-y-1']"
                     >
                         <div
                             class="w-12 h-12 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-3"
@@ -83,7 +83,7 @@
                         <div
                             v-for="(mua, index) in filteredMuas"
                             :key="mua.id"
-                            class="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 border border-pink-100 hover:shadow-lg transition-all duration-200"
+                            class="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 border border-pink-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
                         >
                             <div class="flex items-center mb-4">
                                 <template v-if="mua.profile_photo_url">
@@ -105,35 +105,30 @@
                                         <div class="flex items-center text-sm text-gray-600">{{ mua.user?.email || 'No email' }}</div>
                                     </div>
                             </div>
-                            <div class="text-sm text-gray-600 mb-3" v-if="Array.isArray(mua.makeup_specializations)">
-                                <ul class="list-disc list-inside">
-                                    <li v-for="(spec, idx) in mua.makeup_specializations" :key="idx">{{ spec }}</li>
-                                </ul>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-3" v-else>
-                            {{ mua.makeup_specializations || 'No specialization listed' }}
-                            </p>
                             <div class="flex items-center justify-between">
                                 <span class="text-pink-600 font-semibold">From Rp. {{ (mua.starting_price || 0).toString().replace(/\.00$/, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}</span>
                             </div>
-                            <button
-                            class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                            :class="favorites.has(mua.id) ? 'bg-pink-600' : 'bg-gradient-to-br from-pink-100 to-rose-100 text-pink-600'"
-                            @click="toggleFavorite(mua)"
-                            >
-                            <span
-                                class="material-symbols-outlined"
-                                :class="favorites.has(mua.id) ? 'text-pink-700 font-bold' : 'text-pink-300'"
-                                style="font-weight: 900;"
-                            >{{ favorites.has(mua.id) ? 'favorite' : 'favorite_border' }}</span>
-                            </button>
-                            <button
-                                class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 bg-pink-500 hover:bg-pink-600 transition-colors duration-200"
-                                @click="openBookingModal(mua)"
-                                title="Book MUA"
-                            >
-                                Book
-                            </button>
+                            <div class="flex justify-center gap-3 mt-4">
+                                <button
+                                    class="w-12 h-12 rounded-full flex items-center justify-center"
+                                    :class="favorites.has(mua.id) ? 'bg-pink-600' : 'bg-gradient-to-br from-pink-100 to-rose-100 text-pink-600'"
+                                    @click="toggleFavorite(mua)"
+                                    title="Add to Wishlist"
+                                >
+                                    <span
+                                        class="material-symbols-outlined"
+                                        :class="favorites.has(mua.id) ? 'text-white font-bold' : 'text-pink-600'"
+                                        style="font-weight: 900;"
+                                    >{{ favorites.has(mua.id) ? 'favorite' : 'favorite_border' }}</span>
+                                </button>
+                                <button
+                                    class="w-12 h-12 rounded-full flex items-center justify-center bg-pink-500 hover:bg-pink-600 transition-colors duration-200 text-white"
+                                    @click="openBookingModal(mua)"
+                                    title="Book MUA"
+                                >
+                                    <span class="material-symbols-outlined">calendar_today</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,10 +140,9 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Bridal Makeup</h3>
                             <p class="text-gray-600 mb-4">Perfect for your special day</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                                @click="navigateToMua('bridal')"
+                              class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
-                                Explore
+                              Explore
                             </button>
                         </div>
                     </div>
@@ -156,13 +150,12 @@
                         class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
                     >
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Party Makeup</h3>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Party</h3>
                             <p class="text-gray-600 mb-4">Glam looks for any celebration</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                                @click="navigateToMua('party')"
+                              class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
-                                Explore
+                              Explore
                             </button>
                         </div>
                     </div>
@@ -173,43 +166,43 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Regular</h3>
                             <p class="text-gray-600 mb-4">Corporate and headshot ready</p>
                             <button
-                                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                                @click="navigateToMua('regular')"
+                              class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
-                                Explore
+                              Explore
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Personal Skin Profile</h2>
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div v-if="!profile || !hasSkinProfile" class="text-center py-8">
+                        <div class="text-gray-500 mb-4">
+                            <span class="material-symbols-outlined text-6xl mb-4">face</span>
+                            <p class="text-lg">Your skin profile is not yet complete</p>
+                            <p class="text-sm mt-2">Complete your profile to get personalized recommendations</p>
+                        </div>
+                        <button 
+                            @click="navigateToProfile" 
+                            class="bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-2 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200"
+                        >
+                            Complete Profile
+                        </button>
+                    </div>
+                    <div v-else class="grid md:grid-cols-2 gap-6">
                         <div class="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 border border-pink-100">
                             <h3 class="font-semibold text-gray-800 mb-4">Skin Analysis</h3>
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-gray-600">Skin Type</span>
-                                    <span class="font-medium text-gray-800"
-                                        v-if="profile?.customer_profile?.skin_type">
-                                        {{ profile.customer_profile.skin_type.join(', ') }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Skin Tone</span>
-                                    <div class="flex items-center">
-                                        <div class="w-4 h-4 bg-yellow-200 rounded-full mr-2"></div>
-                                       <span class="font-medium text-gray-800"
-                                        v-if="profile?.customer_profile?.skin_tone">
-                                        {{ profile.customer_profile.skin_tone }}
-                                    </span>
-                                    </div>
+                                    <span class="font-medium text-gray-800">{{ profile.skin_tone || 'Not specified' }}</span>
                                 </div>
                                 <div class="flex items-center justify-between">
-                                    <span class="text-gray-600">Concerns</span>
-                                    <span class="font-medium text-gray-800"
-                                        v-if="profile?.customer_profile?.skin_issues">
-                                        {{ profile.customer_profile.skin_issues }}
-                                    </span>
+                                    <span class="text-gray-600">Skin Type</span>
+                                    <span class="font-medium text-gray-800">{{ profile.skin_type ? profile.skin_type.join(', ') : 'Not specified' }}</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">Skin Issues</span>
+                                    <span class="font-medium text-gray-800">{{ profile.skin_issues || 'Not specified' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -217,25 +210,16 @@
                             <h3 class="font-semibold text-gray-800 mb-4">Preferences</h3>
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-gray-600">Style Preference</span>
-                                    <span class="font-medium text-gray-800"
-                                        v-if="profile?.customer_profile?.makeup_preferences">
-                                        {{ profile.customer_profile.makeup_preferences.join(', ') }}
-                                    </span>
+                                    <span class="text-gray-600">Makeup Preferences</span>
+                                    <span class="font-medium text-gray-800">{{ profile.makeup_preferences ? profile.makeup_preferences.join(', ') : 'Not specified' }}</span>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Skincare History</span>
-                                    <span class="font-medium text-gray-800"
-                                        v-if="profile?.customer_profile?.skincare_history">
-                                        {{ profile.customer_profile.skincare_history }}
-                                    </span>
+                                    <span class="font-medium text-gray-800">{{ profile.skincare_history || 'Not specified' }}</span>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Allergies</span>
-                                    <span class="font-medium text-gray-800"
-                                        v-if="profile?.customer_profile?.allergies">
-                                        {{ profile.customer_profile.allergies }}
-                                    </span>
+                                    <span class="font-medium text-gray-800">{{ profile.allergies || 'None' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -334,6 +318,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { apiFetch } from '@/config'
+import { skinProfileFix } from './dashboard-fix.js'
 
 const profile = ref(null)
 const searchQuery = ref('')
@@ -360,8 +345,19 @@ const filteredMuas = computed(() => {
   if (specializationFilter.value) {
     filtered = filtered.filter((mua) => {
       if (!mua.makeup_specializations) return false
-      const specs = mua.makeup_specializations.map(s => s.toLowerCase())
-      return specializationFilter.value.some(f => specs.includes(f))
+      
+      let specs = []
+      if (Array.isArray(mua.makeup_specializations)) {
+        specs = mua.makeup_specializations.map(s => s.toLowerCase())
+      } else if (typeof mua.makeup_specializations === 'string') {
+        try {
+          specs = JSON.parse(mua.makeup_specializations).map(s => s.toLowerCase())
+        } catch {
+          specs = [mua.makeup_specializations.toLowerCase()]
+        }
+      }
+      
+      return specializationFilter.value.some(f => specs.includes(f.toLowerCase()))
     })
   }
 
@@ -525,7 +521,48 @@ onMounted(async () => {
         Accept: 'application/json',
       },
     })
-    profile.value = { customer_profile: profileData }
+    
+    const data = profileData.profile || profileData
+    if (!data) {
+      throw new Error('No profile data received')
+    }
+
+    let skinType = []
+    if (data.skin_type) {
+      if (typeof data.skin_type === 'string') {
+        try {
+          const parsed = JSON.parse(data.skin_type)
+          skinType = Array.isArray(parsed) ? parsed : []
+        } catch {
+          skinType = data.skin_type.split(',').map(item => item.trim()).filter(item => item)
+        }
+      } else if (Array.isArray(data.skin_type)) {
+        skinType = data.skin_type
+      }
+    }
+
+    let makeupPreferences = []
+    if (data.makeup_preferences) {
+      if (typeof data.makeup_preferences === 'string') {
+        try {
+          const parsed = JSON.parse(data.makeup_preferences)
+          makeupPreferences = Array.isArray(parsed) ? parsed : []
+        } catch {
+          makeupPreferences = data.makeup_preferences.split(',').map(item => item.trim()).filter(item => item)
+        }
+      } else if (Array.isArray(data.makeup_preferences)) {
+        makeupPreferences = data.makeup_preferences
+      }
+    }
+
+    profile.value = {
+      skin_tone: data.skin_tone || '',
+      skin_type: skinType,
+      skin_issues: data.skin_issues || '',
+      skincare_history: data.skincare_history || '',
+      allergies: data.allergies || '',
+      makeup_preferences: makeupPreferences
+    }
 
     const recommendationRes = await apiFetch('/customer/recommendations', {
       headers: {
@@ -542,8 +579,8 @@ onMounted(async () => {
   }
 })
 
-function navigateToMua(styleType) {
-  router.push({ name: 'CustomerMua', query: { style: styleType } })
+function navigateToMuaDetail(muaId) {
+  router.push({ name: 'CustomerMuaDetail', params: { id: muaId } })
 }
 
 </script>

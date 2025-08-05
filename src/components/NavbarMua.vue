@@ -86,13 +86,12 @@ onMounted(async () => {
   const token = localStorage.getItem('token')
   if (token) {
     try {
-      const res = await apiFetch('/me', {
+      const data = await apiFetch('/me', {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
         },
       })
-      const data = await res.json()
 
       userName.value = data.name || 'MUA'
       profile.value = data.mua_profile || data.muaProfile || null

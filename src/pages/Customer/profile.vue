@@ -315,31 +315,44 @@ const skinTypeDisplay = ref('Combination')
 
 onMounted(async () => {
   const token = localStorage.getItem('token')
+  if (!token) {
+    errorMessage.value = 'Please login to view your profile'
+    return
+  }
+
   try {
-    const data = await apiFetch('/customer/profile', {
+    console.log('Loading customer profile...')
+    const response = await apiFetch('/customer/profile', {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json'
       }
     })
 
-    profile.value = data
-    form.name = data.name || ''
-    form.email = data.email || ''
-    form.phone = data.phone || ''
-    form.address = data.address || ''
-    form.skin_tone = data.skin_tone || ''
+    console.log('Profile response:', response)
+    
+    // Handle new response structure
+    const data = response.profile || response
+    
+    if (!data) {
+      throw new Error('No profile data received')
+    }
 
-    // console.log(profile.value.profile_photo)
-    // console.log("DATA GAMBAR", mediaBaseUrl + '/storage/profile_photos/' + profile.value.profile_photo + '?t=' + Date.now())
+    profile.value = data
+    
+            // Safely set form data with fallbacks
+            form.name = data.name || data.user?.name || user.value?.name || ''
+            form.email = data.email || data.user?.email || user.value?.email || ''
+            form.phone = data.phone || data.user?.phone || user.value?.phone || ''
+            form.address = data.address || ''
+            form.skin_tone = data.skin_tone || ''
+
+    // Handle skin_type safely
     try {
       if (data.skin_type) {
         if (typeof data.skin_type === 'string') {
-          try {
-            form.skin_type = JSON.parse(data.skin_type)
-          } catch {
-            form.skin_type = data.skin_type.split(',')
-          }
+          const parsed = JSON.parse(data.skin_type)
+          form.skin_type = Array.isArray(parsed) ? parsed : []
         } else if (Array.isArray(data.skin_type)) {
           form.skin_type = data.skin_type
         } else {
@@ -349,38 +362,62 @@ onMounted(async () => {
         form.skin_type = []
       }
     } catch (e) {
+      console.warn('Error parsing skin_type:', e)
       form.skin_type = []
     }
+
+    // Handle makeup_preferences safely
+    try {
+      if (data.makeup_preferences) {
+        if (typeof data.makeup_preferences === 'string') {
+          const parsed = JSON.parse(data.makeup_preferences)
+          form.makeup_preferences = Array.isArray(parsed) ? parsed : []
+        } else if (Array.isArray(data.makeup_preferences)) {
+          form.makeup_preferences = data.makeup_preferences
+        } else {
+          form.makeup_preferences = []
+        }
+      } else {
+        form.makeup_preferences = []
+      }
+    } catch (e) {
+      console.warn('Error parsing makeup_preferences:', e)
+      form.makeup_preferences = []
+    }
+
     form.skin_issues = data.skin_issues || ''
     form.skincare_history = data.skincare_history || ''
     form.allergies = data.allergies || ''
-try {
-  if (data.makeup_preferences) {
-    if (typeof data.makeup_preferences === 'string') {
-      try {
-        form.makeup_preferences = JSON.parse(data.makeup_preferences)
-      } catch {
-        form.makeup_preferences = data.makeup_preferences.split(',')
-      }
-    } else if (Array.isArray(data.makeup_preferences)) {
-      form.makeup_preferences = data.makeup_preferences
-    } else {
-      form.makeup_preferences = []
-    }
-  } else {
-    form.makeup_preferences = []
-  }
-} catch {
-  form.makeup_preferences = []
-}
+    
     skinTypeDisplay.value = mapSkinTypeToDisplay(form.skin_type)
     successMessage.value = ''
     errorMessage.value = ''
+    
   } catch (err) {
-    console.error('Failed to load profile', err)
-    errorMessage.value = 'Failed to load profile data.'
+    console.error('Failed to load profile:', err)
+    if (err.message?.includes('401')) {
+      errorMessage.value = 'Session expired. Please login again.'
+    } else if (err.message?.includes('404')) {
+      errorMessage.value = 'Profile not found. Creating new profile...'
+      // Auto-create profile will be handled by backend
+      setTimeout(() => loadProfile(), 2000)
+    } else {
+      errorMessage.value = 'Failed to load profile data. Please try again.'
+    }
   }
 })
+
+// Add user ref for fallback data
+import { computed } from 'vue'
+const user = computed(() => {
+  const userStr = localStorage.getItem('user')
+  return userStr ? JSON.parse(userStr) : null
+})
+
+// Add reload function
+const loadProfile = async () => {
+  await onMounted()
+}
 
 function toggleEditForm() {
   showEditForm.value = !showEditForm.value
