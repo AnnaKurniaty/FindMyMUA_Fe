@@ -797,6 +797,7 @@ const triggerFileInput = () => {
 const handleFileChange = (event) => {
     const file = event.target.files[0]
     if (file && file.type.startsWith('image/')) {
+        editForm.profile_photo = file
         selectedFile.value = file
         previewUrl.value = URL.createObjectURL(file)
     }
@@ -820,6 +821,7 @@ function openEditModal() {
     editForm.available_days = parseArrayData(profile.value.mua_profile?.available_days)
     editForm.available_start_time = profile.value.mua_profile?.available_start_time || ''
     editForm.available_end_time = profile.value.mua_profile?.available_end_time || ''
+    editForm.profile_photo = profile.value.mua_profile?.profile_photo || null
     
     // Debug logging untuk available days
     console.log('Opening edit modal with available days:', editForm.available_days)
