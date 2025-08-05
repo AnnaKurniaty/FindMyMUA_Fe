@@ -139,11 +139,12 @@
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Bridal Makeup</h3>
                             <p class="text-gray-600 mb-4">Perfect for your special day</p>
-                            <button
-                              class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-                            >
-                              Explore
-                            </button>
+              <button
+                @click="navigateToMuaList"
+                class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
+              >
+                Explore
+              </button>
                         </div>
                     </div>
                     <div
@@ -153,6 +154,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Party</h3>
                             <p class="text-gray-600 mb-4">Glam looks for any celebration</p>
                             <button
+                              @click="navigateToMuaList"
                               class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
                               Explore
@@ -166,6 +168,7 @@
                             <h3 class="text-xl font-bold text-gray-800 mb-2">Regular</h3>
                             <p class="text-gray-600 mb-4">Corporate and headshot ready</p>
                             <button
+                              @click="navigateToMuaList"
                               class="w-full bg-gradient-to-r from-pink-500 to-rose-500 py-3 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
                             >
                               Explore
@@ -338,6 +341,14 @@ const bookingDate = ref('')
 const bookingTime = ref('')
 const bookingServiceId = ref(null)
 const bookingServices = ref([])
+
+const hasSkinProfile = computed(() => {
+  if (!profile.value) return false
+  return !!(profile.value.skin_tone || 
+            (profile.value.skin_type && profile.value.skin_type.length > 0) || 
+            profile.value.skin_issues || 
+            profile.value.makeup_preferences)
+})
 
 const filteredMuas = computed(() => {
   let filtered = recommendedMuas.value
@@ -581,6 +592,15 @@ onMounted(async () => {
 
 function navigateToMuaDetail(muaId) {
   router.push({ name: 'CustomerMuaDetail', params: { id: muaId } })
+}
+
+function navigateToMuaList() {
+  router.push({ name: 'CustomerMua' })
+}
+
+function exploreService(serviceType) {
+  specializationFilter.value = [serviceType]
+  sortMethod.value = null
 }
 
 </script>

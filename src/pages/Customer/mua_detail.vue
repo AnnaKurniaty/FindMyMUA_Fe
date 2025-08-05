@@ -26,11 +26,11 @@
                 <div class="relative">
                     <div ref="portfolioContainer" class="overflow-x-hidden pb-4">
                         <div class="flex gap-4" :style="{ transform: `translateX(-${portfolioScrollPosition}px)` }">
-                            <div v-for="(service, index) in displayedServices" :key="service.id" class="w-72 h-80 flex-shrink-0 relative group">
+                            <div v-for="(service, index) in displayedServices" :key="service.id" class="w-50 h-80 flex-shrink-0 relative group">
                                 <img
                                     :src="service.service_photo_url || 'https://via.placeholder.com/400x300?text=Service+Image'"
                                     :alt="service.name"
-                                    class="w-72 h-80 object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
+                                    class="w-50 h-80 object-cover rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group-hover:brightness-90"
                                     :keywords="service.name"
                                 />
                                 <div
@@ -687,6 +687,10 @@
     }
     #webcrumbs .w-72 {
         width: 288px;
+    }
+
+    #webcrumbs .w-50 {
+        width: 208px;
     }
     #webcrumbs .w-full {
         width: 100%;
