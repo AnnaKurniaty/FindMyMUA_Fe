@@ -107,7 +107,13 @@
             >
               <td class="py-4">
                 <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                  <img 
+                    v-if="booking.profile_photo_url" 
+                    :src="booking.profile_photo_url" 
+                    alt="Customer" 
+                    class="w-8 h-8 rounded-full object-cover"
+                  />
+                  <div v-else class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
                     <span class="text-sm">👤</span>
                   </div>
                   <div>
@@ -156,6 +162,9 @@
                   </button>
                   <button @click="openEditModal(booking)" class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center hover:bg-pink-200 text-gray-800">
                     <span class="material-symbols-outlined text-sm">edit</span>
+                  </button>
+                  <button @click="openCustomerDetailModal(booking)" class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center hover:bg-blue-200 text-gray-800">
+                    <span class="material-symbols-outlined text-sm">person</span>
                   </button>
                 </div>
               </td>
@@ -251,6 +260,7 @@
         <button @click="showEditModal = false" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-sm">
           Cancel
         </button>
+      
         <button @click="saveBooking" class="px-4 py-2 rounded bg-pink-500 hover:bg-pink-600 text-white text-sm">
           Save
         </button>
@@ -258,6 +268,63 @@
     </div>
   </div>
 </div>
+      <div v-if="showCustomerDetailModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm text-gray-800 p-4">
+    <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg overflow-auto max-h-[80vh] transform transition-all duration-300 animate-fadeIn relative p-6">
+      <button @click="closeCustomerDetailModal" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 z-10 p-1 rounded-full hover:bg-gray-100 transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <h2 class="text-lg font-semibold mb-4 text-gray-800">Customer Detail</h2>
+      <div v-if="loadingCustomerDetail" class="text-center py-10">
+        Loading...
+      </div>
+      <div v-else-if="customerDetail">
+        <div class="flex items-center mb-4">
+          <img 
+            v-if="customerDetail.profile_photo_url" 
+            :src="customerDetail.profile_photo_url" 
+            alt="Customer Photo" 
+            class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-purple-200"
+          />
+          <div v-else class="w-20 h-20 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+            <span class="material-symbols-outlined text-2xl text-purple-600">person</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-800 text-lg">{{ customerDetail.name }}</h3>
+            <p class="text-sm text-gray-600">{{ customerDetail.email }}</p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-semibold text-gray-700 mb-2">Customer Information</h3>
+          <div class="space-y-2">
+            <p><strong>Phone:</strong> {{ customerDetail.phone || 'Not provided' }}</p>
+            <p><strong>Address:</strong> {{ customerDetail.address || 'Not provided' }}</p>
+            <p><strong>Style:</strong> {{ customerDetail.style || 'Not provided' }}</p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-semibold text-gray-700 mb-2">Booking Details</h3>
+          <div class="space-y-2">
+            <p><strong>Service:</strong> {{ customerDetail.booking_details.service }}</p>
+            <p><strong>Date:</strong> {{ customerDetail.booking_details.date }}</p>
+            <p><strong>Time:</strong> {{ customerDetail.booking_details.time }}</p>
+            <p><strong>Total Price:</strong> {{ customerDetail.booking_details.total_price }}</p>
+            <p><strong>Status:</strong> {{ customerDetail.booking_details.status }}</p>
+            <p><strong>Payment Status:</strong> {{ customerDetail.booking_details.payment_status }}</p>
+          </div>
+        </div>
+        
+        <div v-if="customerDetail.payment_proof_url" class="mb-4">
+          <h3 class="font-semibold text-gray-700 mb-2">Payment Proof</h3>
+          <img :src="customerDetail.payment_proof_url" alt="Payment Proof" class="max-w-full rounded shadow" />
+        </div>
+      </div>
+      <div v-else class="text-center py-10 text-red-600">
+        Failed to load customer details.
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -389,7 +456,8 @@ async function fetchBookings() {
       time: booking.time,
       status: booking.status.charAt(0).toUpperCase() + booking.status.slice(1),
       payment_status: booking.payment_status ? booking.payment_status.charAt(0).toUpperCase() + booking.payment_status.slice(1) : 'Pending',
-      phone: booking.customer.phone || ''
+      phone: booking.customer.phone || '',
+      payment_proof_url: booking.payment_proof_url
     }))
   } catch (error) {
     console.error('Failed to fetch bookings:', error)
@@ -409,6 +477,30 @@ onMounted(() => {
   fetchBookings()
   fetchBookingSummary()
 })
+const showCustomerDetailModal = ref(false)
+const customerDetail = ref(null)
+const loadingCustomerDetail = ref(false)
+
+async function openCustomerDetailModal(booking) {
+  showCustomerDetailModal.value = true
+  loadingCustomerDetail.value = true
+  try {
+    // Ambil data detail customer dan bukti pembayaran dari API
+    const data = await apiFetch(`/mua/bookings/${booking.id}/customer-detail`)
+    customerDetail.value = data
+  } catch (error) {
+    console.error('Failed to fetch customer detail:', error)
+    customerDetail.value = null
+  } finally {
+    loadingCustomerDetail.value = false
+  }
+}
+
+function closeCustomerDetailModal() {
+  showCustomerDetailModal.value = false
+  customerDetail.value = null
+}
+
 </script>
 
 
