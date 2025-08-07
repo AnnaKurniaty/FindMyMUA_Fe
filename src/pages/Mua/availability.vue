@@ -89,14 +89,22 @@
                     <div class="space-y-3">
                         <button 
                             @click="blockSelectedDate"
-                            :disabled="!selectedDate"
+                            :disabled="!selectedDate || isDateBlocked(selectedDate)"
                             :class="[
                                 'w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-colors',
-                                selectedDate ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                !selectedDate ? 'bg-gray-300 text-gray-500 cursor-not-allowed' :
+                                isDateBlocked(selectedDate) ? 'bg-gray-400 text-gray-600 cursor-not-allowed' :
+                                'bg-red-500 text-white hover:bg-red-600'
                             ]"
                         >
-                            <span class="material-symbols-outlined text-lg">block</span>
-                            <span>{{ selectedDate ? `Block ${formatDate(selectedDate)}` : 'Select Date to Block' }}</span>
+                            <span class="material-symbols-outlined text-lg">
+                                {{ isDateBlocked(selectedDate) ? 'check_circle' : 'block' }}
+                            </span>
+                            <span>
+                                {{ !selectedDate ? 'Select Date to Block' : 
+                                   isDateBlocked(selectedDate) ? `${formatDate(selectedDate)} Already Blocked` : 
+                                   `Block ${formatDate(selectedDate)}` }}
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -508,36 +516,46 @@ function getDateCursorClass(date) {
   return 'cursor-pointer'
 }
 
-// Block selected date
-async function blockSelectedDate() {
-  if (!selectedDate.value) return
-  
-  try {
-    // Send to backend to save blocked time slot (full day block)
-    const blockedSlot = await apiFetch('/blocked-slots', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        date: selectedDate.value,
-        is_full_day: true,
-      }),
-    })
-    
-    // Update local blockedDates and blockedTimeSlots with correct data
-    if (!blockedDates.value.includes(blockedSlot.date)) {
-      blockedDates.value.push(blockedSlot.date)
-    }
-    blockedTimeSlots.value.push(blockedSlot)
-    
-    alert(`Date ${formatDate(selectedDate.value)} has been blocked!`)
-  } catch (err) {
-    console.error('Failed to block date:', err)
-    alert('Failed to block date')
-  }
-}
+        // Block selected date
+        async function blockSelectedDate() {
+            if (!selectedDate.value) return
+            
+            // Double check if already blocked
+            if (isDateBlocked(selectedDate.value)) {
+                alert(`⚠️ Date ${formatDate(selectedDate.value)} is already blocked!\n\nThis date has been previously blocked and cannot be blocked again.`)
+                return
+            }
+            
+            try {
+                // Send to backend to save blocked time slot (full day block)
+                const blockedSlot = await apiFetch('/blocked-slots', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        date: selectedDate.value,
+                        is_full_day: true,
+                    }),
+                })
+                
+                // Update local blockedDates and blockedTimeSlots with correct data
+                if (!blockedDates.value.includes(blockedSlot.date)) {
+                    blockedDates.value.push(blockedSlot.date)
+                }
+                blockedTimeSlots.value.push(blockedSlot)
+                
+                alert(`✅ Date ${formatDate(selectedDate.value)} has been successfully blocked!`)
+            } catch (err) {
+                console.error('Failed to block date:', err)
+                if (err.response && err.response.status === 422) {
+                    alert(`⚠️ ${err.response.data.message || 'This date is already blocked!'}`)
+                } else {
+                    alert('❌ This date is already blocked!')
+                }
+            }
+        }
 
 // Unblock time slot
 async function unblockTimeSlot(id) {
