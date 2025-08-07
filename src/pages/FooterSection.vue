@@ -19,23 +19,23 @@
                             <h3 class="font-bold text-xl mb-4">For Clients</h3>
                             <ul class="space-y-2">
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Find a MUA</a
+                                    <button @click="redirectLoginCustomer" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Find a MUA</button
                                     >
                                 </li>
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Create Skin Profile</a
+                                    <button @click="redirectLoginCustomer" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Create Skin Profile</button
                                     >
                                 </li>
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Book Appointment</a
+                                    <button @click="redirectLoginCustomer" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Book Appointment</button
                                     >
                                 </li>
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Write a Review</a
+                                    <button @click="redirectLoginCustomer" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Write a Review</button
                                     >
                                 </li>
                             </ul>
@@ -44,23 +44,23 @@
                             <h3 class="font-bold text-xl mb-4">For Makeup Artists</h3>
                             <ul class="space-y-2">
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Join as MUA</a
+                                    <button @click="redirectLoginMua" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Join as MUA</button
                                     >
                                 </li>
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Manage Bookings</a
+                                    <button @click="redirectLoginMua" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Manage Bookings</button
                                     >
                                 </li>
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >Update Portfolio</a
+                                    <button @click="redirectLoginMua" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >Update Portfolio</button
                                     >
                                 </li>
                                 <li>
-                                    <a href="#" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
-                                        >View Client Profiles</a
+                                    <button @click="redirectLoginMua" class="text-[#FFFFFF]/80 hover:text-white transition-colors"
+                                        >View Client Profiles</button
                                     >
                                 </li>
                             </ul>
@@ -122,5 +122,19 @@
 <script>
 export default {
   name: 'FooterSection'
+}
+</script>
+
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+function redirectLoginMua() {
+  router.push('/login/mua')
+}
+
+function redirectLoginCustomer() {
+  router.push('/login/cus')
 }
 </script>

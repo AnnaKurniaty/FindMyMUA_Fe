@@ -10,7 +10,7 @@
                             >Wezz Beauty</span
                         >
                     </div>
-                    <div class="hidden md:flex items-center space-x-6">
+                    <div class="md:flex items-center space-x-6">
                         <a
                             href="#"
                             @click.prevent="scrollToSection('hero')"
