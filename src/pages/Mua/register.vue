@@ -302,15 +302,61 @@ async function handleSubmit() {
         return
     }
 
-    try {
-        await apiFetch('/auth/register/mua', {
+                    try {
+                        const formData = new FormData()
+                        formData.append('name', form.name)
+                        formData.append('email', form.email)
+                        formData.append('phone', form.phone)
+                        formData.append('password', form.password)
+                        formData.append('password_confirmation', form.password_confirmation)
+                        formData.append('bio', form.bio)
+                        
+                        // Send certification as proper array
+                        const certifications = form.certification.filter(cert => cert.trim() !== '')
+                        certifications.forEach(cert => {
+                            formData.append('certification[]', cert)
+                        })
+                        
+                        formData.append('service_area', form.service_area)
+                        formData.append('available_start_time', form.available_start_time + ':00')
+                        formData.append('available_end_time', form.available_end_time + ':00')
+                        
+                        // Send available_days as proper array
+                        form.available_days.forEach(day => {
+                            formData.append('available_days[]', day)
+                        })
+                        
+                        // Send makeup_specializations as proper array
+                        form.makeup_specializations.forEach(spec => {
+                            formData.append('makeup_specializations[]', spec)
+                        })
+                        
+                        // Send makeup_styles as proper array
+                        form.makeup_styles.forEach(style => {
+                            formData.append('makeup_styles[]', style)
+                        })
+                        
+                        // Send skin_type as proper array
+                        form.skin_type.forEach(skin => {
+                            formData.append('skin_type[]', skin)
+                        })
+                        
+                        if (form.profile_photo) {
+                            formData.append('profile_photo', form.profile_photo)
+                        }
+
+        const registerResult = await apiFetch('/auth/register/mua', {
             method: 'POST',
-            body: JSON.stringify(form)
+            body: formData
         });
-        
+
+        // Auto-login after successful registration
         const loginResult = await apiFetch('/auth/login/mua', {
             method: 'POST',
-            body: JSON.stringify(form)
+            body: JSON.stringify({
+                email: form.email,
+                password: form.password
+            })
         });
 
         localStorage.setItem('token', loginResult.access_token)
@@ -318,29 +364,15 @@ async function handleSubmit() {
         localStorage.setItem('user_id', loginResult.user.id)
         localStorage.setItem('role', 'mua')
 
-        const formData = new FormData()
-        formData.append('bio', form.bio)
-        formData.append('certification', JSON.stringify(form.certification))
-        formData.append('service_area', form.service_area)
-        formData.append('available_start_time', form.available_start_time + ':00')
-        formData.append('available_end_time', form.available_end_time + ':00')
-        formData.append('available_days', JSON.stringify(form.available_days))
-        formData.append('makeup_specializations', JSON.stringify(form.makeup_specializations))
-        formData.append('makeup_styles', JSON.stringify(form.makeup_styles))
-        formData.append('skin_type', JSON.stringify(form.skin_type))
-        if (form.profile_photo)
-            formData.append('profile_photo', form.profile_photo)
-
-        await apiFetch('/mua/profile', {
-            method: 'POST',
-            body: formData
-        });
-
         alert(`MUA's Account Created!`)
         router.push('/mua/dashboard')
     } catch (err) {
-        console.error(err)
-        alert('Maaf sedang terjadi masalah, silahkan coba lagi.')
+        console.error('Registration error:', err)
+        if (err.message) {
+            alert(`Registration failed: ${err.message}`)
+        } else {
+            alert('Registration failed. Please check your input and try again.')
+        }
     }
 }
 </script>
